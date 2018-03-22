@@ -1,5 +1,12 @@
 inspecode:
   ktlint:
+  - input:
+    - node*/
+    auto-fix: true
+    thresholds:
+      num-issues: 999
+  - ignore:
+    - node*/
     auto-fix: true
     thresholds:
       num-issues: 999
