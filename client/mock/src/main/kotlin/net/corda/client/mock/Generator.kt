@@ -110,7 +110,7 @@ class Generator<out A>(val generate: (SplittableRandom) -> Try<A>) {
                     } else {
                         -1
                     }
-                }].second
+                } ].second
             }
         }
 
@@ -174,7 +174,6 @@ class Generator<out A>(val generate: (SplittableRandom) -> Try<A>) {
             return sequence(generators)
         }
 
-
         fun <A> replicatePoisson(meanSize: Double, generator: Generator<A>, atLeastOne: Boolean = false) = Generator<List<A>> {
             val chance = (meanSize - 1) / meanSize
             val result = mutableListOf<A>()
@@ -234,6 +233,5 @@ class Generator<out A>(val generate: (SplittableRandom) -> Try<A>) {
                 result
             }
         }
-
     }
 }

@@ -34,8 +34,10 @@ data class DummyContract(val blank: Any? = null) : Contract {
      * participants, and could in theory be merged with [SingleOwnerState] by putting the additional participants
      * in a different field, however this is a good example of a contract with multiple states.
      */
-    data class MultiOwnerState(override val magicNumber: Int = 0,
-                               val owners: List<AbstractParty>) : State {
+    data class MultiOwnerState(
+        override val magicNumber: Int = 0,
+        val owners: List<AbstractParty>
+    ) : State {
         override val participants: List<AbstractParty> get() = owners
     }
 

@@ -87,9 +87,11 @@ object FixingFlow {
      * is just the "side" of the flow run by the party with the floating leg as a way of deciding who
      * does what in the flow.
      */
-    class Floater(override val otherSideSession: FlowSession,
-                  override val payload: FixingSession,
-                  override val progressTracker: ProgressTracker = TwoPartyDealFlow.Primary.tracker()) : TwoPartyDealFlow.Primary() {
+    class Floater(
+        override val otherSideSession: FlowSession,
+        override val payload: FixingSession,
+        override val progressTracker: ProgressTracker = TwoPartyDealFlow.Primary.tracker()
+    ) : TwoPartyDealFlow.Primary() {
         private val dealToFix: StateAndRef<FixableDealState> by transient {
             val state: TransactionState<FixableDealState> = uncheckedCast(serviceHub.loadState(payload.ref))
             StateAndRef(state, payload.ref)
@@ -101,7 +103,6 @@ object FixingFlow {
             // Add some constraints here.
         }
     }
-
 
     /** Used to set up the session between [Floater] and [Fixer] */
     @CordaSerializable

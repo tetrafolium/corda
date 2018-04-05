@@ -2,7 +2,6 @@
 
 package net.corda.testing.driver
 
-import net.corda.core.CordaInternal
 import net.corda.core.DoNotImplement
 import net.corda.core.concurrent.CordaFuture
 import net.corda.core.flows.FlowLogic
@@ -25,8 +24,6 @@ import net.corda.testing.node.internal.genericDriver
 import net.corda.testing.node.internal.getTimestampAsDirectoryName
 import net.corda.testing.node.internal.newContext
 import rx.Observable
-import java.net.InetSocketAddress
-import java.net.ServerSocket
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicInteger
@@ -63,7 +60,6 @@ interface NodeHandle : AutoCloseable {
     fun stop()
 }
 
-
 /** Interface which represents an out of process node and exposes its process handle. **/
 @DoNotImplement
 interface OutOfProcess : NodeHandle {
@@ -97,8 +93,8 @@ interface InProcess : NodeHandle {
  * */
 @Deprecated("The webserver is for testing purposes only and will be removed soon")
 data class WebserverHandle(
-        val listenAddress: NetworkHostAndPort,
-        val process: Process
+    val listenAddress: NetworkHostAndPort,
+    val process: Process
 )
 
 /**
@@ -139,12 +135,12 @@ abstract class PortAllocation {
  */
 @Suppress("unused")
 data class NodeParameters(
-        val providedName: CordaX500Name? = null,
-        val rpcUsers: List<User> = emptyList(),
-        val verifierType: VerifierType = VerifierType.InMemory,
-        val customOverrides: Map<String, Any?> = emptyMap(),
-        val startInSameProcess: Boolean? = null,
-        val maximumHeapSize: String = "200m"
+    val providedName: CordaX500Name? = null,
+    val rpcUsers: List<User> = emptyList(),
+    val verifierType: VerifierType = VerifierType.InMemory,
+    val customOverrides: Map<String, Any?> = emptyMap(),
+    val startInSameProcess: Boolean? = null,
+    val maximumHeapSize: String = "200m"
 ) {
     fun withProvidedName(providedName: CordaX500Name?): NodeParameters = copy(providedName = providedName)
     fun withRpcUsers(rpcUsers: List<User>): NodeParameters = copy(rpcUsers = rpcUsers)
@@ -162,9 +158,11 @@ data class NodeParameters(
  * @property jmxHttpServerPortAllocation The port allocation strategy to use for remote Jolokia/JMX monitoring over HTTP.
  * Defaults to incremental.
  */
-data class JmxPolicy(val startJmxHttpServer: Boolean = false,
-                     val jmxHttpServerPortAllocation: PortAllocation? =
-                     if (startJmxHttpServer) PortAllocation.Incremental(7005) else null)
+data class JmxPolicy(
+    val startJmxHttpServer: Boolean = false,
+    val jmxHttpServerPortAllocation: PortAllocation? =
+    if (startJmxHttpServer) PortAllocation.Incremental(7005) else null
+)
 
 /**
  * [driver] allows one to start up nodes like this:
@@ -234,18 +232,18 @@ fun <A> driver(defaultParameters: DriverParameters = DriverParameters(), dsl: Dr
  */
 @Suppress("unused")
 data class DriverParameters(
-        val isDebug: Boolean = false,
-        val driverDirectory: Path = Paths.get("build", getTimestampAsDirectoryName()),
-        val portAllocation: PortAllocation = PortAllocation.Incremental(10000),
-        val debugPortAllocation: PortAllocation = PortAllocation.Incremental(5005),
-        val systemProperties: Map<String, String> = emptyMap(),
-        val useTestClock: Boolean = false,
-        val startNodesInProcess: Boolean = false,
-        val waitForAllNodesToFinish: Boolean = false,
-        val notarySpecs: List<NotarySpec> = listOf(NotarySpec(DUMMY_NOTARY_NAME)),
-        val extraCordappPackagesToScan: List<String> = emptyList(),
-        val jmxPolicy: JmxPolicy = JmxPolicy(),
-        val networkParameters: NetworkParameters = testNetworkParameters()
+    val isDebug: Boolean = false,
+    val driverDirectory: Path = Paths.get("build", getTimestampAsDirectoryName()),
+    val portAllocation: PortAllocation = PortAllocation.Incremental(10000),
+    val debugPortAllocation: PortAllocation = PortAllocation.Incremental(5005),
+    val systemProperties: Map<String, String> = emptyMap(),
+    val useTestClock: Boolean = false,
+    val startNodesInProcess: Boolean = false,
+    val waitForAllNodesToFinish: Boolean = false,
+    val notarySpecs: List<NotarySpec> = listOf(NotarySpec(DUMMY_NOTARY_NAME)),
+    val extraCordappPackagesToScan: List<String> = emptyList(),
+    val jmxPolicy: JmxPolicy = JmxPolicy(),
+    val networkParameters: NetworkParameters = testNetworkParameters()
 ) {
     fun withIsDebug(isDebug: Boolean): DriverParameters = copy(isDebug = isDebug)
     fun withDriverDirectory(driverDirectory: Path): DriverParameters = copy(driverDirectory = driverDirectory)

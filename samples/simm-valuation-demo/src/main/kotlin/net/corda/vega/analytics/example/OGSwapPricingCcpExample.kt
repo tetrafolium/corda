@@ -114,7 +114,7 @@ class SwapPricingCcpExample {
     /**
      * Runs the example, pricing the instruments, producing the output as an ASCII table.
 
-     * @param args  ignored
+     * @param args ignored
      */
     fun main(@Suppress("UNUSED_PARAMETER") args: Array<String>) {
         // setup calculation runner component, which needs life-cycle management
@@ -196,7 +196,6 @@ class SwapPricingCcpExample {
                 LocalDate.of(2021, 9, 12), // the end date
                 BuySell.BUY, // indicates whether this trade is a buy or sell
                 100000000.0, // the notional amount  
-                0.015)                    // the fixed interest rate
+                0.015) // the fixed interest rate
     }
-
 }

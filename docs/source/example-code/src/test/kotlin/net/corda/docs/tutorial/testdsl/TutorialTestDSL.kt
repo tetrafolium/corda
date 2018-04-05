@@ -3,7 +3,6 @@ package net.corda.docs.tutorial.testdsl
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.whenever
 import net.corda.core.contracts.TransactionVerificationException
-import net.corda.core.crypto.generateKeyPair
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.node.services.IdentityService
 import net.corda.core.utilities.days
@@ -18,7 +17,6 @@ import net.corda.testing.core.*
 import net.corda.testing.internal.rigorousMock
 import net.corda.testing.node.MockServices
 import net.corda.testing.node.ledger
-import net.corda.testing.node.makeTestIdentityService
 import net.corda.testing.node.transaction
 import org.junit.Rule
 import org.junit.Test
@@ -212,7 +210,6 @@ class CommercialPaperTest {
                 timeWindow(TEST_TX_TIME)
                 verifies()
             }
-
 
             transaction("Trade") {
                 input("paper")

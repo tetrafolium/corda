@@ -54,9 +54,9 @@ class TransactionSignature(bytes: ByteArray, val by: PublicKey, val signatureMet
         if (this === other) return true
         if (other !is TransactionSignature) return false
 
-        return (Arrays.equals(bytes, other.bytes)
-                && by == other.by
-                && signatureMetadata == other.signatureMetadata)
+        return (Arrays.equals(bytes, other.bytes) &&
+                by == other.by &&
+                signatureMetadata == other.signatureMetadata)
     }
 
     override fun hashCode(): Int {

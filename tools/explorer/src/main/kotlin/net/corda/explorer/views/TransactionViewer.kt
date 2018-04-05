@@ -26,7 +26,6 @@ import net.corda.core.crypto.toStringShort
 import net.corda.core.identity.AbstractParty
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
-import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.WireTransaction
 import net.corda.core.utilities.toBase58String
 import net.corda.explorer.AmountDiff
@@ -68,14 +67,14 @@ class TransactionViewer : CordaView("Transactions") {
      * have the data.
      */
     data class Transaction(
-            val tx: PartiallyResolvedTransaction,
-            val id: SecureHash,
-            val inputs: Inputs,
-            val outputs: Outputs,
-            val inputParties: ObservableList<List<ObservableValue<Party?>>>,
-            val outputParties: ObservableList<List<ObservableValue<Party?>>>,
-            val commandTypes: List<Class<CommandData>>,
-            val totalValueEquiv: ObservableValue<AmountDiff<Currency>>
+        val tx: PartiallyResolvedTransaction,
+        val id: SecureHash,
+        val inputs: Inputs,
+        val outputs: Outputs,
+        val inputParties: ObservableList<List<ObservableValue<Party?>>>,
+        val outputParties: ObservableList<List<ObservableValue<Party?>>>,
+        val commandTypes: List<Class<CommandData>>,
+        val totalValueEquiv: ObservableValue<AmountDiff<Currency>>
     )
 
     data class Inputs(val resolved: ObservableList<StateAndRef<ContractState>>, val unresolved: ObservableList<StateRef>)
@@ -319,10 +318,12 @@ class TransactionViewer : CordaView("Transactions") {
 /**
  * We calculate the total value by subtracting relevant input states and adding relevant output states, as long as they're cash
  */
-private fun calculateTotalEquiv(myIdentity: Party?,
-                                reportingCurrencyExchange: Pair<Currency, (Amount<Currency>) -> Amount<Currency>>,
-                                inputs: List<ContractState>,
-                                outputs: List<ContractState>): AmountDiff<Currency> {
+private fun calculateTotalEquiv(
+    myIdentity: Party?,
+    reportingCurrencyExchange: Pair<Currency, (Amount<Currency>) -> Amount<Currency>>,
+    inputs: List<ContractState>,
+    outputs: List<ContractState>
+): AmountDiff<Currency> {
     val (reportingCurrency, exchange) = reportingCurrencyExchange
     fun List<ContractState>.sum() = this.map { it as? Cash.State }
             .filterNotNull()

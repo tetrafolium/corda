@@ -37,15 +37,15 @@ open class AbstractRPCTest {
     lateinit var mode: RPCTestMode
 
     data class TestProxy<out I : RPCOps>(
-            val ops: I,
-            val createSession: () -> ClientSession
+        val ops: I,
+        val createSession: () -> ClientSession
     )
 
     inline fun <reified I : RPCOps> RPCDriverDSL.testProxy(
-            ops: I,
-            rpcUser: User = rpcTestUser,
-            clientConfiguration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default,
-            serverConfiguration: RPCServerConfiguration = RPCServerConfiguration.default
+        ops: I,
+        rpcUser: User = rpcTestUser,
+        clientConfiguration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default,
+        serverConfiguration: RPCServerConfiguration = RPCServerConfiguration.default
     ): TestProxy<I> {
         return when (mode) {
             RPCTestMode.InVm ->

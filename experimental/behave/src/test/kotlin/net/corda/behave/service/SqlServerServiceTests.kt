@@ -15,5 +15,4 @@ class SqlServerServiceTests {
         service.stop()
         assertThat(didStart).isTrue()
     }
-
 }

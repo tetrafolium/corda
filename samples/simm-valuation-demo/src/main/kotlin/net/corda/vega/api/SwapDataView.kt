@@ -13,22 +13,26 @@ import java.time.LocalDate
  * View of an IRS trade that is converted to JSON when served.
  */
 data class SwapDataView(
-        val id: String,
-        val product: String,
-        val tradeDate: LocalDate,
-        val effectiveDate: LocalDate,
-        val maturityDate: LocalDate,
-        val currency: String,
-        val buySell: BuySell,
-        val notional: BigDecimal,
-        var IM: Double? = null,
-        var MTM: Double? = null,
-        var margined: Boolean = false,
-        var marginedText: String = "❌️")
+    val id: String,
+    val product: String,
+    val tradeDate: LocalDate,
+    val effectiveDate: LocalDate,
+    val maturityDate: LocalDate,
+    val currency: String,
+    val buySell: BuySell,
+    val notional: BigDecimal,
+    var IM: Double? = null,
+    var MTM: Double? = null,
+    var margined: Boolean = false,
+    var marginedText: String = "❌️"
+)
 
-fun SwapData.toView(viewingParty: Party, portfolio: Portfolio? = null,
-                    presentValue: MultiCurrencyAmount? = null,
-                    IM: InitialMarginTriple? = null): SwapDataView {
+fun SwapData.toView(
+    viewingParty: Party,
+    portfolio: Portfolio? = null,
+    presentValue: MultiCurrencyAmount? = null,
+    IM: InitialMarginTriple? = null
+): SwapDataView {
     val isBuyer = viewingParty.owningKey == buyer.second
     val trade = if (isBuyer) toFixedLeg() else toFloatingLeg()
     val leg = getLegForParty(viewingParty)

@@ -30,4 +30,3 @@ fun intFormatter(): TextFormatter<Int> = Pattern.compile("\\d*").run {
         if (matcher(newText).matches()) change else null
     }
 }
-

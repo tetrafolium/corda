@@ -10,9 +10,9 @@ import javafx.collections.ObservableMap
  * tables.
  */
 class LeftOuterJoinedMap<K : Any, A, B, C>(
-        val leftTable: ObservableMap<K, out A>,
-        val rightTable: ObservableMap<K, out B>,
-        assemble: (K, A, ObservableValue<B?>) -> C
+    val leftTable: ObservableMap<K, out A>,
+    val rightTable: ObservableMap<K, out B>,
+    assemble: (K, A, ObservableValue<B?>) -> C
 ) : ReadOnlyBackedObservableMapBase<K, C, SimpleObjectProperty<B?>>() {
     init {
         leftTable.forEach { entry ->

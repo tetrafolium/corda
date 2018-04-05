@@ -25,9 +25,11 @@ import net.corda.core.utilities.ProgressTracker
  * @param extraRecipients A list of additional participants to inform of the transaction.
  */
 @InitiatingFlow
-class FinalityFlow(val transaction: SignedTransaction,
-                   private val extraRecipients: Set<Party>,
-                   override val progressTracker: ProgressTracker) : FlowLogic<SignedTransaction>() {
+class FinalityFlow(
+    val transaction: SignedTransaction,
+    private val extraRecipients: Set<Party>,
+    override val progressTracker: ProgressTracker
+) : FlowLogic<SignedTransaction>() {
     constructor(transaction: SignedTransaction, extraParticipants: Set<Party>) : this(transaction, extraParticipants, tracker())
     constructor(transaction: SignedTransaction) : this(transaction, emptySet(), tracker())
     constructor(transaction: SignedTransaction, progressTracker: ProgressTracker) : this(transaction, emptySet(), progressTracker)

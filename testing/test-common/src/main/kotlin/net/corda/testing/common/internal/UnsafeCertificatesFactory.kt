@@ -21,12 +21,13 @@ import java.util.*
 import javax.security.auth.x500.X500Principal
 
 class UnsafeCertificatesFactory(
-        defaults: Defaults = defaults(),
-        private val keyType: String = defaults.keyType,
-        private val signatureAlgorithm: String = defaults.signatureAlgorithm,
-        private val keySize: Int = defaults.keySize,
-        private val certificatesValidityWindow: CertificateValidityWindow = defaults.certificatesValidityWindow,
-        private val keyStoreType: String = defaults.keyStoreType) {
+    defaults: Defaults = defaults(),
+    private val keyType: String = defaults.keyType,
+    private val signatureAlgorithm: String = defaults.signatureAlgorithm,
+    private val keySize: Int = defaults.keySize,
+    private val certificatesValidityWindow: CertificateValidityWindow = defaults.certificatesValidityWindow,
+    private val keyStoreType: String = defaults.keyStoreType
+) {
 
     companion object {
         private const val KEY_TYPE_RSA = "RSA"
@@ -39,11 +40,12 @@ class UnsafeCertificatesFactory(
     }
 
     data class Defaults(
-            val keyType: String,
-            val signatureAlgorithm: String,
-            val keySize: Int,
-            val certificatesValidityWindow: CertificateValidityWindow,
-            val keyStoreType: String)
+        val keyType: String,
+        val signatureAlgorithm: String,
+        val keySize: Int,
+        val certificatesValidityWindow: CertificateValidityWindow,
+        val keyStoreType: String
+    )
 
     fun createSelfSigned(name: X500Name): UnsafeCertificate = createSelfSigned(name, keyType, signatureAlgorithm, keySize, certificatesValidityWindow)
 

@@ -37,16 +37,16 @@ import javafx.collections.transformation.TransformationList
  * @param assemble Function to assemble the aggregation into the exposed [A].
  */
 class AggregatedList<A, E : Any, K : Any>(
-        list: ObservableList<out E>,
-        val toKey: (E) -> K,
-        val assemble: (K, ObservableList<E>) -> A
+    list: ObservableList<out E>,
+    val toKey: (E) -> K,
+    val assemble: (K, ObservableList<E>) -> A
 ) : TransformationList<A, E>(list) {
 
     private class AggregationGroup<E, out A>(
-            val keyHashCode: Int,
-            val value: A,
+        val keyHashCode: Int,
+        val value: A,
             // Invariant: sorted by E.hashCode()
-            val elements: ObservableList<E>
+        val elements: ObservableList<E>
     )
 
     // Invariant: sorted by K.hashCode()

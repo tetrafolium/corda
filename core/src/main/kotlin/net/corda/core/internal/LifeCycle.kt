@@ -20,8 +20,8 @@ class LifeCycle<S : Enum<S>>(initial: S) {
 
     /** Assert something about the current state atomically. */
     fun requireState(
-            errorMessage: (S) -> String = { "Predicate failed on state $it" },
-            predicate: (S) -> Boolean
+        errorMessage: (S) -> String = { "Predicate failed on state $it" },
+        predicate: (S) -> Boolean
     ) {
         lock.readLock().withLock {
             require(predicate(state)) { errorMessage(state) }

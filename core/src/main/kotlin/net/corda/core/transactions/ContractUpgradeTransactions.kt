@@ -24,14 +24,14 @@ import java.security.PublicKey
 /** A special transaction for upgrading the contract of a state. */
 @CordaSerializable
 data class ContractUpgradeWireTransaction(
-        /**
-         * Contains all of the transaction components in serialized form.
-         * This is used for calculating the transaction id in a deterministic fashion, since re-serializing properties
-         * may result in a different byte sequence depending on the serialization context.
-         */
-        val serializedComponents: List<OpaqueBytes>,
-        /** Required for hiding components in [ContractUpgradeFilteredTransaction]. */
-        val privacySalt: PrivacySalt = PrivacySalt()
+    /**
+     * Contains all of the transaction components in serialized form.
+     * This is used for calculating the transaction id in a deterministic fashion, since re-serializing properties
+     * may result in a different byte sequence depending on the serialization context.
+     */
+    val serializedComponents: List<OpaqueBytes>,
+    /** Required for hiding components in [ContractUpgradeFilteredTransaction]. */
+    val privacySalt: PrivacySalt = PrivacySalt()
 ) : CoreTransaction() {
     override val inputs: List<StateRef> = serializedComponents[INPUTS.ordinal].deserialize()
     override val notary: Party by lazy { serializedComponents[NOTARY.ordinal].deserialize<Party>() }
@@ -53,7 +53,7 @@ data class ContractUpgradeWireTransaction(
                 "outputs can only be obtained from a resolved ContractUpgradeLedgerTransaction")
 
     override val id: SecureHash by lazy {
-        val componentHashes =serializedComponents.mapIndexed { index, component ->
+        val componentHashes = serializedComponents.mapIndexed { index, component ->
             componentHash(nonces[index], component)
         }
         combinedHash(componentHashes)
@@ -111,13 +111,13 @@ data class ContractUpgradeWireTransaction(
  */
 @CordaSerializable
 data class ContractUpgradeFilteredTransaction(
-        /** Transaction components that are exposed. */
-        val visibleComponents: Map<Int, FilteredComponent>,
-        /**
-         * Hashes of the transaction components that are not revealed in this transaction.
-         * Required for computing the transaction id.
-         */
-        val hiddenComponents: Map<Int, SecureHash>
+    /** Transaction components that are exposed. */
+    val visibleComponents: Map<Int, FilteredComponent>,
+    /**
+     * Hashes of the transaction components that are not revealed in this transaction.
+     * Required for computing the transaction id.
+     */
+    val hiddenComponents: Map<Int, SecureHash>
 ) : CoreTransaction() {
     override val inputs: List<StateRef> by lazy {
         visibleComponents[INPUTS.ordinal]?.component?.deserialize<List<StateRef>>()
@@ -158,15 +158,15 @@ data class ContractUpgradeFilteredTransaction(
  * *participants* fields, so full resolution is needed for signature verification.
  */
 data class ContractUpgradeLedgerTransaction(
-        override val inputs: List<StateAndRef<ContractState>>,
-        override val notary: Party,
-        val legacyContractAttachment: Attachment,
-        val upgradedContractClassName: ContractClassName,
-        val upgradedContractAttachment: Attachment,
-        override val id: SecureHash,
-        val privacySalt: PrivacySalt,
-        override val sigs: List<TransactionSignature>,
-        private val networkParameters: NetworkParameters
+    override val inputs: List<StateAndRef<ContractState>>,
+    override val notary: Party,
+    val legacyContractAttachment: Attachment,
+    val upgradedContractClassName: ContractClassName,
+    val upgradedContractAttachment: Attachment,
+    override val id: SecureHash,
+    val privacySalt: PrivacySalt,
+    override val sigs: List<TransactionSignature>,
+    private val networkParameters: NetworkParameters
 ) : FullTransaction(), TransactionWithSignatures {
     /** The legacy contract class name is determined by the first input state. */
     private val legacyContractClassName = inputs.first().state.contract

@@ -24,18 +24,19 @@ import java.util.concurrent.ForkJoinPool
  *     further limited by the batches that [generate] returns.
  */
 data class LoadTestConfiguration(
-        val sshUser: String = System.getProperty("user.name"),
-        val localTunnelStartingPort: Int,
-        val nodeHosts: List<String>,
-        val rpcUser: User,
-        val remoteNodeDirectory: Path,
-        val rpcPort: Int,
-        val remoteSystemdServiceName: String,
-        val seed: Long?,
-        val mode: TestMode = TestMode.LOAD_TEST,
-        val executionFrequency: Int = 2,
-        val generateCount: Int = 10000,
-        val parallelism: Int = ForkJoinPool.getCommonPoolParallelism())
+    val sshUser: String = System.getProperty("user.name"),
+    val localTunnelStartingPort: Int,
+    val nodeHosts: List<String>,
+    val rpcUser: User,
+    val remoteNodeDirectory: Path,
+    val rpcPort: Int,
+    val remoteSystemdServiceName: String,
+    val seed: Long?,
+    val mode: TestMode = TestMode.LOAD_TEST,
+    val executionFrequency: Int = 2,
+    val generateCount: Int = 10000,
+    val parallelism: Int = ForkJoinPool.getCommonPoolParallelism()
+)
 
 data class RemoteNode(val hostname: String, val systemdServiceName: String, val sshUserName: String, val rpcUser: User, val rpcPort: Int, val nodeDirectory: Path)
 

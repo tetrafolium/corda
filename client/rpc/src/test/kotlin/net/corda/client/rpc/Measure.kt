@@ -34,8 +34,8 @@ private fun <R> measure(paramIterables: List<Iterable<Any?>>, kCallable: KCallab
 }
 
 data class MeasureResult<out R>(
-        val parameters: List<Pair<String?, Any?>>,
-        val result: R
+    val parameters: List<Pair<String?, Any?>>,
+    val result: R
 )
 
 fun <A> iterateLexical(iterables: List<Iterable<A>>): Iterable<List<A>> {

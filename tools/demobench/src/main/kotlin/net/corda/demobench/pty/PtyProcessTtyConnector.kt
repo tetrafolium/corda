@@ -11,9 +11,9 @@ import java.nio.charset.Charset
  * @author traff
  */
 class PtyProcessTtyConnector(
-        private val name: String,
-        private val process: PtyProcess,
-        charset: Charset
+    private val name: String,
+    private val process: PtyProcess,
+    charset: Charset
 ) : ProcessTtyConnector(process.zeroFiltered(), charset) {
 
     override fun getName() = name
@@ -30,5 +30,4 @@ class PtyProcessTtyConnector(
             )
         }
     }
-
 }

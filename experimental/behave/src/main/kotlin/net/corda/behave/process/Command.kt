@@ -12,10 +12,10 @@ import java.time.Duration
 import java.util.concurrent.CountDownLatch
 
 open class Command(
-        private val command: List<String>,
-        private val directory: File = currentDirectory,
-        private val timeout: Duration = 2.minutes
-): Closeable {
+    private val command: List<String>,
+    private val directory: File = currentDirectory,
+    private val timeout: Duration = 2.minutes
+) : Closeable {
 
     protected val log = getLogger<Command>()
 
@@ -151,7 +151,5 @@ open class Command(
     companion object {
 
         private val WAIT_BEFORE_KILL: Duration = 5.seconds
-
     }
-
 }

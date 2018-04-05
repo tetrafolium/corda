@@ -12,7 +12,6 @@ import net.corda.core.contracts.Amount
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateRef
 import net.corda.core.crypto.*
-import net.corda.core.crypto.CompositeKey
 import net.corda.core.identity.AbstractParty
 import net.corda.core.identity.AnonymousParty
 import net.corda.core.identity.CordaX500Name
@@ -26,10 +25,8 @@ import net.corda.core.serialization.deserialize
 import net.corda.core.serialization.serialize
 import net.corda.core.transactions.*
 import net.corda.core.utilities.OpaqueBytes
-import net.corda.core.utilities.base58ToByteArray
 import net.corda.core.utilities.base64ToByteArray
 import net.corda.core.utilities.toBase64
-import net.i2p.crypto.eddsa.EdDSAPublicKey
 import java.math.BigDecimal
 import java.security.PublicKey
 import java.util.*
@@ -118,8 +115,11 @@ object JacksonSupport {
      */
     @JvmStatic
     @JvmOverloads
-    fun createDefaultMapper(rpc: CordaRPCOps, factory: JsonFactory = JsonFactory(),
-                            fuzzyIdentityMatch: Boolean = false): ObjectMapper = configureMapper(RpcObjectMapper(rpc, factory, fuzzyIdentityMatch))
+    fun createDefaultMapper(
+        rpc: CordaRPCOps,
+        factory: JsonFactory = JsonFactory(),
+        fuzzyIdentityMatch: Boolean = false
+    ): ObjectMapper = configureMapper(RpcObjectMapper(rpc, factory, fuzzyIdentityMatch))
 
     /** For testing or situations where deserialising parties is not required */
     @JvmStatic
@@ -135,8 +135,11 @@ object JacksonSupport {
      */
     @JvmStatic
     @JvmOverloads
-    fun createInMemoryMapper(identityService: IdentityService, factory: JsonFactory = JsonFactory(),
-                             fuzzyIdentityMatch: Boolean = false) = configureMapper(IdentityObjectMapper(identityService, factory, fuzzyIdentityMatch))
+    fun createInMemoryMapper(
+        identityService: IdentityService,
+        factory: JsonFactory = JsonFactory(),
+        fuzzyIdentityMatch: Boolean = false
+    ) = configureMapper(IdentityObjectMapper(identityService, factory, fuzzyIdentityMatch))
 
     private fun configureMapper(mapper: ObjectMapper): ObjectMapper = mapper.apply {
         enable(SerializationFeature.INDENT_OUTPUT)
@@ -348,4 +351,3 @@ object JacksonSupport {
         @JsonIgnore abstract fun getOutputStates(): List<ContractState>
     }
 }
-

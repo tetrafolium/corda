@@ -15,6 +15,6 @@ class ContractAttachment @JvmOverloads constructor (val attachment: Attachment, 
     val allContracts: Set<ContractClassName> get() = additionalContracts + contract
 
     override fun toString(): String {
-        return "ContractAttachment(attachment=${attachment.id}, contracts='${allContracts}', uploader='${uploader}')"
+        return "ContractAttachment(attachment=${attachment.id}, contracts='$allContracts', uploader='$uploader')"
     }
 }

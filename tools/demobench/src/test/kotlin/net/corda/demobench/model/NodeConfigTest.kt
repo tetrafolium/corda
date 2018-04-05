@@ -75,14 +75,14 @@ class NodeConfigTest {
     }
 
     private fun createConfig(
-            legalName: CordaX500Name = CordaX500Name(organisation = "Unknown", locality = "Nowhere", country = "GB"),
-            p2pPort: Int = -1,
-            rpcPort: Int = -1,
-            rpcAdminPort: Int = -1,
-            webPort: Int = -1,
-            h2port: Int = -1,
-            notary: NotaryService?,
-            users: List<User> = listOf(user("guest"))
+        legalName: CordaX500Name = CordaX500Name(organisation = "Unknown", locality = "Nowhere", country = "GB"),
+        p2pPort: Int = -1,
+        rpcPort: Int = -1,
+        rpcAdminPort: Int = -1,
+        webPort: Int = -1,
+        h2port: Int = -1,
+        notary: NotaryService?,
+        users: List<User> = listOf(user("guest"))
     ): NodeConfig {
         return NodeConfig(
                 myLegalName = legalName,

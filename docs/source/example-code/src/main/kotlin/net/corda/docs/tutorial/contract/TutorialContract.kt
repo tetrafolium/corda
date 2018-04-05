@@ -87,8 +87,12 @@ class CommercialPaper : Contract {
     // DOCEND 2
 
     // DOCSTART 5
-    fun generateIssue(issuance: PartyAndReference, faceValue: Amount<Issued<Currency>>, maturityDate: Instant,
-                      notary: Party): TransactionBuilder {
+    fun generateIssue(
+        issuance: PartyAndReference,
+        faceValue: Amount<Issued<Currency>>,
+        maturityDate: Instant,
+        notary: Party
+    ): TransactionBuilder {
         val state = State(issuance, issuance.party, faceValue, maturityDate)
         val stateAndContract = StateAndContract(state, CP_PROGRAM_ID)
         return TransactionBuilder(notary = notary).withItems(stateAndContract, Command(Commands.Issue(), issuance.party.owningKey))
@@ -123,10 +127,10 @@ class CommercialPaper : Contract {
 
 // DOCSTART 1
 data class State(
-        val issuance: PartyAndReference,
-        override val owner: AbstractParty,
-        val faceValue: Amount<Issued<Currency>>,
-        val maturityDate: Instant
+    val issuance: PartyAndReference,
+    override val owner: AbstractParty,
+    val faceValue: Amount<Issued<Currency>>,
+    val maturityDate: Instant
 ) : OwnableState {
     override val participants = listOf(owner)
 

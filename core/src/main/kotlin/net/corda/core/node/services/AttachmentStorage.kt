@@ -70,4 +70,3 @@ interface AttachmentStorage {
      */
     fun hasAttachment(attachmentId: AttachmentId): Boolean
 }
-

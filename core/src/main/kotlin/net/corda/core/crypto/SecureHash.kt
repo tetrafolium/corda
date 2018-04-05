@@ -122,4 +122,3 @@ fun ByteArray.sha256(): SecureHash.SHA256 = SecureHash.sha256(this)
  */
 fun OpaqueBytes.sha256(): SecureHash.SHA256 = SecureHash.sha256(this.bytes)
 
-

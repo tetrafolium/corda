@@ -6,8 +6,8 @@ import java.time.Duration
 import java.util.concurrent.CountDownLatch
 
 class ConjunctiveWatch(
-        private val left: Watch,
-        private val right: Watch
+    private val left: Watch,
+    private val right: Watch
 ) : Watch() {
 
     override fun await(observable: Observable<String>, timeout: Duration): Boolean {
@@ -19,5 +19,4 @@ class ConjunctiveWatch(
         }
         return latch.await(timeout)
     }
-
 }

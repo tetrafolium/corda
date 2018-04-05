@@ -60,9 +60,12 @@ sealed class CriteriaExpression<O, out T> {
     data class BinaryLogical<O>(val left: CriteriaExpression<O, Boolean>, val right: CriteriaExpression<O, Boolean>, val operator: BinaryLogicalOperator) : CriteriaExpression<O, Boolean>()
     data class Not<O>(val expression: CriteriaExpression<O, Boolean>) : CriteriaExpression<O, Boolean>()
     data class ColumnPredicateExpression<O, C>(val column: Column<O, C>, val predicate: ColumnPredicate<C>) : CriteriaExpression<O, Boolean>()
-    data class AggregateFunctionExpression<O, C>(val column: Column<O, C>, val predicate: ColumnPredicate<C>,
-                                                 val groupByColumns: List<Column<O, C>>?,
-                                                 val orderBy: Sort.Direction?) : CriteriaExpression<O, Boolean>()
+    data class AggregateFunctionExpression<O, C>(
+        val column: Column<O, C>,
+        val predicate: ColumnPredicate<C>,
+        val groupByColumns: List<Column<O, C>>?,
+        val orderBy: Sort.Direction?
+    ) : CriteriaExpression<O, Boolean>()
 }
 
 @CordaSerializable
@@ -175,8 +178,9 @@ data class Sort(val columns: Collection<SortColumn>) : BaseSort() {
 
     @CordaSerializable
     data class SortColumn(
-            val sortAttribute: SortAttribute,
-            val direction: Sort.Direction = Sort.Direction.ASC)
+        val sortAttribute: SortAttribute,
+        val direction: Sort.Direction = Sort.Direction.ASC
+    )
 }
 
 @CordaSerializable
@@ -190,8 +194,9 @@ data class AttachmentSort(val columns: Collection<AttachmentSortColumn>) : BaseS
 
     @CordaSerializable
     data class AttachmentSortColumn(
-            val sortAttribute: AttachmentSortAttribute,
-            val direction: Sort.Direction = Sort.Direction.ASC)
+        val sortAttribute: AttachmentSortAttribute,
+        val direction: Sort.Direction = Sort.Direction.ASC
+    )
 }
 
 @CordaSerializable
@@ -207,8 +212,10 @@ sealed class SortAttribute {
      * [entityStateColumnName] should reference an entity attribute name as defined by the associated mapped schema
      * (for example, [CashSchemaV1.PersistentCashState::currency.name])
      */
-    data class Custom(val entityStateClass: Class<out PersistentState>,
-                      val entityStateColumnName: String) : SortAttribute()
+    data class Custom(
+        val entityStateClass: Class<out PersistentState>,
+        val entityStateColumnName: String
+    ) : SortAttribute()
 }
 
 @CordaSerializable
@@ -219,11 +226,11 @@ object Builder {
 
     fun <R> Field.predicate(predicate: ColumnPredicate<R>) = CriteriaExpression.ColumnPredicateExpression(Column<Any, R>(this), predicate)
 
-    fun <O, R> KProperty1<O, R?>.functionPredicate(predicate: ColumnPredicate<R>, groupByColumns: List<Column<O, R>>? = null, orderBy: Sort.Direction? = null)
-            = CriteriaExpression.AggregateFunctionExpression(Column(this), predicate, groupByColumns, orderBy)
+    fun <O, R> KProperty1<O, R?>.functionPredicate(predicate: ColumnPredicate<R>, groupByColumns: List<Column<O, R>>? = null, orderBy: Sort.Direction? = null) =
+            CriteriaExpression.AggregateFunctionExpression(Column(this), predicate, groupByColumns, orderBy)
 
-    fun <R> Field.functionPredicate(predicate: ColumnPredicate<R>, groupByColumns: List<Column<Any, R>>? = null, orderBy: Sort.Direction? = null)
-            = CriteriaExpression.AggregateFunctionExpression(Column<Any, R>(this), predicate, groupByColumns, orderBy)
+    fun <R> Field.functionPredicate(predicate: ColumnPredicate<R>, groupByColumns: List<Column<Any, R>>? = null, orderBy: Sort.Direction? = null) =
+            CriteriaExpression.AggregateFunctionExpression(Column<Any, R>(this), predicate, groupByColumns, orderBy)
 
     fun <O, R : Comparable<R>> KProperty1<O, R?>.comparePredicate(operator: BinaryComparisonOperator, value: R) = predicate(compare(operator, value))
     fun <R : Comparable<R>> Field.comparePredicate(operator: BinaryComparisonOperator, value: R) = predicate(compare(operator, value))
@@ -278,7 +285,6 @@ object Builder {
     fun notLike(string: String) = ColumnPredicate.Likeness(LikenessOperator.NOT_LIKE, string)
     fun <R> isNull() = ColumnPredicate.NullExpression<R>(NullOperator.IS_NULL)
     fun <R> isNotNull() = ColumnPredicate.NullExpression<R>(NullOperator.NOT_NULL)
-
 
     fun <O> KProperty1<O, String?>.like(string: String) = predicate(ColumnPredicate.Likeness(LikenessOperator.LIKE, string))
     @JvmStatic

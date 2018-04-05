@@ -104,8 +104,9 @@ abstract class FlowSession {
      */
     @Suspendable
     abstract fun <R : Any> sendAndReceive(
-            receiveType: Class<R>,
-            payload: Any, maySkipCheckpoint: Boolean
+        receiveType: Class<R>,
+        payload: Any,
+        maySkipCheckpoint: Boolean
     ): UntrustworthyData<R>
 
     /**

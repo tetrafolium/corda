@@ -47,13 +47,11 @@ class Swaption {
             }
 
             highStreetBank may {
-                "expire".givenThat(after("2016-09-01"))
-                {
+                "expire".givenThat(after("2016-09-01")) {
                     zero
                 }
             }
         }
-
     }
 
     val stateInitial = UniversalContract.State(listOf(DUMMY_NOTARY), contractInitial)
@@ -76,6 +74,4 @@ class Swaption {
     fun `pretty print`() {
         println ( prettyPrint(contractInitial) )
     }
-
-
 }

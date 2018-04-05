@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit
  * [Rate] holds a quantity denoting the frequency of some event e.g. 100 times per second or 2 times per day.
  */
 data class Rate(
-        val numberOfEvents: Long,
-        val perTimeUnit: TimeUnit
+    val numberOfEvents: Long,
+    val perTimeUnit: TimeUnit
 ) {
     /**
      * Returns the interval between two subsequent events.
@@ -23,7 +23,7 @@ data class Rate(
      */
     operator fun times(inUnit: TimeUnit): Long = inUnit.convert(numberOfEvents, perTimeUnit)
 
-    override fun toString(): String = "$numberOfEvents / ${perTimeUnit.name.dropLast(1).toLowerCase()}"  // drop the "s" at the end
+    override fun toString(): String = "$numberOfEvents / ${perTimeUnit.name.dropLast(1).toLowerCase()}" // drop the "s" at the end
 }
 
 operator fun Long.div(timeUnit: TimeUnit) = Rate(this, timeUnit)

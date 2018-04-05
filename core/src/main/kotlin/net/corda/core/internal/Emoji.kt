@@ -46,7 +46,6 @@ object Emoji {
     @JvmStatic
     val CODE_SOON: String = codePointsString(0x1F51C)
 
-
     /**
      * When non-null, toString() methods are allowed to use emoji in the output as we're going to render them to a
      * sufficiently capable text surface.
@@ -74,7 +73,7 @@ object Emoji {
 
     inline fun <T> renderIfSupported(body: () -> T): T {
         if (hasEmojiTerminal)
-            emojiMode.set(this)   // Could be any object.
+            emojiMode.set(this) // Could be any object.
 
         try {
             return body()
@@ -90,7 +89,7 @@ object Emoji {
         if (emojiMode.get() != null)
             return obj.toString()
 
-        emojiMode.set(this)   // Could be any object.
+        emojiMode.set(this) // Could be any object.
         try {
             return obj.toString()
         } finally {

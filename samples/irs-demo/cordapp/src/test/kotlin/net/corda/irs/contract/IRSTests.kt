@@ -228,7 +228,6 @@ fun createDummyIRS(irsSelect: Int): InterestRateSwap.State {
             )
 
             return InterestRateSwap.State(fixedLeg = fixedLeg, floatingLeg = floatingLeg, calculation = calculation, common = common, oracle = DUMMY_PARTY)
-
         }
         else -> TODO("IRS number $irsSelect not defined")
     }
@@ -409,7 +408,6 @@ class IRSTests {
         // This does not throw an exception in the test itself; it evaluates the above and they will throw if they do not pass.
     }
 
-
     /**
      * Generates a typical transactional history for an IRS.
      */
@@ -584,7 +582,6 @@ class IRSTests {
             this `fails with` "The termination dates are aligned"
         }
 
-
         val modifiedIRS4 = irs.copy(floatingLeg = irs.floatingLeg.copy(effectiveDate = irs.fixedLeg.effectiveDate.minusDays(1)))
         transaction {
             attachments(IRS_PROGRAM_ID)
@@ -594,7 +591,6 @@ class IRSTests {
             this `fails with` "The effective dates are aligned"
         }
     }
-
 
     @Test
     fun `various fixing tests`() {
@@ -672,7 +668,6 @@ class IRSTests {
             }
         }
     }
-
 
     /**
      * This returns an example of transactions that are grouped by TradeId and then a fixing applied.

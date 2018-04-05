@@ -91,7 +91,7 @@ class ObligationTests {
     private val mockService = MockServices(listOf("net.corda.finance.contracts.asset"), MEGA_CORP.name, identityService)
     private val ledgerServices get() = MockServices(listOf("net.corda.finance.contracts.asset", "net.corda.testing.contracts"), MEGA_CORP.name, identityService)
     private fun cashObligationTestRoots(
-            group: LedgerDSL<TestTransactionDSLInterpreter, TestLedgerDSLInterpreter>
+        group: LedgerDSL<TestTransactionDSLInterpreter, TestLedgerDSLInterpreter>
     ) = group.apply {
         unverifiedTransaction {
             attachments(Obligation.PROGRAM_ID)
@@ -251,7 +251,6 @@ class ObligationTests {
                     beneficiary = MINI_CORP, notary = DUMMY_NOTARY)
         }.toWireTransaction(miniCorpServices)
 
-
         // Include the previously issued obligation in a new issuance command
         val ptx = TransactionBuilder(DUMMY_NOTARY)
         ptx.addInputState(tx.outRef<Obligation.State<Currency>>(0))
@@ -314,7 +313,6 @@ class ObligationTests {
     private inline fun <reified T : ContractState> getStateAndRef(state: T, contractClassName: ContractClassName): StateAndRef<T> {
         val txState = TransactionState(state, contractClassName, DUMMY_NOTARY)
         return StateAndRef(txState, StateRef(SecureHash.randomSHA256(), 0))
-
     }
 
     /** Test generating a transaction to mark outputs as having defaulted. */
@@ -741,7 +739,6 @@ class ObligationTests {
                 }
             }
         }
-
     }
 
     @Test

@@ -17,10 +17,13 @@ class DummyDealContract : Contract {
     override fun verify(tx: LedgerTransaction) {}
 
     data class State(
-            override val participants: List<AbstractParty>,
-            override val linearId: UniqueIdentifier) : DealState, QueryableState {
-        constructor(participants: List<AbstractParty> = listOf(),
-                    ref: String) : this(participants, UniqueIdentifier(ref))
+        override val participants: List<AbstractParty>,
+        override val linearId: UniqueIdentifier
+    ) : DealState, QueryableState {
+        constructor(
+            participants: List<AbstractParty> = listOf(),
+            ref: String
+        ) : this(participants, UniqueIdentifier(ref))
 
         override fun generateAgreement(notary: Party): TransactionBuilder {
             throw UnsupportedOperationException("not implemented")

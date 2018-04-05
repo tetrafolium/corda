@@ -73,8 +73,9 @@ import kotlin.reflect.jvm.kotlinFunction
  */
 @ThreadSafe
 open class StringToMethodCallParser<in T : Any> @JvmOverloads constructor(
-        targetType: Class<out T>,
-        private val om: ObjectMapper = JacksonSupport.createNonRpcMapper(YAMLFactory())) {
+    targetType: Class<out T>,
+    private val om: ObjectMapper = JacksonSupport.createNonRpcMapper(YAMLFactory())
+) {
     /** Same as the regular constructor but takes a Kotlin reflection [KClass] instead of a Java [Class]. */
     constructor(targetType: KClass<out T>) : this(targetType.java)
 
@@ -180,7 +181,7 @@ open class StringToMethodCallParser<in T : Any> @JvmOverloads constructor(
                     throw e
             }
         }
-        throw UnparseableCallException("No overloads of the method matched")  // Should be unreachable!
+        throw UnparseableCallException("No overloads of the method matched") // Should be unreachable!
     }
 
     /**
@@ -215,7 +216,7 @@ open class StringToMethodCallParser<in T : Any> @JvmOverloads constructor(
     val availableCommands: Map<String, String>
         get() {
             return methodMap.entries().map { entry ->
-                val (name, args) = entry   // TODO: Kotlin 1.1
+                val (name, args) = entry // TODO: Kotlin 1.1
                 val argStr = if (args.parameterCount == 0) "" else {
                     val paramNames = methodParamNames[name]!!
                     val typeNames = args.parameters.map { it.type.simpleName }

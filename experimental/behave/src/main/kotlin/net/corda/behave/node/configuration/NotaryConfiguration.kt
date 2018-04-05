@@ -12,5 +12,4 @@ class NotaryConfiguration(private val notaryType: NotaryType) : ConfigurationTem
                     "notary { validating = true }"
             }
         }
-
 }

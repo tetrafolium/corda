@@ -5,22 +5,19 @@ import net.corda.core.internal.concurrent.map
 import net.corda.core.utilities.contextLogger
 import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.NodeHandle
-import net.corda.testing.driver.PortAllocation
 import net.corda.testing.driver.WebserverHandle
 import net.corda.testing.driver.internal.NodeHandleInternal
-import net.corda.testing.node.NotarySpec
 import net.corda.testing.node.internal.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.ConnectException
 import java.net.URL
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
 
 fun <A> springDriver(
-        defaultParameters: DriverParameters = DriverParameters(),
-        dsl: SpringBootDriverDSL.() -> A
+    defaultParameters: DriverParameters = DriverParameters(),
+    dsl: SpringBootDriverDSL.() -> A
 ): A {
     return genericDriver(
             defaultParameters = defaultParameters,

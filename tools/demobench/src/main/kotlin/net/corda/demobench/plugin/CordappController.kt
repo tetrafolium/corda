@@ -54,7 +54,6 @@ class CordappController : Controller() {
         else
             Stream.empty()
     }
-
 }
 
 fun Path.isCordapp(): Boolean = Files.isReadable(this) && this.fileName.toString().endsWith(".jar")

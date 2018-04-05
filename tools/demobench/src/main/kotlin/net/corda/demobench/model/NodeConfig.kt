@@ -20,20 +20,20 @@ import java.util.Properties
  * to fill in the defaults so we're not required to specify them here.
  */
 data class NodeConfig(
-        val myLegalName: CordaX500Name,
-        val p2pAddress: NetworkHostAndPort,
-        val rpcAddress: NetworkHostAndPort,
-        val rpcAdminAddress: NetworkHostAndPort,
-        /** This is not used by the node but by the webserver which looks at node.conf. */
-        val webAddress: NetworkHostAndPort,
-        val notary: NotaryService?,
-        val h2port: Int,
-        val rpcUsers: List<User> = listOf(defaultUser),
-        /** This is an extra config used by the Cash app. */
-        val issuableCurrencies: List<String> = emptyList(),
-        /** Pass-through for generating node.conf with external DB */
-        val dataSourceProperties: Properties? = null,
-        val database: Properties? = null
+    val myLegalName: CordaX500Name,
+    val p2pAddress: NetworkHostAndPort,
+    val rpcAddress: NetworkHostAndPort,
+    val rpcAdminAddress: NetworkHostAndPort,
+    /** This is not used by the node but by the webserver which looks at node.conf. */
+    val webAddress: NetworkHostAndPort,
+    val notary: NotaryService?,
+    val h2port: Int,
+    val rpcUsers: List<User> = listOf(defaultUser),
+    /** This is an extra config used by the Cash app. */
+    val issuableCurrencies: List<String> = emptyList(),
+    /** Pass-through for generating node.conf with external DB */
+    val dataSourceProperties: Properties? = null,
+    val database: Properties? = null
 ) {
     companion object {
         val renderOptions: ConfigRenderOptions = ConfigRenderOptions.defaults().setOriginComments(false)
@@ -71,21 +71,21 @@ data class NodeConfig(
 }
 
 private data class NodeConfigurationData(
-        val myLegalName: CordaX500Name,
-        val p2pAddress: NetworkHostAndPort,
-        val rpcAddress: NetworkHostAndPort,
-        val notary: NotaryService?,
-        val h2port: Int,
-        val rpcUsers: List<User> = listOf(NodeConfig.defaultUser),
-        val useTestClock: Boolean,
-        val detectPublicIp: Boolean
+    val myLegalName: CordaX500Name,
+    val p2pAddress: NetworkHostAndPort,
+    val rpcAddress: NetworkHostAndPort,
+    val notary: NotaryService?,
+    val h2port: Int,
+    val rpcUsers: List<User> = listOf(NodeConfig.defaultUser),
+    val useTestClock: Boolean,
+    val detectPublicIp: Boolean
 )
 
 private data class WebServerConfigurationData(
-        val myLegalName: CordaX500Name,
-        val rpcAddress: NetworkHostAndPort,
-        val webAddress: NetworkHostAndPort,
-        val rpcUsers: List<User>
+    val myLegalName: CordaX500Name,
+    val rpcAddress: NetworkHostAndPort,
+    val webAddress: NetworkHostAndPort,
+    val rpcUsers: List<User>
 ) {
 
    fun asConfig() = toConfig()

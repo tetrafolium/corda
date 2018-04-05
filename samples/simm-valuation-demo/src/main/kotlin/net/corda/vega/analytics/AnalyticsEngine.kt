@@ -34,31 +34,38 @@ data class InitialMarginTriple(val first: Double, val second: Double, val third:
  */
 abstract class AnalyticsEngine {
 
-    data class CurrencyAmount(val currencyParameterSensitivities: CurrencyParameterSensitivities,
-                              val multiCurrencyAmount: MultiCurrencyAmount)
+    data class CurrencyAmount(
+        val currencyParameterSensitivities: CurrencyParameterSensitivities,
+        val multiCurrencyAmount: MultiCurrencyAmount
+    )
 
     abstract fun curveGroup(): CurveGroupDefinition
     abstract fun marketData(asOf: LocalDate): MarketData
     abstract fun sensitivities(
-            trades: List<ResolvedSwapTrade>,
-            pricer: DiscountingSwapProductPricer,
-            combinedRatesProvider: ImmutableRatesProvider
+        trades: List<ResolvedSwapTrade>,
+        pricer: DiscountingSwapProductPricer,
+        combinedRatesProvider: ImmutableRatesProvider
     ): Pair<CurrencyParameterSensitivities, MultiCurrencyAmount>
 
-    abstract fun margin(combinedRatesProvider: ImmutableRatesProvider,
-                        fxRateProvider: MarketDataFxRateProvider,
-                        totalSensitivities: CurrencyParameterSensitivities,
-                        totalCurrencyExposure: MultiCurrencyAmount): Triple<Double, Double, Double>
+    abstract fun margin(
+        combinedRatesProvider: ImmutableRatesProvider,
+        fxRateProvider: MarketDataFxRateProvider,
+        totalSensitivities: CurrencyParameterSensitivities,
+        totalCurrencyExposure: MultiCurrencyAmount
+    ): Triple<Double, Double, Double>
 
-    abstract fun calculateSensitivitiesBatch(trades: List<ResolvedSwapTrade>,
-                                             pricer: DiscountingSwapProductPricer,
-                                             ratesProvider: ImmutableRatesProvider): Map<ResolvedSwapTrade, CurrencyAmount>
+    abstract fun calculateSensitivitiesBatch(
+        trades: List<ResolvedSwapTrade>,
+        pricer: DiscountingSwapProductPricer,
+        ratesProvider: ImmutableRatesProvider
+    ): Map<ResolvedSwapTrade, CurrencyAmount>
 
-
-    abstract fun calculateMarginBatch(tradeSensitivitiesMap: Map<ResolvedSwapTrade, CurrencyAmount>,
-                                      combinedRatesProvider: ImmutableRatesProvider,
-                                      fxRateProvider: MarketDataFxRateProvider,
-                                      portfolioMargin: InitialMarginTriple): Map<ResolvedSwapTrade, InitialMarginTriple>
+    abstract fun calculateMarginBatch(
+        tradeSensitivitiesMap: Map<ResolvedSwapTrade, CurrencyAmount>,
+        combinedRatesProvider: ImmutableRatesProvider,
+        fxRateProvider: MarketDataFxRateProvider,
+        portfolioMargin: InitialMarginTriple
+    ): Map<ResolvedSwapTrade, InitialMarginTriple>
 }
 
 class OGSIMMAnalyticsEngine : AnalyticsEngine() {
@@ -92,9 +99,12 @@ class OGSIMMAnalyticsEngine : AnalyticsEngine() {
         return Pair(totalSensitivities, totalCurrencyExposure)
     }
 
-    override fun margin(combinedRatesProvider: ImmutableRatesProvider, fxRateProvider: MarketDataFxRateProvider,
-                        totalSensitivities: CurrencyParameterSensitivities,
-                        totalCurrencyExposure: MultiCurrencyAmount): Triple<Double, Double, Double> {
+    override fun margin(
+        combinedRatesProvider: ImmutableRatesProvider,
+        fxRateProvider: MarketDataFxRateProvider,
+        totalSensitivities: CurrencyParameterSensitivities,
+        totalCurrencyExposure: MultiCurrencyAmount
+    ): Triple<Double, Double, Double> {
         val normalizer = PortfolioNormalizer(Currency.EUR, combinedRatesProvider)
         val calculatorTotal = RwamBimmNotProductClassesCalculator(
                 fxRateProvider,
@@ -131,9 +141,11 @@ class OGSIMMAnalyticsEngine : AnalyticsEngine() {
      * Calculates the IM for the entire portfolio excluding each particular trade in order to determine that particular trades contribution to the IM.
      * We assume that eachg trade.info.id field is going to be unique
      */
-    override fun calculateSensitivitiesBatch(trades: List<ResolvedSwapTrade>,
-                                             pricer: DiscountingSwapProductPricer,
-                                             ratesProvider: ImmutableRatesProvider): Map<ResolvedSwapTrade, CurrencyAmount> {
+    override fun calculateSensitivitiesBatch(
+        trades: List<ResolvedSwapTrade>,
+        pricer: DiscountingSwapProductPricer,
+        ratesProvider: ImmutableRatesProvider
+    ): Map<ResolvedSwapTrade, CurrencyAmount> {
         return trades
                 .map {
                     val sensAmountPair = this.sensitivities(trades.omit(it), pricer, ratesProvider)
@@ -141,10 +153,12 @@ class OGSIMMAnalyticsEngine : AnalyticsEngine() {
                 }.toMap()
     }
 
-    override fun calculateMarginBatch(tradeSensitivitiesMap: Map<ResolvedSwapTrade, CurrencyAmount>,
-                                      combinedRatesProvider: ImmutableRatesProvider,
-                                      fxRateProvider: MarketDataFxRateProvider,
-                                      portfolioMargin: InitialMarginTriple): Map<ResolvedSwapTrade, InitialMarginTriple> {
+    override fun calculateMarginBatch(
+        tradeSensitivitiesMap: Map<ResolvedSwapTrade, CurrencyAmount>,
+        combinedRatesProvider: ImmutableRatesProvider,
+        fxRateProvider: MarketDataFxRateProvider,
+        portfolioMargin: InitialMarginTriple
+    ): Map<ResolvedSwapTrade, InitialMarginTriple> {
         val normalizer = PortfolioNormalizer(Currency.EUR, combinedRatesProvider) // TODO.. Not just EUR
         val calculatorTotal = RwamBimmNotProductClassesCalculator(fxRateProvider, Currency.EUR, IsdaConfiguration.INSTANCE)
         return tradeSensitivitiesMap.map {
@@ -163,4 +177,3 @@ class OGSIMMAnalyticsEngine : AnalyticsEngine() {
 fun <E> List<E>.omit(ignoree: ResolvedSwapTrade): List<E> {
     return this.filter { it is ResolvedSwapTrade && it != ignoree }
 }
-

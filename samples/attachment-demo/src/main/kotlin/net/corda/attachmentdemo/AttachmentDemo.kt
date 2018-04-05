@@ -108,9 +108,11 @@ private fun sender(rpc: CordaRPCOps, inputStream: InputStream, hash: SecureHash.
 // DOCEND 2
 
 @StartableByRPC
-class AttachmentDemoFlow(private val otherSide: Party,
-                         private val notary: Party,
-                         private val attachId: SecureHash.SHA256) : FlowLogic<SignedTransaction>() {
+class AttachmentDemoFlow(
+    private val otherSide: Party,
+    private val notary: Party,
+    private val attachId: SecureHash.SHA256
+) : FlowLogic<SignedTransaction>() {
 
     object SIGNING : ProgressTracker.Step("Signing transaction")
 

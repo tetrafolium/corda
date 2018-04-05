@@ -27,16 +27,16 @@ import java.time.Duration
  * This configuration may be used to tweak the internals of the RPC client.
  */
 data class CordaRPCClientConfigurationImpl(
-        override val minimumServerProtocolVersion: Int,
-        override val trackRpcCallSites: Boolean,
-        override val reapInterval: Duration,
-        override val observationExecutorPoolSize: Int,
-        override val connectionRetryInterval: Duration,
-        override val connectionRetryIntervalMultiplier: Double,
-        override val connectionMaxRetryInterval: Duration,
-        override val maxReconnectAttempts: Int,
-        override val maxFileSize: Int,
-        override val deduplicationCacheExpiry: Duration
+    override val minimumServerProtocolVersion: Int,
+    override val trackRpcCallSites: Boolean,
+    override val reapInterval: Duration,
+    override val observationExecutorPoolSize: Int,
+    override val connectionRetryInterval: Duration,
+    override val connectionRetryIntervalMultiplier: Double,
+    override val connectionMaxRetryInterval: Duration,
+    override val maxReconnectAttempts: Int,
+    override val maxFileSize: Int,
+    override val deduplicationCacheExpiry: Duration
 ) : CordaRPCClientConfiguration {
     companion object {
         private const val unlimitedReconnectAttempts = -1
@@ -58,15 +58,15 @@ data class CordaRPCClientConfigurationImpl(
 }
 
 class RPCClient<I : RPCOps>(
-        val transport: TransportConfiguration,
-        val rpcConfiguration: CordaRPCClientConfiguration = CordaRPCClientConfigurationImpl.default,
-        val serializationContext: SerializationContext = SerializationDefaults.RPC_CLIENT_CONTEXT
+    val transport: TransportConfiguration,
+    val rpcConfiguration: CordaRPCClientConfiguration = CordaRPCClientConfigurationImpl.default,
+    val serializationContext: SerializationContext = SerializationDefaults.RPC_CLIENT_CONTEXT
 ) {
     constructor(
-            hostAndPort: NetworkHostAndPort,
-            sslConfiguration: SSLConfiguration? = null,
-            configuration: CordaRPCClientConfiguration = CordaRPCClientConfigurationImpl.default,
-            serializationContext: SerializationContext = SerializationDefaults.RPC_CLIENT_CONTEXT
+        hostAndPort: NetworkHostAndPort,
+        sslConfiguration: SSLConfiguration? = null,
+        configuration: CordaRPCClientConfiguration = CordaRPCClientConfigurationImpl.default,
+        serializationContext: SerializationContext = SerializationDefaults.RPC_CLIENT_CONTEXT
     ) : this(tcpTransport(ConnectionDirection.Outbound(), hostAndPort, sslConfiguration), configuration, serializationContext)
 
     companion object {
@@ -74,11 +74,11 @@ class RPCClient<I : RPCOps>(
     }
 
     fun start(
-            rpcOpsClass: Class<I>,
-            username: String,
-            password: String,
-            externalTrace: Trace? = null,
-            impersonatedActor: Actor? = null
+        rpcOpsClass: Class<I>,
+        username: String,
+        password: String,
+        externalTrace: Trace? = null,
+        impersonatedActor: Actor? = null
     ): RPCConnection<I> {
         return log.logElapsedTime("Startup") {
             val clientAddress = SimpleString("${RPCApi.RPC_CLIENT_QUEUE_NAME_PREFIX}.$username.${random63BitValue()}")

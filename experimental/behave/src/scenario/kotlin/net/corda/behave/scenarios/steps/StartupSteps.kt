@@ -27,5 +27,4 @@ fun startupSteps(steps: StepsBlock) = steps {
             startup.hasPlatformVersion(name, platformVersion.toInt())
         }
     }
-
 }

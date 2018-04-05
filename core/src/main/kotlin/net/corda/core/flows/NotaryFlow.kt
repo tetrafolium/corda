@@ -35,8 +35,10 @@ class NotaryFlow {
      */
     @DoNotImplement
     @InitiatingFlow
-    open class Client(private val stx: SignedTransaction,
-                      override val progressTracker: ProgressTracker) : FlowLogic<List<TransactionSignature>>() {
+    open class Client(
+        private val stx: SignedTransaction,
+        override val progressTracker: ProgressTracker
+    ) : FlowLogic<List<TransactionSignature>>() {
         constructor(stx: SignedTransaction) : this(stx, tracker())
 
         companion object {
@@ -186,10 +188,10 @@ data class TransactionParts(val id: SecureHash, val inputs: List<StateRef>, val 
  * underlying [error] specifies the cause of failure.
  */
 class NotaryException(
-        /** Cause of notarisation failure. */
-        val error: NotaryError,
-        /** Id of the transaction to be notarised. Can be _null_ if an error occurred before the id could be resolved. */
-        val txId: SecureHash? = null
+    /** Cause of notarisation failure. */
+    val error: NotaryError,
+    /** Id of the transaction to be notarised. Can be _null_ if an error occurred before the id could be resolved. */
+    val txId: SecureHash? = null
 ) : FlowException("Unable to notarise transaction${txId ?: " "}: $error")
 
 /** Exception internal to the notary service. Does not get exposed to CorDapps and flows calling [NotaryFlow.Client]. */
@@ -200,10 +202,10 @@ class NotaryInternalException(val error: NotaryError) : FlowException("Unable to
 sealed class NotaryError {
     /** Occurs when one or more input states have already been consumed by another transaction. */
     data class Conflict(
-            /** Id of the transaction that was attempted to be notarised. */
-            val txId: SecureHash,
-            /** Specifies which states have already been consumed in another transaction. */
-            val consumedStates: Map<StateRef, StateConsumptionDetails>
+        /** Id of the transaction that was attempted to be notarised. */
+        val txId: SecureHash,
+        /** Specifies which states have already been consumed in another transaction. */
+        val consumedStates: Map<StateRef, StateConsumptionDetails>
     ) : NotaryError() {
         override fun toString() = "One or more input states have been used in another transaction"
     }
@@ -242,10 +244,10 @@ sealed class NotaryError {
 // TODO: include notary timestamp?
 @CordaSerializable
 data class StateConsumptionDetails(
-        /**
-         * Hash of the consuming transaction id.
-         *
-         * Note that this is NOT the transaction id itself – revealing it could lead to privacy leaks.
-         */
-        val hashOfTransactionId: SecureHash
+    /**
+     * Hash of the consuming transaction id.
+     *
+     * Note that this is NOT the transaction id itself – revealing it could lead to privacy leaks.
+     */
+    val hashOfTransactionId: SecureHash
 )

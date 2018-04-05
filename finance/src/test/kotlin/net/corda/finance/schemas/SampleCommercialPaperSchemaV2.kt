@@ -22,37 +22,37 @@ object SampleCommercialPaperSchemaV2 : MappedSchema(schemaFamily = CommercialPap
                     Index(name = "maturity_index2", columnList = "maturity_instant")))
     class PersistentCommercialPaperState(
 
-            @ElementCollection
-            @Column(name = "participants")
-            @CollectionTable(name="cp_states_v2_participants", joinColumns = arrayOf(
-                    JoinColumn(name = "output_index", referencedColumnName = "output_index"),
-                    JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")))
-            override var participants: MutableSet<AbstractParty>? = null,
+        @ElementCollection
+        @Column(name = "participants")
+        @CollectionTable(name = "cp_states_v2_participants", joinColumns = arrayOf(
+                JoinColumn(name = "output_index", referencedColumnName = "output_index"),
+                JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")))
+        override var participants: MutableSet<AbstractParty>? = null,
 
-            @Column(name = "maturity_instant")
-            var maturity: Instant,
+        @Column(name = "maturity_instant")
+        var maturity: Instant,
 
-            @Column(name = "ccy_code", length = 3)
-            var currency: String,
+        @Column(name = "ccy_code", length = 3)
+        var currency: String,
 
-            @Column(name = "face_value_issuer_key_hash", length = MAX_HASH_HEX_SIZE)
-            var faceValueIssuerPartyHash: String,
+        @Column(name = "face_value_issuer_key_hash", length = MAX_HASH_HEX_SIZE)
+        var faceValueIssuerPartyHash: String,
 
-            @Column(name = "face_value_issuer_ref", length = MAX_ISSUER_REF_SIZE)
-            @Type(type = "corda-wrapper-binary")
-            var faceValueIssuerRef: ByteArray,
+        @Column(name = "face_value_issuer_ref", length = MAX_ISSUER_REF_SIZE)
+        @Type(type = "corda-wrapper-binary")
+        var faceValueIssuerRef: ByteArray,
 
-            /** parent attributes */
-            @Transient
-            val _participants: Set<AbstractParty>,
-            @Transient
-            val _owner: AbstractParty,
-            @Transient
-            // face value
-            val _quantity: Long,
-            @Transient
-            val _issuerParty: AbstractParty,
-            @Transient
-            val _issuerRef: OpaqueBytes
+        /** parent attributes */
+        @Transient
+        val _participants: Set<AbstractParty>,
+        @Transient
+        val _owner: AbstractParty,
+        @Transient
+        // face value
+        val _quantity: Long,
+        @Transient
+        val _issuerParty: AbstractParty,
+        @Transient
+        val _issuerRef: OpaqueBytes
     ) : CommonSchemaV1.FungibleState(_participants.toMutableSet(), _owner, _quantity, _issuerParty, _issuerRef.bytes)
 }

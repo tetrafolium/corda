@@ -153,7 +153,6 @@ class Cap {
     val paymentFirst = arrange { highStreetBank.owes(acmeCorp, 250.K, EUR) }
     val paymentFinal = arrange { highStreetBank.owes(acmeCorp, 250.K, EUR) }
 
-
     val stateInitial = UniversalContract.State(listOf(DUMMY_NOTARY), contractInitial)
 
     val stateAfterFixingFirst = UniversalContract.State(listOf(DUMMY_NOTARY), contractAfterFixingFirst)

@@ -19,10 +19,11 @@ import net.corda.core.utilities.NetworkHostAndPort
  *           concept in DNS.
  */
 @CordaSerializable
-data class NodeInfo(val addresses: List<NetworkHostAndPort>,
-                    val legalIdentitiesAndCerts: List<PartyAndCertificate>,
-                    val platformVersion: Int,
-                    val serial: Long
+data class NodeInfo(
+    val addresses: List<NetworkHostAndPort>,
+    val legalIdentitiesAndCerts: List<PartyAndCertificate>,
+    val platformVersion: Int,
+    val serial: Long
 ) {
     // TODO We currently don't support multi-IP/multi-identity nodes, we only left slots in the data structures.
     init {

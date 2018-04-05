@@ -10,20 +10,20 @@ import java.net.URL
  */
 class Distribution private constructor(
 
-        /**
-         * The version string of the Corda distribution.
-         */
-        val version: String,
+    /**
+     * The version string of the Corda distribution.
+     */
+    val version: String,
 
-        /**
-         * The path of the distribution fat JAR on disk, if available.
-         */
-        file: File? = null,
+    /**
+     * The path of the distribution fat JAR on disk, if available.
+     */
+    file: File? = null,
 
-        /**
-         * The URL of the distribution fat JAR, if available.
-         */
-        val url: URL? = null
+    /**
+     * The URL of the distribution fat JAR, if available.
+     */
+    val url: URL? = null
 
 ) {
 
@@ -110,7 +110,5 @@ class Distribution private constructor(
             "master" -> LATEST_MASTER
             else -> distributions.firstOrNull { it.version == version }
         }
-
     }
-
 }

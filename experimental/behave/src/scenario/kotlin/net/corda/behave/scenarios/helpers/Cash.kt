@@ -27,5 +27,4 @@ class Cash(state: ScenarioState) : Substeps(state) {
             }
         }
     }
-
 }

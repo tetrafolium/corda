@@ -33,7 +33,7 @@ class StepsContainer(val state: ScenarioState) : En {
 
     fun fail(message: String) = state.fail(message)
 
-    fun<T> error(message: String) = state.error<T>(message)
+    fun <T> error(message: String) = state.error<T>(message)
 
     fun node(name: String) = state.nodeBuilder(name)
 
@@ -56,5 +56,4 @@ class StepsContainer(val state: ScenarioState) : En {
     private fun steps(action: (StepsContainer.() -> Unit)) {
         action(this)
     }
-
 }

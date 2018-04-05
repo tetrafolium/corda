@@ -14,9 +14,9 @@ import java.util.*
  * @param assemble The function to assemble the final map element from the list element and the associated key.
  */
 class AssociatedList<K, out A, B>(
-        val sourceList: ObservableList<out A>,
-        toKey: (A) -> K,
-        assemble: (K, A) -> B
+    val sourceList: ObservableList<out A>,
+    toKey: (A) -> K,
+    assemble: (K, A) -> B
 ) : ReadOnlyBackedObservableMapBase<K, B, Unit>() {
     init {
         sourceList.forEach {

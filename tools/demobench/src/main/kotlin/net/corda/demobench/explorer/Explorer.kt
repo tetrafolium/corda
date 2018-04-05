@@ -117,7 +117,6 @@ class Explorer internal constructor(private val explorerController: ExplorerCont
             log.error("Failed to close stream: '{}'", e.message)
         }
     }
-
 }
 
 class ExplorerController : Controller() {

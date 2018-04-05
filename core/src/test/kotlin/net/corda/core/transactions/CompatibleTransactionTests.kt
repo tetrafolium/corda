@@ -386,7 +386,7 @@ class CompatibleTransactionTests {
         assertFailsWith<IllegalStateException> { WireTransaction(componentGroups = componentGroupsLessSigners, privacySalt = PrivacySalt()) }
 
         // Test if there is no command to sign.
-        val commandsNoKey1= listOf(dummyCommand(DUMMY_KEY_2.public))
+        val commandsNoKey1 = listOf(dummyCommand(DUMMY_KEY_2.public))
 
         val componentGroupsNoKey1ToSign = listOf(
                 inputGroup,
@@ -399,7 +399,7 @@ class CompatibleTransactionTests {
         )
 
         val wtxNoKey1 = WireTransaction(componentGroups = componentGroupsNoKey1ToSign, privacySalt = PrivacySalt())
-        val allCommandsNoKey1Ftx= wtxNoKey1.buildFilteredTransaction(Predicate(::filterCommandsOnly))
+        val allCommandsNoKey1Ftx = wtxNoKey1.buildFilteredTransaction(Predicate(::filterCommandsOnly))
         allCommandsNoKey1Ftx.checkCommandVisibility(DUMMY_KEY_1.public) // This will pass, because there are indeed no commands to sign in the original transaction.
     }
 
@@ -546,4 +546,3 @@ class CompatibleTransactionTests {
         assertFailsWith<ComponentVisibilityException> { ftxAlterSignerB.checkCommandVisibility(DUMMY_KEY_1.public) }
     }
 }
-

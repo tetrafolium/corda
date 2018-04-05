@@ -6,7 +6,7 @@ import java.io.Closeable
 import java.io.InterruptedIOException
 
 class MonitoringSSHClient(
-        private val client: SSHClient
+    private val client: SSHClient
 ) : Closeable {
 
     private var isRunning = false
@@ -65,5 +65,4 @@ class MonitoringSSHClient(
     fun write(charSequence: CharSequence) = client.write(charSequence)
 
     fun writeLine(string: String) = client.writeLine(string)
-
 }

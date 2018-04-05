@@ -81,8 +81,8 @@ private val defaultIntermediateCaName = X500Principal("CN=Corda Intermediate CA,
  * @param intermediateCaName The subject name for the intermediate CA cert.
  */
 fun createDevIntermediateCaCertPath(
-        rootCaName: X500Principal = defaultRootCaName,
-        intermediateCaName: X500Principal = defaultIntermediateCaName
+    rootCaName: X500Principal = defaultRootCaName,
+    intermediateCaName: X500Principal = defaultIntermediateCaName
 ): Pair<CertificateAndKeyPair, CertificateAndKeyPair> {
     val rootKeyPair = Crypto.generateKeyPair(X509Utilities.DEFAULT_TLS_SIGNATURE_SCHEME)
     val rootCert = X509Utilities.createSelfSignedCACertificate(rootCaName, rootKeyPair)
@@ -107,10 +107,10 @@ fun createDevIntermediateCaCertPath(
  * @param legalName The subject name for the node CA cert.
  */
 fun createDevNodeCaCertPath(
-        legalName: CordaX500Name,
-        nodeKeyPair: KeyPair = generateKeyPair(X509Utilities.DEFAULT_TLS_SIGNATURE_SCHEME),
-        rootCaName: X500Principal = defaultRootCaName,
-        intermediateCaName: X500Principal = defaultIntermediateCaName
+    legalName: CordaX500Name,
+    nodeKeyPair: KeyPair = generateKeyPair(X509Utilities.DEFAULT_TLS_SIGNATURE_SCHEME),
+    rootCaName: X500Principal = defaultRootCaName,
+    intermediateCaName: X500Principal = defaultIntermediateCaName
 ): Triple<CertificateAndKeyPair, CertificateAndKeyPair, CertificateAndKeyPair> {
     val (rootCa, intermediateCa) = createDevIntermediateCaCertPath(rootCaName, intermediateCaName)
     val nodeCa = createDevNodeCa(intermediateCa, legalName, nodeKeyPair)

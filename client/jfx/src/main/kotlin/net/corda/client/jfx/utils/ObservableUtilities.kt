@@ -60,25 +60,25 @@ fun <A, B> ObservableList<out A>.map(cached: Boolean = true, function: (A) -> B)
 fun <A> A.lift(): ObservableValue<A> = ReadOnlyObjectWrapper(this)
 
 fun <A, R> ((A) -> R).lift(
-        arg0: ObservableValue<A>
+    arg0: ObservableValue<A>
 ): ObservableValue<R> = EasyBind.map(arg0, this)
 
 fun <A, B, R> ((A, B) -> R).lift(
-        arg0: ObservableValue<A>,
-        arg1: ObservableValue<B>
+    arg0: ObservableValue<A>,
+    arg1: ObservableValue<B>
 ): ObservableValue<R> = EasyBind.combine(arg0, arg1, this)
 
 fun <A, B, C, R> ((A, B, C) -> R).lift(
-        arg0: ObservableValue<A>,
-        arg1: ObservableValue<B>,
-        arg2: ObservableValue<C>
+    arg0: ObservableValue<A>,
+    arg1: ObservableValue<B>,
+    arg2: ObservableValue<C>
 ): ObservableValue<R> = EasyBind.combine(arg0, arg1, arg2, this)
 
 fun <A, B, C, D, R> ((A, B, C, D) -> R).lift(
-        arg0: ObservableValue<A>,
-        arg1: ObservableValue<B>,
-        arg2: ObservableValue<C>,
-        arg3: ObservableValue<D>
+    arg0: ObservableValue<A>,
+    arg1: ObservableValue<B>,
+    arg2: ObservableValue<C>,
+    arg3: ObservableValue<D>
 ): ObservableValue<R> = EasyBind.combine(arg0, arg1, arg2, arg3, this)
 
 /**
@@ -241,10 +241,10 @@ fun <A> ObservableList<ObservableList<A>>.concatenate(): ObservableList<A> {
  *   people.leftOuterJoin(people, Person::name, Person::managerName) { manager, employees -> Pair(manager, employees) }
  */
 fun <A : Any, B : Any, C, K : Any> ObservableList<A>.leftOuterJoin(
-        rightTable: ObservableList<B>,
-        leftToJoinKey: (A) -> K,
-        rightToJoinKey: (B) -> K,
-        assemble: (A, ObservableList<B>) -> C
+    rightTable: ObservableList<B>,
+    leftToJoinKey: (A) -> K,
+    rightToJoinKey: (B) -> K,
+    assemble: (A, ObservableList<B>) -> C
 ): ObservableList<C> {
     val joinedMap = leftOuterJoin(rightTable, leftToJoinKey, rightToJoinKey)
     return joinedMap.getObservableValues().map { pair ->
@@ -265,9 +265,9 @@ fun <A : Any, B : Any, C, K : Any> ObservableList<A>.leftOuterJoin(
  * the result, but this may not be the case for the right table.
  */
 fun <A : Any, B : Any, K : Any> ObservableList<A>.leftOuterJoin(
-        rightTable: ObservableList<B>,
-        leftToJoinKey: (A) -> K,
-        rightToJoinKey: (B) -> K
+    rightTable: ObservableList<B>,
+    leftToJoinKey: (A) -> K,
+    rightToJoinKey: (B) -> K
 ): ObservableMap<K, Pair<ObservableList<A>, ObservableList<B>>> {
     val leftTableMap = associateByAggregation(leftToJoinKey)
     val rightTableMap = rightTable.associateByAggregation(rightToJoinKey)

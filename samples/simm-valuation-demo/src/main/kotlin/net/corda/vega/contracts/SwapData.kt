@@ -39,16 +39,17 @@ data class FloatingLeg(val _notional: BigDecimal, override val notional: BigDeci
  */
 @CordaSerializable
 data class SwapData(
-        val id: Pair<String, String>,
-        val buyer: Pair<String, PublicKey>,
-        val seller: Pair<String, PublicKey>,
-        val description: String,
-        val tradeDate: LocalDate,
-        val convention: String,
-        val startDate: LocalDate,
-        val endDate: LocalDate,
-        val notional: BigDecimal,
-        val fixedRate: BigDecimal) {
+    val id: Pair<String, String>,
+    val buyer: Pair<String, PublicKey>,
+    val seller: Pair<String, PublicKey>,
+    val description: String,
+    val tradeDate: LocalDate,
+    val convention: String,
+    val startDate: LocalDate,
+    val endDate: LocalDate,
+    val notional: BigDecimal,
+    val fixedRate: BigDecimal
+) {
 
     fun getLegForParty(party: AbstractParty): Leg {
         return if (party == buyer.second) FixedLeg(notional) else FloatingLeg(notional)
@@ -92,14 +93,4 @@ data class SwapData(
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
 

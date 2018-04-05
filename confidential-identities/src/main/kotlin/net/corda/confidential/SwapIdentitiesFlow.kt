@@ -28,9 +28,11 @@ import java.util.*
  */
 @StartableByRPC
 @InitiatingFlow
-class SwapIdentitiesFlow(private val otherParty: Party,
-                         private val revocationEnabled: Boolean,
-                         override val progressTracker: ProgressTracker) : FlowLogic<LinkedHashMap<Party, AnonymousParty>>() {
+class SwapIdentitiesFlow(
+    private val otherParty: Party,
+    private val revocationEnabled: Boolean,
+    override val progressTracker: ProgressTracker
+) : FlowLogic<LinkedHashMap<Party, AnonymousParty>>() {
     constructor(otherParty: Party) : this(otherParty, false, tracker())
 
     companion object {
@@ -49,10 +51,12 @@ class SwapIdentitiesFlow(private val otherParty: Party,
         }
 
         @Throws(SwapIdentitiesException::class)
-        fun validateAndRegisterIdentity(identityService: IdentityService,
-                                        otherSide: Party,
-                                        anonymousOtherSideBytes: PartyAndCertificate,
-                                        sigBytes: DigitalSignature): PartyAndCertificate {
+        fun validateAndRegisterIdentity(
+            identityService: IdentityService,
+            otherSide: Party,
+            anonymousOtherSideBytes: PartyAndCertificate,
+            sigBytes: DigitalSignature
+        ): PartyAndCertificate {
             val anonymousOtherSide: PartyAndCertificate = anonymousOtherSideBytes
             if (anonymousOtherSide.name != otherSide.name) {
                 throw SwapIdentitiesException("Certificate subject must match counterparty's well known identity.")
@@ -60,7 +64,7 @@ class SwapIdentitiesFlow(private val otherParty: Party,
             val signature = DigitalSignature.WithKey(anonymousOtherSide.owningKey, sigBytes.bytes)
             try {
                 signature.verify(buildDataToSign(anonymousOtherSideBytes))
-            } catch(ex: SignatureException) {
+            } catch (ex: SignatureException) {
                 throw SwapIdentitiesException("Signature does not match the expected identity ownership assertion.", ex)
             }
             // Validate then store their identity so that we can prove the key in the transaction is owned by the
@@ -108,8 +112,10 @@ class SwapIdentitiesFlow(private val otherParty: Party,
  * keys.
  */
 @CordaSerializable
-data class CertificateOwnershipAssertion(val x500Name: CordaX500Name,
-                                         val publicKey: PublicKey)
+data class CertificateOwnershipAssertion(
+    val x500Name: CordaX500Name,
+    val publicKey: PublicKey
+)
 
 open class SwapIdentitiesException @JvmOverloads constructor(message: String, cause: Throwable? = null)
     : FlowException(message, cause)

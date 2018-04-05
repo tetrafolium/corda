@@ -22,9 +22,10 @@ import net.corda.core.utilities.ProgressTracker
  */
 @InitiatingFlow
 class NotaryChangeFlow<out T : ContractState>(
-        originalState: StateAndRef<T>,
-        newNotary: Party,
-        progressTracker: ProgressTracker = AbstractStateReplacementFlow.Instigator.tracker())
+    originalState: StateAndRef<T>,
+    newNotary: Party,
+    progressTracker: ProgressTracker = AbstractStateReplacementFlow.Instigator.tracker()
+)
     : AbstractStateReplacementFlow.Instigator<T, T, Party>(originalState, newNotary, progressTracker) {
 
     override fun assembleTx(): AbstractStateReplacementFlow.UpgradeTx {

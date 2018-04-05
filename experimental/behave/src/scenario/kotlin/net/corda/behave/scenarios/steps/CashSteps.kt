@@ -16,5 +16,4 @@ fun cashSteps(steps: StepsBlock) = steps {
             assertThat(cash.numberOfIssuableCurrencies(name)).isEqualTo(count.toInt())
         }
     }
-
 }

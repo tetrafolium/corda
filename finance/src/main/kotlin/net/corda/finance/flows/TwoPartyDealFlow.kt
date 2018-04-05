@@ -81,8 +81,10 @@ object TwoPartyDealFlow {
     /**
      * Abstracted bilateral deal flow participant that is recipient of initial communication.
      */
-    abstract class Secondary<U>(override val progressTracker: ProgressTracker = Secondary.tracker(),
-                                val regulators: Set<Party> = emptySet()) : FlowLogic<SignedTransaction>() {
+    abstract class Secondary<U>(
+        override val progressTracker: ProgressTracker = Secondary.tracker(),
+        val regulators: Set<Party> = emptySet()
+    ) : FlowLogic<SignedTransaction>() {
 
         companion object {
             object RECEIVING : ProgressTracker.Step("Waiting for deal info.")
@@ -160,9 +162,11 @@ object TwoPartyDealFlow {
     /**
      * One side of the flow for inserting a pre-agreed deal.
      */
-    open class Instigator(override val otherSideSession: FlowSession,
-                          override val payload: AutoOffer,
-                          override val progressTracker: ProgressTracker = Primary.tracker()) : Primary() {
+    open class Instigator(
+        override val otherSideSession: FlowSession,
+        override val payload: AutoOffer,
+        override val progressTracker: ProgressTracker = Primary.tracker()
+    ) : Primary() {
         override val notaryParty: Party get() = payload.notary
 
         @Suspendable override fun checkProposal(stx: SignedTransaction) = requireThat {
@@ -173,8 +177,10 @@ object TwoPartyDealFlow {
     /**
      * One side of the flow for inserting a pre-agreed deal.
      */
-    open class Acceptor(override val otherSideSession: FlowSession,
-                        override val progressTracker: ProgressTracker = Secondary.tracker()) : Secondary<AutoOffer>() {
+    open class Acceptor(
+        override val otherSideSession: FlowSession,
+        override val progressTracker: ProgressTracker = Secondary.tracker()
+    ) : Secondary<AutoOffer>() {
 
         override fun validateHandshake(handshake: Handshake<AutoOffer>): Handshake<AutoOffer> {
             // What is the seller trying to sell us?

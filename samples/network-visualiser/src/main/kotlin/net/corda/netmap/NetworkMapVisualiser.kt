@@ -252,7 +252,7 @@ class NetworkMapVisualiser : Application() {
                     val timeline = Timeline(
                             KeyFrame(Duration(250.0),
                                     KeyValue(pane.opacityProperty(), 0.0),
-                                    KeyValue(slideProp, -pane.height - 50.0)  // Subtract the bottom padding gap.
+                                    KeyValue(slideProp, -pane.height - 50.0) // Subtract the bottom padding gap.
                             )
                     )
                     timeline.setOnFinished {

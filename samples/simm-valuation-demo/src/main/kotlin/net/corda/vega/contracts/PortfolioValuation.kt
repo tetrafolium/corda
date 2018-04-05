@@ -15,11 +15,13 @@ import java.math.BigDecimal
  * we want to avoid walking the transaction chain.
  */
 @CordaSerializable
-data class PortfolioValuation(val trades: Int,
-                              val notional: BigDecimal,
-                              val marketData: CordaMarketData,
-                              val totalSensivities: CurrencyParameterSensitivities,
-                              val currencySensitivies: MultiCurrencyAmount,
-                              val margin: InitialMarginTriple,
-                              val imContributionMap: Map<String, InitialMarginTriple>?,
-                              val presentValues: Map<String, MultiCurrencyAmount>)
+data class PortfolioValuation(
+    val trades: Int,
+    val notional: BigDecimal,
+    val marketData: CordaMarketData,
+    val totalSensivities: CurrencyParameterSensitivities,
+    val currencySensitivies: MultiCurrencyAmount,
+    val margin: InitialMarginTriple,
+    val imContributionMap: Map<String, InitialMarginTriple>?,
+    val presentValues: Map<String, MultiCurrencyAmount>
+)

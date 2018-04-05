@@ -1,7 +1,6 @@
 package net.corda.testing.contracts
 
 import net.corda.core.contracts.*
-import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.AbstractParty
 import net.corda.core.transactions.LedgerTransaction
 

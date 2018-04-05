@@ -13,10 +13,10 @@ import net.corda.finance.flows.CashPaymentFlow.PaymentRequest
 import java.util.*
 
 fun generateIssue(
-        max: Long,
-        currency: Currency,
-        notary: Party,
-        possibleRecipients: List<Party>
+    max: Long,
+    currency: Currency,
+    notary: Party,
+    possibleRecipients: List<Party>
 ): Generator<IssueAndPaymentRequest> {
     return generateAmount(1, max, Generator.pure(currency)).combine(
             Generator.pure(OpaqueBytes.of(0)),
@@ -27,10 +27,10 @@ fun generateIssue(
 }
 
 fun generateMove(
-        max: Long,
-        currency: Currency,
-        issuer: Party,
-        possibleRecipients: List<Party>
+    max: Long,
+    currency: Currency,
+    issuer: Party,
+    possibleRecipients: List<Party>
 ): Generator<PaymentRequest> {
     return generateAmount(1, max, Generator.pure(Issued(PartyAndReference(issuer, OpaqueBytes.of(0)), currency))).combine(
             Generator.pickOne(possibleRecipients)
@@ -40,8 +40,8 @@ fun generateMove(
 }
 
 fun generateExit(
-        max: Long,
-        currency: Currency
+    max: Long,
+    currency: Currency
 ): Generator<ExitRequest> {
     return generateAmount(1, max, Generator.pure(currency)).map { amount ->
         ExitRequest(amount, OpaqueBytes.of(0))

@@ -4,11 +4,11 @@ import java.io.File
 import java.time.Duration
 
 class JarCommand(
-        jarFile: File,
-        arguments: Array<String>,
-        directory: File,
-        timeout: Duration,
-        enableRemoteDebugging: Boolean = false
+    jarFile: File,
+    arguments: Array<String>,
+    directory: File,
+    timeout: Duration,
+    enableRemoteDebugging: Boolean = false
 ) : Command(
         command = listOf(
                 "/usr/bin/java",
@@ -28,7 +28,5 @@ class JarCommand(
             } else {
                 arrayOf()
             }
-
     }
-
 }

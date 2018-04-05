@@ -48,9 +48,10 @@ abstract class AbstractStateReplacementFlow {
      * @param M the type of a class representing proposed modification by the instigator.
      */
     abstract class Instigator<out S : ContractState, out T : ContractState, out M>(
-            val originalState: StateAndRef<S>,
-            val modification: M,
-            override val progressTracker: ProgressTracker = Instigator.tracker()) : FlowLogic<StateAndRef<T>>() {
+        val originalState: StateAndRef<S>,
+        val modification: M,
+        override val progressTracker: ProgressTracker = Instigator.tracker()
+    ) : FlowLogic<StateAndRef<T>>() {
         companion object {
             object SIGNING : ProgressTracker.Step("Requesting signatures from other parties")
             object NOTARY : ProgressTracker.Step("Requesting notary signature")
@@ -78,7 +79,7 @@ abstract class AbstractStateReplacementFlow {
          *
          * @return the transaction
          */
-        abstract protected fun assembleTx(): UpgradeTx
+        protected abstract fun assembleTx(): UpgradeTx
 
         /**
          * Initiate sessions with parties we want signatures from.
@@ -126,8 +127,10 @@ abstract class AbstractStateReplacementFlow {
 
     // Type parameter should ideally be Unit but that prevents Java code from subclassing it (https://youtrack.jetbrains.com/issue/KT-15964).
     // We use Void? instead of Unit? as that's what you'd use in Java.
-    abstract class Acceptor<in T>(val initiatingSession: FlowSession,
-                                  override val progressTracker: ProgressTracker = Acceptor.tracker()) : FlowLogic<Void?>() {
+    abstract class Acceptor<in T>(
+        val initiatingSession: FlowSession,
+        override val progressTracker: ProgressTracker = Acceptor.tracker()
+    ) : FlowLogic<Void?>() {
         constructor(initiatingSession: FlowSession) : this(initiatingSession, Acceptor.tracker())
 
         companion object {
@@ -176,7 +179,7 @@ abstract class AbstractStateReplacementFlow {
          * The proposal is returned if acceptable, otherwise a [StateReplacementException] is thrown.
          */
         @Throws(StateReplacementException::class)
-        abstract protected fun verifyProposal(stx: SignedTransaction, proposal: Proposal<T>)
+        protected abstract fun verifyProposal(stx: SignedTransaction, proposal: Proposal<T>)
 
         private fun checkMySignatureRequired(stx: SignedTransaction) {
             // TODO: use keys from the keyManagementService instead

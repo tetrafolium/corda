@@ -14,8 +14,8 @@ val Positivity.sign: String
     }
 
 data class AmountDiff<T : Any>(
-        val positivity: Positivity,
-        val amount: Amount<T>
+    val positivity: Positivity,
+    val amount: Amount<T>
 ) {
     companion object {
         fun <T : Any> fromLong(quantity: Long, token: T) =

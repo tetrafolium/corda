@@ -46,9 +46,11 @@ class ThreadLocalToggleField<T>(name: String) : ToggleField<T>(name) {
 class ThreadLeakException(valueToString: String) : RuntimeException("Leaked thread '${Thread.currentThread().name}' detected, value was: $valueToString")
 
 /** @param isAGlobalThreadBeingCreated whether a global thread (that should not inherit any value) is being created. */
-class InheritableThreadLocalToggleField<T>(name: String,
-                                           private val log: Logger = staticLog,
-                                           private val isAGlobalThreadBeingCreated: (Array<StackTraceElement>) -> Boolean) : ToggleField<T>(name) {
+class InheritableThreadLocalToggleField<T>(
+    name: String,
+    private val log: Logger = staticLog,
+    private val isAGlobalThreadBeingCreated: (Array<StackTraceElement>) -> Boolean
+) : ToggleField<T>(name) {
     companion object {
         private val staticLog = contextLogger()
     }

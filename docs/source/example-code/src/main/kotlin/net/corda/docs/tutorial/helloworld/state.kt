@@ -7,9 +7,11 @@ import net.corda.core.contracts.ContractState
 import net.corda.core.identity.Party
 
 // Replace TemplateState's definition with:
-class IOUState(val value: Int,
-               val lender: Party,
-               val borrower: Party) : ContractState {
+class IOUState(
+    val value: Int,
+    val lender: Party,
+    val borrower: Party
+) : ContractState {
     override val participants get() = listOf(lender, borrower)
 }
 // DOCEND 01

@@ -20,12 +20,13 @@ import java.time.LocalDate
 class PortfolioApiUtils(private val ownParty: Party) {
     data class InitialMarginView(val baseCurrency: String, val post: Map<String, Double>, val call: Map<String, Double>, val agreed: Boolean)
     data class ValuationsView(
-            val businessDate: LocalDate,
-            val portfolio: Map<String, Any>,
-            val marketData: Map<String, Any>,
-            val sensitivities: Map<String, Any>,
-            val initialMargin: InitialMarginView,
-            val confirmation: Map<String, Any>)
+        val businessDate: LocalDate,
+        val portfolio: Map<String, Any>,
+        val marketData: Map<String, Any>,
+        val sensitivities: Map<String, Any>,
+        val initialMargin: InitialMarginView,
+        val confirmation: Map<String, Any>
+    )
 
     fun createValuations(state: PortfolioState, portfolio: Portfolio): ValuationsView {
         val valuation = state.valuation!!
@@ -119,10 +120,11 @@ class PortfolioApiUtils(private val ownParty: Party) {
     }
 
     data class TradeView(
-            val fixedLeg: Map<String, Any>,
-            val floatingLeg: Map<String, Any>,
-            val common: Map<String, Any>,
-            val ref: String)
+        val fixedLeg: Map<String, Any>,
+        val floatingLeg: Map<String, Any>,
+        val common: Map<String, Any>,
+        val ref: String
+    )
 
     fun createTradeView(rpc: CordaRPCOps, state: IRSState): TradeView {
         val trade = if (state.buyer == ownParty as AbstractParty) state.swap.toFloatingLeg() else state.swap.toFloatingLeg()

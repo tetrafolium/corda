@@ -12,8 +12,8 @@ import net.corda.finance.contracts.asset.Cash
 import rx.Observable
 
 data class Diff<out T : ContractState>(
-        val added: Collection<StateAndRef<T>>,
-        val removed: Collection<StateAndRef<T>>
+    val added: Collection<StateAndRef<T>>,
+    val removed: Collection<StateAndRef<T>>
 )
 
 /**
@@ -47,5 +47,4 @@ class ContractStateModel {
             }.filterNotNull()
         }
     }
-
 }

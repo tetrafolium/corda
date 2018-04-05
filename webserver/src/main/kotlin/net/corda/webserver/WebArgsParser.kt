@@ -50,20 +50,24 @@ class ArgsParser {
     fun printHelp(sink: PrintStream) = optionParser.printHelpOn(sink)
 }
 
-data class CmdLineOptions(val baseDirectory: Path,
-                          val configFile: Path,
-                          val help: Boolean,
-                          val loggingLevel: Level,
-                          val logToConsole: Boolean) {
+data class CmdLineOptions(
+    val baseDirectory: Path,
+    val configFile: Path,
+    val help: Boolean,
+    val loggingLevel: Level,
+    val logToConsole: Boolean
+) {
 
     fun loadConfig(allowMissingConfig: Boolean = false, configOverrides: Map<String, Any?> = emptyMap()): Config {
         return loadConfig(baseDirectory, configFile, allowMissingConfig, configOverrides)
     }
 
-    private fun loadConfig(baseDirectory: Path,
-                           configFile: Path = baseDirectory / "node.conf",
-                           allowMissingConfig: Boolean = false,
-                           configOverrides: Map<String, Any?> = emptyMap()): Config {
+    private fun loadConfig(
+        baseDirectory: Path,
+        configFile: Path = baseDirectory / "node.conf",
+        allowMissingConfig: Boolean = false,
+        configOverrides: Map<String, Any?> = emptyMap()
+    ): Config {
         val parseOptions = ConfigParseOptions.defaults()
         val defaultConfig = ConfigFactory.parseResources("web-reference.conf", parseOptions.setAllowMissing(false))
         val appConfig = ConfigFactory.parseFile(configFile.toFile(), parseOptions.setAllowMissing(allowMissingConfig))

@@ -80,7 +80,6 @@ interface Verifies {
     infix fun `fails with`(msg: String) = failsWith(msg)
 }
 
-
 /**
  * This interface defines the bare bone functionality that a Ledger DSL interpreter should implement.
  *
@@ -95,8 +94,11 @@ interface LedgerDSLInterpreter<out T : TransactionDSLInterpreter> : Verifies, Ou
      * @param dsl The dsl that should be interpreted for building the transaction.
      * @return The final [WireTransaction] of the built transaction.
      */
-    fun _transaction(transactionLabel: String?, transactionBuilder: TransactionBuilder,
-                     dsl: T.() -> EnforceVerifyOrFail): WireTransaction
+    fun _transaction(
+        transactionLabel: String?,
+        transactionBuilder: TransactionBuilder,
+        dsl: T.() -> EnforceVerifyOrFail
+    ): WireTransaction
 
     /**
      * Creates and adds a transaction to the ledger that will not be verified by [verifies].
@@ -105,8 +107,11 @@ interface LedgerDSLInterpreter<out T : TransactionDSLInterpreter> : Verifies, Ou
      * @param dsl The dsl that should be interpreted for building the transaction.
      * @return The final [WireTransaction] of the built transaction.
      */
-    fun _unverifiedTransaction(transactionLabel: String?, transactionBuilder: TransactionBuilder,
-                               dsl: T.() -> Unit): WireTransaction
+    fun _unverifiedTransaction(
+        transactionLabel: String?,
+        transactionBuilder: TransactionBuilder,
+        dsl: T.() -> Unit
+    ): WireTransaction
 
     /**
      * Creates a local scoped copy of the ledger.
@@ -120,7 +125,6 @@ interface LedgerDSLInterpreter<out T : TransactionDSLInterpreter> : Verifies, Ou
      * @return The [SecureHash] that identifies the attachment, to be used in transactions.
      */
     fun attachment(attachment: InputStream): SecureHash
-
 }
 
 /**
@@ -136,16 +140,22 @@ class LedgerDSL<out T : TransactionDSLInterpreter, out L : LedgerDSLInterpreter<
      * Creates and adds a transaction to the ledger.
      */
     @JvmOverloads
-    fun transaction(label: String? = null, transactionBuilder: TransactionBuilder = TransactionBuilder(notary = notary),
-                    dsl: TransactionDSL<TransactionDSLInterpreter>.() -> EnforceVerifyOrFail) =
+    fun transaction(
+        label: String? = null,
+        transactionBuilder: TransactionBuilder = TransactionBuilder(notary = notary),
+        dsl: TransactionDSL<TransactionDSLInterpreter>.() -> EnforceVerifyOrFail
+    ) =
             _transaction(label, transactionBuilder) { TransactionDSL(this, notary).dsl() }
 
     /**
      * Creates and adds a transaction to the ledger that will not be verified by [verifies].
      */
     @JvmOverloads
-    fun unverifiedTransaction(label: String? = null, transactionBuilder: TransactionBuilder = TransactionBuilder(notary = notary),
-                              dsl: TransactionDSL<TransactionDSLInterpreter>.() -> Unit) =
+    fun unverifiedTransaction(
+        label: String? = null,
+        transactionBuilder: TransactionBuilder = TransactionBuilder(notary = notary),
+        dsl: TransactionDSL<TransactionDSLInterpreter>.() -> Unit
+    ) =
             _unverifiedTransaction(label, transactionBuilder) { TransactionDSL(this, notary).dsl() }
 
     /** Creates a local scoped copy of the ledger. */

@@ -70,16 +70,16 @@ import kotlin.reflect.jvm.javaMethod
  * The cleanup happens in batches using a dedicated reaper, scheduled on [reaperExecutor].
  */
 class RPCClientProxyHandler(
-        private val rpcConfiguration: CordaRPCClientConfiguration,
-        private val rpcUsername: String,
-        private val rpcPassword: String,
-        private val serverLocator: ServerLocator,
-        private val clientAddress: SimpleString,
-        private val rpcOpsClass: Class<out RPCOps>,
-        serializationContext: SerializationContext,
-        private val sessionId: Trace.SessionId,
-        private val externalTrace: Trace?,
-        private val impersonatedActor: Actor?
+    private val rpcConfiguration: CordaRPCClientConfiguration,
+    private val rpcUsername: String,
+    private val rpcPassword: String,
+    private val serverLocator: ServerLocator,
+    private val clientAddress: SimpleString,
+    private val rpcOpsClass: Class<out RPCOps>,
+    serializationContext: SerializationContext,
+    private val sessionId: Trace.SessionId,
+    private val externalTrace: Trace?,
+    private val impersonatedActor: Actor?
 ) : InvocationHandler {
 
     private enum class State {
@@ -157,10 +157,10 @@ class RPCClientProxyHandler(
             }
             observablesToReap.locked { observables.add(observableId) }
         }
-        return Caffeine.newBuilder().
-                weakValues().
-                removalListener(onObservableRemove).executor(SameThreadExecutor.getExecutor()).
-                build()
+        return Caffeine.newBuilder()
+                .weakValues()
+                .removalListener(onObservableRemove).executor(SameThreadExecutor.getExecutor())
+                .build()
     }
 
     private var sessionFactory: ClientSessionFactory? = null
@@ -448,9 +448,9 @@ private typealias CallSiteMap = ConcurrentHashMap<InvocationId, Throwable?>
  * @param hardReferenceStore holds references to Observables we want to keep alive while they are subscribed to.
  */
 data class ObservableContext(
-        val callSiteMap: CallSiteMap?,
-        val observableMap: RpcObservableMap,
-        val hardReferenceStore: MutableSet<Observable<*>>
+    val callSiteMap: CallSiteMap?,
+    val observableMap: RpcObservableMap,
+    val hardReferenceStore: MutableSet<Observable<*>>
 )
 
 /**
@@ -496,7 +496,7 @@ object RpcClientObservableSerializer : Serializer<Observable<*>>() {
         }.dematerialize()
     }
 
-    private fun Input.readInvocationId() : InvocationId? {
+    private fun Input.readInvocationId(): InvocationId? {
 
         val value = readString() ?: return null
         val timestamp = readLong()

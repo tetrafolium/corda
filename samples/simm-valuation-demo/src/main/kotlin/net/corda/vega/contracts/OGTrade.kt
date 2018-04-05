@@ -30,6 +30,6 @@ class OGTrade : Contract {
     }
 
     interface Commands : CommandData {
-        class Agree : TypeOnlyCommandData(), Commands  // Both sides agree to trade
+        class Agree : TypeOnlyCommandData(), Commands // Both sides agree to trade
     }
 }

@@ -9,5 +9,4 @@ fun rpcSteps(steps: StepsBlock) = steps {
             succeed()
         }
     }
-
 }

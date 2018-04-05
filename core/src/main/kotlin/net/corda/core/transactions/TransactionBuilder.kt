@@ -34,14 +34,14 @@ import kotlin.collections.ArrayList
  * [TransactionState] with this notary specified will be generated automatically.
  */
 open class TransactionBuilder(
-        var notary: Party? = null,
-        var lockId: UUID = (Strand.currentStrand() as? FlowStateMachine<*>)?.id?.uuid ?: UUID.randomUUID(),
-        protected val inputs: MutableList<StateRef> = arrayListOf(),
-        protected val attachments: MutableList<SecureHash> = arrayListOf(),
-        protected val outputs: MutableList<TransactionState<ContractState>> = arrayListOf(),
-        protected val commands: MutableList<Command<*>> = arrayListOf(),
-        protected var window: TimeWindow? = null,
-        protected var privacySalt: PrivacySalt = PrivacySalt()
+    var notary: Party? = null,
+    var lockId: UUID = (Strand.currentStrand() as? FlowStateMachine<*>)?.id?.uuid ?: UUID.randomUUID(),
+    protected val inputs: MutableList<StateRef> = arrayListOf(),
+    protected val attachments: MutableList<SecureHash> = arrayListOf(),
+    protected val outputs: MutableList<TransactionState<ContractState>> = arrayListOf(),
+    protected val commands: MutableList<Command<*>> = arrayListOf(),
+    protected var window: TimeWindow? = null,
+    protected var privacySalt: PrivacySalt = PrivacySalt()
 ) {
     constructor(notary: Party) : this(notary, (Strand.currentStrand() as? FlowStateMachine<*>)?.id?.uuid ?: UUID.randomUUID())
 

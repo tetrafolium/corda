@@ -25,21 +25,21 @@ object CashSchemaV1 : MappedSchema(schemaFamily = CashSchema.javaClass, version 
             indexes = arrayOf(Index(name = "ccy_code_idx", columnList = "ccy_code"),
                     Index(name = "pennies_idx", columnList = "pennies")))
     class PersistentCashState(
-            /** X500Name of owner party **/
-            @Column(name = "owner_name")
-            var owner: AbstractParty,
+        /** X500Name of owner party **/
+        @Column(name = "owner_name")
+        var owner: AbstractParty,
 
-            @Column(name = "pennies")
-            var pennies: Long,
+        @Column(name = "pennies")
+        var pennies: Long,
 
-            @Column(name = "ccy_code", length = 3)
-            var currency: String,
+        @Column(name = "ccy_code", length = 3)
+        var currency: String,
 
-            @Column(name = "issuer_key_hash", length = MAX_HASH_HEX_SIZE)
-            var issuerPartyHash: String,
+        @Column(name = "issuer_key_hash", length = MAX_HASH_HEX_SIZE)
+        var issuerPartyHash: String,
 
-            @Column(name = "issuer_ref", length = MAX_ISSUER_REF_SIZE)
-            @Type(type = "corda-wrapper-binary")
-            var issuerRef: ByteArray
+        @Column(name = "issuer_ref", length = MAX_ISSUER_REF_SIZE)
+        @Type(type = "corda-wrapper-binary")
+        var issuerRef: ByteArray
     ) : PersistentState()
 }

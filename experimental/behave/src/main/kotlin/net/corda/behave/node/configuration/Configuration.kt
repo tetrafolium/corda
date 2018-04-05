@@ -6,20 +6,20 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 
 class Configuration(
-        val name: String,
-        val distribution: Distribution = Distribution.LATEST_MASTER,
-        val databaseType: DatabaseType = DatabaseType.H2,
-        val location: String = "London",
-        val country: String = "GB",
-        val users: UserConfiguration = UserConfiguration().withUser("corda", DEFAULT_PASSWORD),
-        val nodeInterface: NetworkInterface = NetworkInterface(),
-        val database: DatabaseConfiguration = DatabaseConfiguration(
-                databaseType,
-                nodeInterface.host,
-                nodeInterface.dbPort,
-                password = DEFAULT_PASSWORD
-        ),
-        vararg configElements: ConfigurationTemplate
+    val name: String,
+    val distribution: Distribution = Distribution.LATEST_MASTER,
+    val databaseType: DatabaseType = DatabaseType.H2,
+    val location: String = "London",
+    val country: String = "GB",
+    val users: UserConfiguration = UserConfiguration().withUser("corda", DEFAULT_PASSWORD),
+    val nodeInterface: NetworkInterface = NetworkInterface(),
+    val database: DatabaseConfiguration = DatabaseConfiguration(
+            databaseType,
+            nodeInterface.host,
+            nodeInterface.dbPort,
+            password = DEFAULT_PASSWORD
+    ),
+    vararg configElements: ConfigurationTemplate
 ) {
 
     private val developerMode = true
@@ -50,7 +50,5 @@ class Configuration(
     companion object {
 
         private val DEFAULT_PASSWORD = "S0meS3cretW0rd"
-
     }
-
 }

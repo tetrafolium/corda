@@ -61,10 +61,12 @@ import java.security.PublicKey
  * just in the states. If null, the default well known identity of the node is used.
  */
 // TODO: AbstractStateReplacementFlow needs updating to use this flow.
-class CollectSignaturesFlow @JvmOverloads constructor(val partiallySignedTx: SignedTransaction,
-                                                      val sessionsToCollectFrom: Collection<FlowSession>,
-                                                      val myOptionalKeys: Iterable<PublicKey>?,
-                                                      override val progressTracker: ProgressTracker = CollectSignaturesFlow.tracker()) : FlowLogic<SignedTransaction>() {
+class CollectSignaturesFlow @JvmOverloads constructor(
+    val partiallySignedTx: SignedTransaction,
+    val sessionsToCollectFrom: Collection<FlowSession>,
+    val myOptionalKeys: Iterable<PublicKey>?,
+    override val progressTracker: ProgressTracker = CollectSignaturesFlow.tracker()
+) : FlowLogic<SignedTransaction>() {
     @JvmOverloads constructor(partiallySignedTx: SignedTransaction, sessionsToCollectFrom: Collection<FlowSession>, progressTracker: ProgressTracker = CollectSignaturesFlow.tracker()) : this(partiallySignedTx, sessionsToCollectFrom, null, progressTracker)
 
     companion object {
@@ -75,7 +77,6 @@ class CollectSignaturesFlow @JvmOverloads constructor(val partiallySignedTx: Sig
         fun tracker() = ProgressTracker(COLLECTING, VERIFYING)
 
         // TODO: Make the progress tracker adapt to the number of counterparties to collect from.
-
     }
 
     @Suspendable override fun call(): SignedTransaction {
@@ -194,8 +195,10 @@ class CollectSignatureFlow(val partiallySignedTx: SignedTransaction, val session
  *
  * @param otherSideSession The session which is providing you a transaction to sign.
  */
-abstract class SignTransactionFlow(val otherSideSession: FlowSession,
-                                   override val progressTracker: ProgressTracker = SignTransactionFlow.tracker()) : FlowLogic<SignedTransaction>() {
+abstract class SignTransactionFlow(
+    val otherSideSession: FlowSession,
+    override val progressTracker: ProgressTracker = SignTransactionFlow.tracker()
+) : FlowLogic<SignedTransaction>() {
 
     companion object {
         object RECEIVING : ProgressTracker.Step("Receiving transaction proposal for signing.")
@@ -248,7 +251,7 @@ abstract class SignTransactionFlow(val otherSideSession: FlowSession,
         // need to recognise all keys, but just the initiator's.
         val signingWellKnownIdentities = groupPublicKeysByWellKnownParty(serviceHub, stx.sigs.map(TransactionSignature::by), true)
         require(otherSideSession.counterparty in signingWellKnownIdentities) {
-            "The Initiator of CollectSignaturesFlow must have signed the transaction. Found ${signingWellKnownIdentities}, expected ${otherSideSession}"
+            "The Initiator of CollectSignaturesFlow must have signed the transaction. Found $signingWellKnownIdentities, expected $otherSideSession"
         }
         val signed = stx.sigs.map { it.by }
         val allSigners = stx.tx.requiredSigningKeys
@@ -278,7 +281,7 @@ abstract class SignTransactionFlow(val otherSideSession: FlowSession,
      */
     @Suspendable
     @Throws(FlowException::class)
-    abstract protected fun checkTransaction(stx: SignedTransaction)
+    protected abstract fun checkTransaction(stx: SignedTransaction)
 
     @Suspendable private fun checkMySignaturesRequired(stx: SignedTransaction, signingKeys: Iterable<PublicKey>) {
         require(signingKeys.all { it in stx.tx.requiredSigningKeys }) {

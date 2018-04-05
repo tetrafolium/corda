@@ -94,7 +94,7 @@ class WebServer internal constructor(private val webServerController: WebServerC
             try {
                 rateLimiter.acquire()
                 val conn = url.toURL().openConnection() as HttpURLConnection
-                conn.connectTimeout = 500  // msec
+                conn.connectTimeout = 500 // msec
                 conn.requestMethod = "HEAD"
                 conn.connect()
                 conn.disconnect()

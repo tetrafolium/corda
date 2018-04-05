@@ -24,11 +24,12 @@ import java.util.*
  */
 @StartableByRPC
 open class CashPaymentFlow(
-        val amount: Amount<Currency>,
-        val recipient: Party,
-        val anonymous: Boolean,
-        progressTracker: ProgressTracker,
-        val issuerConstraint: Set<Party> = emptySet()) : AbstractCashFlow<AbstractCashFlow.Result>(progressTracker) {
+    val amount: Amount<Currency>,
+    val recipient: Party,
+    val anonymous: Boolean,
+    progressTracker: ProgressTracker,
+    val issuerConstraint: Set<Party> = emptySet()
+) : AbstractCashFlow<AbstractCashFlow.Result>(progressTracker) {
     /** A straightforward constructor that constructs spends using cash states of any issuer. */
     constructor(amount: Amount<Currency>, recipient: Party) : this(amount, recipient, true, tracker())
 
@@ -69,8 +70,10 @@ open class CashPaymentFlow(
     }
 
     @CordaSerializable
-    class PaymentRequest(amount: Amount<Currency>,
-                         val recipient: Party,
-                         val anonymous: Boolean,
-                         val issuerConstraint: Set<Party> = emptySet()) : AbstractRequest(amount)
+    class PaymentRequest(
+        amount: Amount<Currency>,
+        val recipient: Party,
+        val anonymous: Boolean,
+        val issuerConstraint: Set<Party> = emptySet()
+    ) : AbstractRequest(amount)
 }

@@ -14,8 +14,10 @@ import java.time.Instant
 const val UNIVERSAL_PROGRAM_ID = "net.corda.finance.contracts.universal.UniversalContract"
 
 class UniversalContract : Contract {
-    data class State(override val participants: List<AbstractParty>,
-                     val details: Arrangement) : ContractState
+    data class State(
+        override val participants: List<AbstractParty>,
+        val details: Arrangement
+    ) : ContractState
 
     interface Commands : CommandData {
 
@@ -232,7 +234,6 @@ class UniversalContract : Contract {
                         requireThat {
                             "output states must match action result state" using (arrangement.equals(allContracts))
                         }
-
                     }
                 }
             }
@@ -276,8 +277,12 @@ class UniversalContract : Contract {
         }
     }
 
-    fun <T> replaceFixing(tx: LedgerTransaction, perceivable: Perceivable<T>,
-                          fixings: Map<FixOf, BigDecimal>, unusedFixings: MutableSet<FixOf>): Perceivable<T> =
+    fun <T> replaceFixing(
+        tx: LedgerTransaction,
+        perceivable: Perceivable<T>,
+        fixings: Map<FixOf, BigDecimal>,
+        unusedFixings: MutableSet<FixOf>
+    ): Perceivable<T> =
             when (perceivable) {
                 is Const -> perceivable
                 is UnaryPlus -> UnaryPlus(replaceFixing(tx, perceivable.arg, fixings, unusedFixings))
@@ -296,12 +301,20 @@ class UniversalContract : Contract {
                 else -> throw NotImplementedError("replaceFixing - " + perceivable.javaClass.name)
             }
 
-    fun replaceFixing(tx: LedgerTransaction, arr: Action,
-                      fixings: Map<FixOf, BigDecimal>, unusedFixings: MutableSet<FixOf>) =
+    fun replaceFixing(
+        tx: LedgerTransaction,
+        arr: Action,
+        fixings: Map<FixOf, BigDecimal>,
+        unusedFixings: MutableSet<FixOf>
+    ) =
             Action(arr.name, replaceFixing(tx, arr.condition, fixings, unusedFixings), replaceFixing(tx, arr.arrangement, fixings, unusedFixings))
 
-    fun replaceFixing(tx: LedgerTransaction, arr: Arrangement,
-                      fixings: Map<FixOf, BigDecimal>, unusedFixings: MutableSet<FixOf>): Arrangement =
+    fun replaceFixing(
+        tx: LedgerTransaction,
+        arr: Arrangement,
+        fixings: Map<FixOf, BigDecimal>,
+        unusedFixings: MutableSet<FixOf>
+    ): Arrangement =
             when (arr) {
                 is Zero -> arr
                 is And -> And(arr.arrangements.map { replaceFixing(tx, it, fixings, unusedFixings) }.toSet())
@@ -318,4 +331,3 @@ class UniversalContract : Contract {
         tx.addCommand(Commands.Issue(), at.party.owningKey)
     }
 }
-

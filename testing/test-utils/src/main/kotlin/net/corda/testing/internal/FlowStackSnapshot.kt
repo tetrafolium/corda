@@ -134,7 +134,6 @@ class FlowStackSnapshotFactoryImpl : FlowStackSnapshotFactory {
             }
         }
     }
-
 }
 
 private inline fun <reified R, A : Any> R.getField(name: String): A {

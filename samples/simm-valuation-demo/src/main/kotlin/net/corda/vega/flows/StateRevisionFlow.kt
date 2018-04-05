@@ -14,8 +14,10 @@ import net.corda.vega.contracts.RevisionedState
  * on the update between two parties.
  */
 object StateRevisionFlow {
-    open class Requester<T>(curStateRef: StateAndRef<RevisionedState<T>>,
-                            updatedData: T) : AbstractStateReplacementFlow.Instigator<RevisionedState<T>, RevisionedState<T>, T>(curStateRef, updatedData) {
+    open class Requester<T>(
+        curStateRef: StateAndRef<RevisionedState<T>>,
+        updatedData: T
+    ) : AbstractStateReplacementFlow.Instigator<RevisionedState<T>, RevisionedState<T>, T>(curStateRef, updatedData) {
         override fun assembleTx(): AbstractStateReplacementFlow.UpgradeTx {
             val state = originalState.state.data
             val tx = state.generateRevision(originalState.state.notary, originalState, modification)

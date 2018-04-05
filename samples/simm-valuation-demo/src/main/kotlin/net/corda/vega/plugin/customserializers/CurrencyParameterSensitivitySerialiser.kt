@@ -10,9 +10,12 @@ import net.corda.core.serialization.SerializationCustomSerializer
 @Suppress("UNUSED")
 class CurrencyParameterSensitivitySerializer :
         SerializationCustomSerializer<CurrencyParameterSensitivity, CurrencyParameterSensitivitySerializer.Proxy> {
-    data class Proxy(val currency: Currency, val marketDataName: MarketDataName<*>,
-                     val parameterMetadata: List<ParameterMetadata>,
-                     val sensitivity: DoubleArray)
+    data class Proxy(
+        val currency: Currency,
+        val marketDataName: MarketDataName<*>,
+        val parameterMetadata: List<ParameterMetadata>,
+        val sensitivity: DoubleArray
+    )
 
     override fun fromProxy(proxy: CurrencyParameterSensitivitySerializer.Proxy) =
             CurrencyParameterSensitivity.of(

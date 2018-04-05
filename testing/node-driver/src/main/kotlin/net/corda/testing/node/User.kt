@@ -8,6 +8,7 @@ package net.corda.testing.node
  * @property permissions A [List] of [String] detailing the [User]'s permissions
  * */
 data class User(
-        val username: String,
-        val password: String,
-        val permissions: Set<String>)
+    val username: String,
+    val password: String,
+    val permissions: Set<String>
+)

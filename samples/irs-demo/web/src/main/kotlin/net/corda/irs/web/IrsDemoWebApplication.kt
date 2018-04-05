@@ -23,19 +23,19 @@ import org.springframework.context.annotation.Bean
 @SpringBootApplication
 class IrsDemoWebApplication {
     @Value("\${corda.host}")
-    lateinit var cordaHost:String
+    lateinit var cordaHost: String
 
     @Value("\${corda.user}")
-    lateinit var cordaUser:String
+    lateinit var cordaUser: String
 
     @Value("\${corda.password}")
-    lateinit var cordaPassword:String
+    lateinit var cordaPassword: String
 
     @Bean
     fun rpcClient(): CordaRPCOps {
         log.info("Connecting to Corda on $cordaHost using username $cordaUser and password $cordaPassword")
         // TODO remove this when CordaRPC gets proper connection retry, please
-        var maxRetries = 100;
+        var maxRetries = 100
         do {
             try {
                 return CordaRPCClient(NetworkHostAndPort.parse(cordaHost)).start(cordaUser, cordaPassword).proxy
@@ -65,4 +65,3 @@ class IrsDemoWebApplication {
         }
     }
 }
-

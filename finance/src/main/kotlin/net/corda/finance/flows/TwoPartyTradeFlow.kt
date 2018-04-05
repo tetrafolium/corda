@@ -51,15 +51,17 @@ object TwoPartyTradeFlow {
      */
     @CordaSerializable
     data class SellerTradeInfo(
-            val price: Amount<Currency>,
-            val payToIdentity: PartyAndCertificate
+        val price: Amount<Currency>,
+        val payToIdentity: PartyAndCertificate
     )
 
-    open class Seller(private val otherSideSession: FlowSession,
-                      private val assetToSell: StateAndRef<OwnableState>,
-                      private val price: Amount<Currency>,
-                      private val myParty: PartyAndCertificate, // TODO Left because in tests it's used to pass anonymous party.
-                      override val progressTracker: ProgressTracker = Seller.tracker()) : FlowLogic<SignedTransaction>() {
+    open class Seller(
+        private val otherSideSession: FlowSession,
+        private val assetToSell: StateAndRef<OwnableState>,
+        private val price: Amount<Currency>,
+        private val myParty: PartyAndCertificate, // TODO Left because in tests it's used to pass anonymous party.
+        override val progressTracker: ProgressTracker = Seller.tracker()
+    ) : FlowLogic<SignedTransaction>() {
 
         companion object {
             object AWAITING_PROPOSAL : ProgressTracker.Step("Awaiting transaction proposal")
@@ -131,11 +133,13 @@ object TwoPartyTradeFlow {
         // express flow state machines on top of the messaging layer.
     }
 
-    open class Buyer(private val sellerSession: FlowSession,
-                     private val notary: Party,
-                     private val acceptablePrice: Amount<Currency>,
-                     private val typeToBuy: Class<out OwnableState>,
-                     private val anonymous: Boolean) : FlowLogic<SignedTransaction>() {
+    open class Buyer(
+        private val sellerSession: FlowSession,
+        private val notary: Party,
+        private val acceptablePrice: Amount<Currency>,
+        private val typeToBuy: Class<out OwnableState>,
+        private val anonymous: Boolean
+    ) : FlowLogic<SignedTransaction>() {
         constructor(otherSideSession: FlowSession, notary: Party, acceptablePrice: Amount<Currency>, typeToBuy: Class<out OwnableState>) :
                 this(otherSideSession, notary, acceptablePrice, typeToBuy, true)
 

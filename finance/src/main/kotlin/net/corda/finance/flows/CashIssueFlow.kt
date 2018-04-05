@@ -24,13 +24,17 @@ import java.util.*
  * @param notary the notary to set on the output states.
  */
 @StartableByRPC
-class CashIssueFlow(private val amount: Amount<Currency>,
-                    private val issuerBankPartyRef: OpaqueBytes,
-                    private val notary: Party,
-                    progressTracker: ProgressTracker) : AbstractCashFlow<AbstractCashFlow.Result>(progressTracker) {
-    constructor(amount: Amount<Currency>,
-                issuerBankPartyRef: OpaqueBytes,
-                notary: Party) : this(amount, issuerBankPartyRef, notary, tracker())
+class CashIssueFlow(
+    private val amount: Amount<Currency>,
+    private val issuerBankPartyRef: OpaqueBytes,
+    private val notary: Party,
+    progressTracker: ProgressTracker
+) : AbstractCashFlow<AbstractCashFlow.Result>(progressTracker) {
+    constructor(
+        amount: Amount<Currency>,
+        issuerBankPartyRef: OpaqueBytes,
+        notary: Party
+    ) : this(amount, issuerBankPartyRef, notary, tracker())
 
     constructor(request: IssueRequest) : this(request.amount, request.issueRef, request.notary, tracker())
 

@@ -52,16 +52,16 @@ fun <E : Any> expect(klass: Class<E>, match: (E) -> Boolean, expectClosure: (E) 
  * Convenience variant of [expect] reifying the [Class] parameter
  */
 inline fun <reified E : Any> expect(
-        noinline match: (E) -> Boolean = { true },
-        noinline expectClosure: (E) -> Unit
+    noinline match: (E) -> Boolean = { true },
+    noinline expectClosure: (E) -> Unit
 ): ExpectCompose<E> = expect(E::class.java, match, expectClosure)
 
 /**
  * Convenience variant of [expect] that only matches events that are strictly equal to [event]
  */
 inline fun <reified E : Any> expect(
-        event: E,
-        noinline expectClosure: (E) -> Unit = {}
+    event: E,
+    noinline expectClosure: (E) -> Unit = {}
 ): ExpectCompose<E> = expect(match = { event == it }, expectClosure = expectClosure)
 
 /**
@@ -139,9 +139,9 @@ fun <E : Any> Iterable<E>.expectEvents(isStrict: Boolean = true, expectCompose: 
  * @param expectCompose The DSL we expect to match against the stream of events.
  */
 fun <S, E : Any> S.genericExpectEvents(
-        isStrict: Boolean = true,
-        stream: S.((E) -> Unit) -> Unit,
-        expectCompose: () -> ExpectCompose<E>
+    isStrict: Boolean = true,
+    stream: S.((E) -> Unit) -> Unit,
+    expectCompose: () -> ExpectCompose<E>
 ) {
     val finishFuture = SettableFuture.create<Unit>()
     /**
@@ -201,9 +201,9 @@ sealed class ExpectCompose<out E> {
 }
 
 internal data class Expect<out E, T : E>(
-        val clazz: Class<T>,
-        val match: (T) -> Boolean,
-        val expectClosure: (T) -> Unit
+    val clazz: Class<T>,
+    val match: (T) -> Boolean,
+    val expectClosure: (T) -> Unit
 )
 
 private sealed class ExpectComposeState<E : Any> {
@@ -233,9 +233,9 @@ private sealed class ExpectComposeState<E : Any> {
     }
 
     class Sequential<E : Any>(
-            val sequential: ExpectCompose.Sequential<E>,
-            val index: Int,
-            val state: ExpectComposeState<E>
+        val sequential: ExpectCompose.Sequential<E>,
+        val index: Int,
+        val state: ExpectComposeState<E>
     ) : ExpectComposeState<E>() {
         override fun nextState(event: E): Pair<() -> Unit, ExpectComposeState<E>>? {
             val next = state.nextState(event)
@@ -261,8 +261,8 @@ private sealed class ExpectComposeState<E : Any> {
     }
 
     class Parallel<E : Any>(
-            val parallel: ExpectCompose.Parallel<E>,
-            val states: List<ExpectComposeState<E>>
+        val parallel: ExpectCompose.Parallel<E>,
+        val states: List<ExpectComposeState<E>>
     ) : ExpectComposeState<E>() {
         override fun nextState(event: E): Pair<() -> Unit, ExpectComposeState<E>>? {
             states.forEachIndexed { stateIndex, state ->

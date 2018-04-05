@@ -42,7 +42,7 @@ sealed class TransactionVerificationException(val txId: SecureHash, message: Str
      * @property contractClass The fully qualified class name of the failing contract.
      */
     class ContractRejection(txId: SecureHash, val contractClass: String, cause: Throwable) : TransactionVerificationException(txId, "Contract verification failed: ${cause.message}, contract: $contractClass", cause) {
-        constructor(txId: SecureHash, contract: Contract, cause: Throwable) :  this(txId, contract.javaClass.name, cause)
+        constructor(txId: SecureHash, contract: Contract, cause: Throwable) : this(txId, contract.javaClass.name, cause)
     }
 
     /**

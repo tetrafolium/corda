@@ -9,9 +9,8 @@ import javafx.util.Callback
 import net.corda.explorer.formatters.Formatter
 import org.fxmisc.easybind.EasyBind
 
-
 fun <S> TreeTableView<S>.setColumnPrefWidthPolicy(
-        getColumnWidth: (tableWidthWithoutPaddingAndBorder: Number, column: TreeTableColumn<S, *>) -> Number
+    getColumnWidth: (tableWidthWithoutPaddingAndBorder: Number, column: TreeTableColumn<S, *>) -> Number
 ) {
     val tableWidthWithoutPaddingAndBorder = Bindings.createDoubleBinding({
         val padding = padding
@@ -27,8 +26,8 @@ fun <S> TreeTableView<S>.setColumnPrefWidthPolicy(
 }
 
 private fun <S> TreeTableColumn<S, *>.setPrefWidthPolicy(
-        widthWithoutPaddingAndBorder: ObservableValue<Number>,
-        getColumnWidth: (tableWidthWithoutPaddingAndBorder: Number, column: TreeTableColumn<S, *>) -> Number
+    widthWithoutPaddingAndBorder: ObservableValue<Number>,
+    getColumnWidth: (tableWidthWithoutPaddingAndBorder: Number, column: TreeTableColumn<S, *>) -> Number
 ) {
     prefWidthProperty().bind(EasyBind.map(widthWithoutPaddingAndBorder) {
         getColumnWidth(it, this)

@@ -7,10 +7,10 @@ import net.corda.core.transactions.ContractUpgradeWireTransaction
 
 object ContractUpgradeUtils {
     fun <OldState : ContractState, NewState : ContractState> assembleUpgradeTx(
-            stateAndRef: StateAndRef<OldState>,
-            upgradedContractClass: Class<out UpgradedContract<OldState, NewState>>,
-            privacySalt: PrivacySalt,
-            services: ServicesForResolution
+        stateAndRef: StateAndRef<OldState>,
+        upgradedContractClass: Class<out UpgradedContract<OldState, NewState>>,
+        privacySalt: PrivacySalt,
+        services: ServicesForResolution
     ): ContractUpgradeWireTransaction {
         require(stateAndRef.state.encumbrance == null) { "Upgrading an encumbered state is not yet supported" }
         val legacyConstraint = stateAndRef.state.constraint

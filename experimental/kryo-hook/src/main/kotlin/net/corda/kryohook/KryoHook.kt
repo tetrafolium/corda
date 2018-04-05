@@ -11,7 +11,6 @@ import java.lang.instrument.ClassFileTransformer
 import java.lang.instrument.Instrumentation
 import java.security.ProtectionDomain
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicInteger
 
 class KryoHookAgent {
     companion object {
@@ -59,11 +58,11 @@ object KryoHook : ClassFileTransformer {
     val hookClassName = javaClass.name
 
     override fun transform(
-            loader: ClassLoader?,
-            className: String,
-            classBeingRedefined: Class<*>?,
-            protectionDomain: ProtectionDomain?,
-            classfileBuffer: ByteArray
+        loader: ClassLoader?,
+        className: String,
+        classBeingRedefined: Class<*>?,
+        protectionDomain: ProtectionDomain?,
+        classfileBuffer: ByteArray
     ): ByteArray? {
         if (className.startsWith("java") || className.startsWith("javassist") || className.startsWith("kotlin")) {
             return null
@@ -124,9 +123,9 @@ sealed class StatsEvent {
  */
 sealed class StatsTree {
     data class Object(
-            val className: String,
-            val size: Long,
-            val children: List<StatsTree>
+        val className: String,
+        val size: Long,
+        val children: List<StatsTree>
     ) : StatsTree()
 }
 

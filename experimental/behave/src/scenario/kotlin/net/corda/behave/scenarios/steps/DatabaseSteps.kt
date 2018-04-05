@@ -9,5 +9,4 @@ fun databaseSteps(steps: StepsBlock) = steps {
             database.canConnectTo(name)
         }
     }
-
 }

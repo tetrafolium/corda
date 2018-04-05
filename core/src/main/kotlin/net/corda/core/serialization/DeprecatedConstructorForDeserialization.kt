@@ -11,4 +11,3 @@ package net.corda.core.serialization
 @Retention(AnnotationRetention.RUNTIME)
 annotation class DeprecatedConstructorForDeserialization(val version: Int)
 
-

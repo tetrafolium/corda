@@ -37,9 +37,10 @@ import java.util.*
  * @param W The wire type of the data being fetched, for when it isn't the same as the ultimate type.
  */
 sealed class FetchDataFlow<T : NamedByHash, in W : Any>(
-        protected val requests: Set<SecureHash>,
-        protected val otherSideSession: FlowSession,
-        protected val dataType: DataType) : FlowLogic<FetchDataFlow.Result<T>>() {
+    protected val requests: Set<SecureHash>,
+    protected val otherSideSession: FlowSession,
+    protected val dataType: DataType
+) : FlowLogic<FetchDataFlow.Result<T>>() {
 
     @CordaSerializable
     class DownloadedVsRequestedDataMismatch(val requested: SecureHash, val got: SecureHash) : IllegalArgumentException()
@@ -116,8 +117,10 @@ sealed class FetchDataFlow<T : NamedByHash, in W : Any>(
 
     protected open fun convert(wire: W): T = uncheckedCast(wire)
 
-    private fun validateFetchResponse(maybeItems: UntrustworthyData<ArrayList<W>>,
-                                      requests: List<SecureHash>): List<T> {
+    private fun validateFetchResponse(
+        maybeItems: UntrustworthyData<ArrayList<W>>,
+        requests: List<SecureHash>
+    ): List<T> {
         return maybeItems.unwrap { response ->
             if (response.size != requests.size)
                 throw DownloadedVsRequestedSizeMismatch(requests.size, response.size)
@@ -133,13 +136,14 @@ sealed class FetchDataFlow<T : NamedByHash, in W : Any>(
     }
 }
 
-
 /**
  * Given a set of hashes either loads from from local storage  or requests them from the other peer. Downloaded
  * attachments are saved to local storage automatically.
  */
-class FetchAttachmentsFlow(requests: Set<SecureHash>,
-                           otherSide: FlowSession) : FetchDataFlow<Attachment, ByteArray>(requests, otherSide, DataType.ATTACHMENT) {
+class FetchAttachmentsFlow(
+    requests: Set<SecureHash>,
+    otherSide: FlowSession
+) : FetchDataFlow<Attachment, ByteArray>(requests, otherSide, DataType.ATTACHMENT) {
 
     override fun load(txid: SecureHash): Attachment? = serviceHub.attachments.openAttachment(txid)
 

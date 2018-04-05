@@ -11,11 +11,11 @@ import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 open class SSHClient private constructor(
-        private val client: SshClient,
-        private val outputStream: OutputStream,
-        private val inputStream: InputStream,
-        private val session: ClientSession,
-        private val channel: ChannelShell
+    private val client: SshClient,
+    private val outputStream: OutputStream,
+    private val inputStream: InputStream,
+    private val session: ClientSession,
+    private val channel: ChannelShell
 ) : Closeable {
 
     private var isClosed = false
@@ -99,11 +99,11 @@ open class SSHClient private constructor(
         private val log = getLogger<SSHClient>()
 
         fun connect(
-                port: Int,
-                password: String,
-                hostname: String = "localhost",
-                username: String = "corda",
-                timeout: Duration = Duration.ofSeconds(4)
+            port: Int,
+            password: String,
+            hostname: String = "localhost",
+            username: String = "corda",
+            timeout: Duration = Duration.ofSeconds(4)
         ): SSHClient {
             val tty = SttySupport.parsePtyModes(TTY)
             val client = SshClient.setUpDefaultClient()
@@ -155,7 +155,5 @@ open class SSHClient private constructor(
                 "\tstop = ^S; susp = ^Z; time = 0; werase = ^W;"
 
         private val UTF8 = charset("UTF-8")
-
     }
-
 }

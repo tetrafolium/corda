@@ -78,10 +78,10 @@ fun recordScannedClass(className: String?) {
  * @param separator The package part separator character used in the above lists.
  */
 data class Arguments(
-        val truncate: List<String>? = null,
-        val expand: List<String>? = null,
-        val alwaysExcluded: List<String>? = null,
-        val separator: Char = '.'
+    val truncate: List<String>? = null,
+    val expand: List<String>? = null,
+    val alwaysExcluded: List<String>? = null,
+    val separator: Char = '.'
 )
 
 /**
@@ -141,7 +141,6 @@ class QuasarInstrumentationHookAgent {
             instrumentation.addTransformer(QuasarInstrumentationHook)
         }
     }
-
 }
 
 object QuasarInstrumentationHook : ClassFileTransformer {
@@ -176,11 +175,11 @@ object QuasarInstrumentationHook : ClassFileTransformer {
     )
 
     override fun transform(
-            loader: ClassLoader?,
-            className: String,
-            classBeingRedefined: Class<*>?,
-            protectionDomain: ProtectionDomain?,
-            classfileBuffer: ByteArray
+        loader: ClassLoader?,
+        className: String,
+        classBeingRedefined: Class<*>?,
+        protectionDomain: ProtectionDomain?,
+        classfileBuffer: ByteArray
     ): ByteArray {
         return try {
             val instrument = instrumentMap.get(className)
@@ -267,9 +266,9 @@ data class PackageTree(val branches: Map<String, PackageTree>) {
      */
     fun toGlobs(excludeTree: PackageTree): List<Glob> {
         data class State(
-                val include: PackageTree,
-                val exclude: PackageTree,
-                val globSoFar: List<String>
+            val include: PackageTree,
+            val exclude: PackageTree,
+            val globSoFar: List<String>
         )
 
         val toExpandList = LinkedList(listOf(State(this, excludeTree, emptyList())))

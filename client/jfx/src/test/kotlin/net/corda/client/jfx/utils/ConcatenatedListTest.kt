@@ -152,5 +152,4 @@ class ConcatenatedListTest {
         assertEquals(replayedList[5], "e")
         assertEquals(replayedList[6], "f")
     }
-
 }

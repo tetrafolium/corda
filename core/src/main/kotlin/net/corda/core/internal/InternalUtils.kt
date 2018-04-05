@@ -183,7 +183,6 @@ inline fun elapsedTime(block: () -> Unit): Duration {
     return Duration.ofNanos(end - start)
 }
 
-
 fun <T> Logger.logElapsedTime(label: String, body: () -> T): T = logElapsedTime(label, this, body)
 
 // TODO: Add inline back when a new Kotlin version is released and check if the java.lang.VerifyError

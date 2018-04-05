@@ -26,33 +26,33 @@ object DummyLinearStateSchemaV1 : MappedSchema(schemaFamily = DummyLinearStateSc
     class PersistentDummyLinearState(
             /** [ContractState] attributes */
 
-            /** X500Name of participant parties **/
-            @ElementCollection
-            var participants: MutableSet<AbstractParty>,
+        /** X500Name of participant parties **/
+        @ElementCollection
+        var participants: MutableSet<AbstractParty>,
 
-            /**
-             * UniqueIdentifier
-             */
-            @Column(name = "external_id")
-            var externalId: String?,
+        /**
+         * UniqueIdentifier
+         */
+        @Column(name = "external_id")
+        var externalId: String?,
 
-            @Column(name = "uuid", nullable = false)
-            @Type(type = "uuid-char")
-            var uuid: UUID,
+        @Column(name = "uuid", nullable = false)
+        @Type(type = "uuid-char")
+        var uuid: UUID,
 
-            /**
-             *  Dummy attributes
-             */
-            @Column(name = "linear_string")
-            var linearString: String,
+        /**
+         *  Dummy attributes
+         */
+        @Column(name = "linear_string")
+        var linearString: String,
 
-            @Column(name = "linear_number")
-            var linearNumber: Long,
+        @Column(name = "linear_number")
+        var linearNumber: Long,
 
-            @Column(name = "linear_timestamp")
-            var linearTimestamp: Instant,
+        @Column(name = "linear_timestamp")
+        var linearTimestamp: Instant,
 
-            @Column(name = "linear_boolean")
-            var linearBoolean: Boolean
+        @Column(name = "linear_boolean")
+        var linearBoolean: Boolean
     ) : PersistentState()
 }

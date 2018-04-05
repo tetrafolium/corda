@@ -46,7 +46,7 @@ data class Const<T>(val value: T) : Perceivable<T> {
                 value!!.hashCode()
 }
 
-fun <T> const(k: T) : Perceivable<T> = Const(k)
+fun <T> const(k: T): Perceivable<T> = Const(k)
 
 // fun const(b: Boolean) : Perceivable<Boolean> = Const(b)
 
@@ -79,7 +79,7 @@ class EndDate : Perceivable<Instant> {
 }
 
 data class ActorPerceivable(val actor: Party) : Perceivable<Boolean>
-fun signedBy(actor: Party) : Perceivable<Boolean> = ActorPerceivable(actor)
+fun signedBy(actor: Party): Perceivable<Boolean> = ActorPerceivable(actor)
 
 fun signedByOneOf(actors: Collection<Party>): Perceivable<Boolean> =
         if (actors.size == 0)
@@ -117,7 +117,7 @@ operator fun Currency.div(currency: Currency) = CurrencyCross(this, currency)
 
 data class PerceivableComparison<T>(val left: Perceivable<T>, val cmp: Comparison, val right: Perceivable<T>, val type: Type) : Perceivable<Boolean>
 
-inline fun<reified T : Any> perceivableComparison(left: Perceivable<T>, cmp: Comparison, right: Perceivable<T>) =
+inline fun <reified T : Any> perceivableComparison(left: Perceivable<T>, cmp: Comparison, right: Perceivable<T>) =
     PerceivableComparison(left, cmp, right, T::class.java)
 
 infix fun Perceivable<BigDecimal>.lt(n: BigDecimal) = perceivableComparison(this, Comparison.LT, const(n))
@@ -156,21 +156,46 @@ operator fun Perceivable<Int>.minus(n: Int) = PerceivableOperation(this, Operati
 data class TerminalEvent(val reference: Party, val source: PublicKey) : Perceivable<Boolean>
 
 // todo: holidays
-data class Interest(val amount: Perceivable<BigDecimal>, val dayCountConvention: String,
-                    val interest: Perceivable<BigDecimal>, val start: Perceivable<Instant>, val end: Perceivable<Instant>) : Perceivable<BigDecimal>
+data class Interest(
+    val amount: Perceivable<BigDecimal>,
+    val dayCountConvention: String,
+    val interest: Perceivable<BigDecimal>,
+    val start: Perceivable<Instant>,
+    val end: Perceivable<Instant>
+) : Perceivable<BigDecimal>
 
-fun interest(@Suppress("UNUSED_PARAMETER") amount: BigDecimal, @Suppress("UNUSED_PARAMETER") dayCountConvention: String, @Suppress("UNUSED_PARAMETER") interest: BigDecimal /* todo -  appropriate type */,
-             @Suppress("UNUSED_PARAMETER") start: String, @Suppress("UNUSED_PARAMETER") end: String): Perceivable<BigDecimal> = Interest(Const(amount), dayCountConvention, Const(interest), const(parseDate(start).toInstant()), const(parseDate(end).toInstant()))
+fun interest(
+    @Suppress("UNUSED_PARAMETER") amount: BigDecimal,
+    @Suppress("UNUSED_PARAMETER") dayCountConvention: String,
+    @Suppress("UNUSED_PARAMETER") interest: BigDecimal /* todo -  appropriate type */,
+    @Suppress("UNUSED_PARAMETER") start: String,
+    @Suppress("UNUSED_PARAMETER") end: String
+): Perceivable<BigDecimal> = Interest(Const(amount), dayCountConvention, Const(interest), const(parseDate(start).toInstant()), const(parseDate(end).toInstant()))
 
-fun interest(@Suppress("UNUSED_PARAMETER") amount: BigDecimal, @Suppress("UNUSED_PARAMETER") dayCountConvention: String, @Suppress("UNUSED_PARAMETER") interest: Perceivable<BigDecimal> /* todo -  appropriate type */,
-             @Suppress("UNUSED_PARAMETER") start: String, @Suppress("UNUSED_PARAMETER") end: String): Perceivable<BigDecimal> =
+fun interest(
+    @Suppress("UNUSED_PARAMETER") amount: BigDecimal,
+    @Suppress("UNUSED_PARAMETER") dayCountConvention: String,
+    @Suppress("UNUSED_PARAMETER") interest: Perceivable<BigDecimal> /* todo -  appropriate type */,
+    @Suppress("UNUSED_PARAMETER") start: String,
+    @Suppress("UNUSED_PARAMETER") end: String
+): Perceivable<BigDecimal> =
         Interest(Const(amount), dayCountConvention, interest, const(parseDate(start).toInstant()), const(parseDate(end).toInstant()))
 
-fun interest(@Suppress("UNUSED_PARAMETER") amount: BigDecimal, @Suppress("UNUSED_PARAMETER") dayCountConvention: String, @Suppress("UNUSED_PARAMETER") interest: BigDecimal /* todo -  appropriate type */,
-             @Suppress("UNUSED_PARAMETER") start: Perceivable<Instant>, @Suppress("UNUSED_PARAMETER") end: Perceivable<Instant>): Perceivable<BigDecimal> = Interest(const(amount), dayCountConvention, const(interest), start, end)
+fun interest(
+    @Suppress("UNUSED_PARAMETER") amount: BigDecimal,
+    @Suppress("UNUSED_PARAMETER") dayCountConvention: String,
+    @Suppress("UNUSED_PARAMETER") interest: BigDecimal /* todo -  appropriate type */,
+    @Suppress("UNUSED_PARAMETER") start: Perceivable<Instant>,
+    @Suppress("UNUSED_PARAMETER") end: Perceivable<Instant>
+): Perceivable<BigDecimal> = Interest(const(amount), dayCountConvention, const(interest), start, end)
 
-fun interest(@Suppress("UNUSED_PARAMETER") amount: BigDecimal, @Suppress("UNUSED_PARAMETER") dayCountConvention: String, @Suppress("UNUSED_PARAMETER") interest: Perceivable<BigDecimal> /* todo -  appropriate type */,
-             @Suppress("UNUSED_PARAMETER") start: Perceivable<Instant>, @Suppress("UNUSED_PARAMETER") end: Perceivable<Instant>): Perceivable<BigDecimal> = Interest(const(amount), dayCountConvention, interest, start, end)
+fun interest(
+    @Suppress("UNUSED_PARAMETER") amount: BigDecimal,
+    @Suppress("UNUSED_PARAMETER") dayCountConvention: String,
+    @Suppress("UNUSED_PARAMETER") interest: Perceivable<BigDecimal> /* todo -  appropriate type */,
+    @Suppress("UNUSED_PARAMETER") start: Perceivable<Instant>,
+    @Suppress("UNUSED_PARAMETER") end: Perceivable<Instant>
+): Perceivable<BigDecimal> = Interest(const(amount), dayCountConvention, interest, start, end)
 
 data class Fixing(val source: String, val date: Perceivable<Instant>, val tenor: Tenor) : Perceivable<BigDecimal>
 

@@ -13,7 +13,6 @@ import net.corda.finance.utils.sumCommoditiesOrZero
 import java.security.PublicKey
 import java.util.*
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Commodity
@@ -37,10 +36,10 @@ class CommodityContract : OnLedgerAsset<Commodity, CommodityContract.Commands, C
 
     /** A state representing a commodity claim against some party */
     data class State(
-            override val amount: Amount<Issued<Commodity>>,
+        override val amount: Amount<Issued<Commodity>>,
 
-            /** There must be a MoveCommand signed by this key to claim the amount */
-            override val owner: AbstractParty
+        /** There must be a MoveCommand signed by this key to claim the amount */
+        override val owner: AbstractParty
     ) : FungibleAsset<Commodity> {
         constructor(deposit: PartyAndReference, amount: Amount<Commodity>, owner: AbstractParty)
                 : this(Amount(amount.quantity, Issued(deposit, amount.token)), owner)
@@ -48,8 +47,8 @@ class CommodityContract : OnLedgerAsset<Commodity, CommodityContract.Commands, C
         override val exitKeys: Set<PublicKey> = Collections.singleton(owner.owningKey)
         override val participants = listOf(owner)
 
-        override fun withNewOwnerAndAmount(newAmount: Amount<Issued<Commodity>>, newOwner: AbstractParty): FungibleAsset<Commodity>
-                = copy(amount = amount.copy(newAmount.quantity), owner = newOwner)
+        override fun withNewOwnerAndAmount(newAmount: Amount<Issued<Commodity>>, newOwner: AbstractParty): FungibleAsset<Commodity> =
+                copy(amount = amount.copy(newAmount.quantity), owner = newOwner)
 
         override fun toString() = "Commodity($amount at ${amount.token.issuer} owned by $owner)"
 
@@ -118,12 +117,14 @@ class CommodityContract : OnLedgerAsset<Commodity, CommodityContract.Commands, C
         }
     }
 
-    private fun verifyIssueCommand(inputs: List<State>,
-                                   outputs: List<State>,
-                                   tx: LedgerTransaction,
-                                   issueCommand: CommandWithParties<Commands.Issue>,
-                                   commodity: Commodity,
-                                   issuer: PartyAndReference) {
+    private fun verifyIssueCommand(
+        inputs: List<State>,
+        outputs: List<State>,
+        tx: LedgerTransaction,
+        issueCommand: CommandWithParties<Commands.Issue>,
+        commodity: Commodity,
+        issuer: PartyAndReference
+    ) {
         // If we have an issue command, perform special processing: the group is allowed to have no inputs,
         // and the output states must have a deposit reference owned by the signer.
         //
@@ -145,24 +146,23 @@ class CommodityContract : OnLedgerAsset<Commodity, CommodityContract.Commands, C
         }
     }
 
-    override fun extractCommands(commands: Collection<CommandWithParties<CommandData>>): List<CommandWithParties<Commands>>
-            = commands.select<CommodityContract.Commands>()
+    override fun extractCommands(commands: Collection<CommandWithParties<CommandData>>): List<CommandWithParties<Commands>> =
+            commands.select<CommodityContract.Commands>()
 
     /**
      * Puts together an issuance transaction from the given template, that starts out being owned by the given pubkey.
      */
-    fun generateIssue(tx: TransactionBuilder, tokenDef: Issued<Commodity>, pennies: Long, owner: AbstractParty, notary: Party)
-            = generateIssue(tx, Amount(pennies, tokenDef), owner, notary)
+    fun generateIssue(tx: TransactionBuilder, tokenDef: Issued<Commodity>, pennies: Long, owner: AbstractParty, notary: Party) =
+            generateIssue(tx, Amount(pennies, tokenDef), owner, notary)
 
     /**
      * Puts together an issuance transaction for the specified amount that starts out being owned by the given pubkey.
      */
-    fun generateIssue(tx: TransactionBuilder, amount: Amount<Issued<Commodity>>, owner: AbstractParty, notary: Party)
-            = generateIssue(tx, TransactionState(State(amount, owner), PROGRAM_ID, notary), Commands.Issue())
+    fun generateIssue(tx: TransactionBuilder, amount: Amount<Issued<Commodity>>, owner: AbstractParty, notary: Party) =
+            generateIssue(tx, TransactionState(State(amount, owner), PROGRAM_ID, notary), Commands.Issue())
 
-
-    override fun deriveState(txState: TransactionState<State>, amount: Amount<Issued<Commodity>>, owner: AbstractParty)
-            = txState.copy(data = txState.data.copy(amount = amount, owner = owner))
+    override fun deriveState(txState: TransactionState<State>, amount: Amount<Issued<Commodity>>, owner: AbstractParty) =
+            txState.copy(data = txState.data.copy(amount = amount, owner = owner))
 
     override fun generateExitCommand(amount: Amount<Issued<Commodity>>) = Commands.Exit(amount)
     override fun generateMoveCommand() = Commands.Move()

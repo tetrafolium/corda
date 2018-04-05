@@ -22,12 +22,14 @@ interface FlowStateMachine<R> {
     fun initiateFlow(otherParty: Party, sessionFlow: FlowLogic<*>): FlowSession
 
     @Suspendable
-    fun <T : Any> sendAndReceive(receiveType: Class<T>,
-                                 otherParty: Party,
-                                 payload: Any,
-                                 sessionFlow: FlowLogic<*>,
-                                 retrySend: Boolean,
-                                 maySkipCheckpoint: Boolean): UntrustworthyData<T>
+    fun <T : Any> sendAndReceive(
+        receiveType: Class<T>,
+        otherParty: Party,
+        payload: Any,
+        sessionFlow: FlowLogic<*>,
+        retrySend: Boolean,
+        maySkipCheckpoint: Boolean
+    ): UntrustworthyData<T>
 
     @Suspendable
     fun <T : Any> receive(receiveType: Class<T>, otherParty: Party, sessionFlow: FlowLogic<*>, maySkipCheckpoint: Boolean): UntrustworthyData<T>

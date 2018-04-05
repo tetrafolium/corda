@@ -109,9 +109,9 @@ abstract class TraversableTransaction(open val componentGroups: List<ComponentGr
  */
 @CordaSerializable
 class FilteredTransaction internal constructor(
-        override val id: SecureHash,
-        val filteredComponentGroups: List<FilteredComponentGroup>,
-        val groupHashes: List<SecureHash>
+    override val id: SecureHash,
+    val filteredComponentGroups: List<FilteredComponentGroup>,
+    val groupHashes: List<SecureHash>
 ) : TraversableTransaction(filteredComponentGroups) {
 
     companion object {
@@ -308,7 +308,7 @@ class FilteredTransaction internal constructor(
         }
 
         return commandSigners.components
-                .mapIndexed { internalIndex, opaqueBytes ->  signersKeys(internalIndex, opaqueBytes) }
+                .mapIndexed { internalIndex, opaqueBytes -> signersKeys(internalIndex, opaqueBytes) }
                 .filter { signers -> publicKey in signers }.size
     }
 

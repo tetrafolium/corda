@@ -10,7 +10,7 @@ class CordaViewModel {
     val selectedView = SimpleObjectProperty<CordaView>()
     val registeredViews = mutableListOf<CordaView>().observable()
 
-    inline fun <reified T> registerView() where  T : CordaView {
+    inline fun <reified T> registerView() where T : CordaView {
         // Note: this is weirdly very important, as it forces the initialisation of Views. Therefore this is the entry
         // point to the top level observable/stream wiring! Any events sent before this init may be lost!
         registeredViews.add(find<T>().apply { root })

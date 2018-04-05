@@ -52,7 +52,6 @@ class FinanceTypesTest {
         println(ret)
     }
 
-
     @Test
     fun `create a UK calendar`() {
         val cal = BusinessCalendar.getInstance("London")
@@ -82,7 +81,6 @@ class FinanceTypesTest {
         val result = ldn.applyRollConvention(LocalDate.of(2016, 12, 31), DateRollConvention.ModifiedFollowing)
         assertEquals(LocalDate.of(2016, 12, 30), result)
     }
-
 
     @Test
     fun `calendar test of modified previous`() {
@@ -143,6 +141,5 @@ class FinanceTypesTest {
             val result = ldn.moveBusinessDays(firstDay, DateRollDirection.BACKWARD, inc)
             assertEquals(exp, result)
         }
-
     }
 }

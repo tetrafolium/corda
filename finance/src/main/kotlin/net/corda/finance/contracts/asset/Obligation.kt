@@ -42,8 +42,8 @@ interface NetState<P : Any> {
  * Bilateral states are used in close-out netting.
  */
 data class BilateralNetState<P : Any>(
-        val partyKeys: Set<AbstractParty>,
-        override val template: Obligation.Terms<P>
+    val partyKeys: Set<AbstractParty>,
+    override val template: Obligation.Terms<P>
 ) : NetState<P>
 
 /**
@@ -55,7 +55,7 @@ data class BilateralNetState<P : Any>(
  * Used in cases where all parties (or their proxies) are signing, such as central clearing.
  */
 data class MultilateralNetState<P : Any>(
-        override val template: Obligation.Terms<P>
+    override val template: Obligation.Terms<P>
 ) : NetState<P>
 
 /**
@@ -100,14 +100,14 @@ class Obligation<P : Any> : Contract {
      */
     @CordaSerializable
     data class Terms<P : Any>(
-            /** The hash of the asset contract we're willing to accept in payment for this debt. */
-            val acceptableContracts: NonEmptySet<SecureHash>,
-            /** The parties whose assets we are willing to accept in payment for this debt. */
-            val acceptableIssuedProducts: NonEmptySet<Issued<P>>,
+        /** The hash of the asset contract we're willing to accept in payment for this debt. */
+        val acceptableContracts: NonEmptySet<SecureHash>,
+        /** The parties whose assets we are willing to accept in payment for this debt. */
+        val acceptableIssuedProducts: NonEmptySet<Issued<P>>,
 
-            /** When the contract must be settled by. */
-            val dueBefore: Instant,
-            val timeTolerance: Duration = 30.seconds
+        /** When the contract must be settled by. */
+        val dueBefore: Instant,
+        val timeTolerance: Duration = 30.seconds
     ) {
         val product: P
             get() = acceptableIssuedProducts.map { it.product }.toSet().single()
@@ -121,13 +121,13 @@ class Obligation<P : Any> : Contract {
      * @param P the product the obligation is for payment of.
      */
     data class State<P : Any>(
-            var lifecycle: Lifecycle = Lifecycle.NORMAL,
-            /** Where the debt originates from (obligor) */
-            val obligor: AbstractParty,
-            val template: Terms<P>,
-            val quantity: Long,
-            /** The public key of the entity the contract pays to */
-            val beneficiary: AbstractParty
+        var lifecycle: Lifecycle = Lifecycle.NORMAL,
+        /** Where the debt originates from (obligor) */
+        val obligor: AbstractParty,
+        val template: Terms<P>,
+        val quantity: Long,
+        /** The public key of the entity the contract pays to */
+        val beneficiary: AbstractParty
     ) : FungibleAsset<Terms<P>>, NettableState<State<P>, MultilateralNetState<P>> {
         override val amount: Amount<Issued<Terms<P>>> = Amount(quantity, Issued(obligor.ref(0), template))
         override val exitKeys: Collection<PublicKey> = setOf(beneficiary.owningKey)
@@ -135,8 +135,8 @@ class Obligation<P : Any> : Contract {
         override val participants: List<AbstractParty> = listOf(obligor, beneficiary)
         override val owner: AbstractParty = beneficiary
 
-        override fun withNewOwnerAndAmount(newAmount: Amount<Issued<Terms<P>>>, newOwner: AbstractParty): State<P>
-                = copy(quantity = newAmount.quantity, beneficiary = newOwner)
+        override fun withNewOwnerAndAmount(newAmount: Amount<Issued<Terms<P>>>, newOwner: AbstractParty): State<P> =
+                copy(quantity = newAmount.quantity, beneficiary = newOwner)
 
         override fun toString() = when (lifecycle) {
             Lifecycle.NORMAL -> "${Emoji.bagOfCash}Debt($amount due $dueBefore to $beneficiary)"
@@ -253,10 +253,12 @@ class Obligation<P : Any> : Contract {
         }
     }
 
-    private fun conserveAmount(tx: LedgerTransaction,
-                               inputs: List<FungibleAsset<Terms<P>>>,
-                               outputs: List<FungibleAsset<Terms<P>>>,
-                               key: Issued<Terms<P>>) {
+    private fun conserveAmount(
+        tx: LedgerTransaction,
+        inputs: List<FungibleAsset<Terms<P>>>,
+        outputs: List<FungibleAsset<Terms<P>>>,
+        key: Issued<Terms<P>>
+    ) {
         val issuer = key.issuer
         val terms = key.product
         val inputAmount = inputs.sumObligationsOrNull<P>() ?: throw IllegalArgumentException("there is at least one obligation input for this group")
@@ -277,11 +279,13 @@ class Obligation<P : Any> : Contract {
         verifyMoveCommand<Commands.Move>(inputs, tx.commands)
     }
 
-    private fun verifyIssueCommand(tx: LedgerTransaction,
-                                   inputs: List<FungibleAsset<Terms<P>>>,
-                                   outputs: List<FungibleAsset<Terms<P>>>,
-                                   issueCommand: CommandWithParties<Commands.Issue>,
-                                   key: Issued<Terms<P>>) {
+    private fun verifyIssueCommand(
+        tx: LedgerTransaction,
+        inputs: List<FungibleAsset<Terms<P>>>,
+        outputs: List<FungibleAsset<Terms<P>>>,
+        issueCommand: CommandWithParties<Commands.Issue>,
+        key: Issued<Terms<P>>
+    ) {
         // If we have an issue command, perform special processing: the group is allowed to have no inputs,
         // and the output states must have a deposit reference owned by the signer.
         //
@@ -305,11 +309,13 @@ class Obligation<P : Any> : Contract {
         }
     }
 
-    private fun verifySettleCommand(tx: LedgerTransaction,
-                                    inputs: List<FungibleAsset<Terms<P>>>,
-                                    outputs: List<FungibleAsset<Terms<P>>>,
-                                    command: CommandWithParties<Commands.Settle<P>>,
-                                    groupingKey: Issued<Terms<P>>) {
+    private fun verifySettleCommand(
+        tx: LedgerTransaction,
+        inputs: List<FungibleAsset<Terms<P>>>,
+        outputs: List<FungibleAsset<Terms<P>>>,
+        command: CommandWithParties<Commands.Settle<P>>,
+        groupingKey: Issued<Terms<P>>
+    ) {
         val obligor = groupingKey.issuer.party
         val template = groupingKey.product
         val inputAmount: Amount<Issued<Terms<P>>> = inputs.sumObligationsOrNull<P>() ?: throw IllegalArgumentException("there is at least one obligation input for this group")
@@ -428,10 +434,12 @@ class Obligation<P : Any> : Contract {
      * A default command mutates inputs and produces identical outputs, except that the lifecycle changes.
      */
     @VisibleForTesting
-    private fun verifySetLifecycleCommand(inputs: List<FungibleAsset<Terms<P>>>,
-                                          outputs: List<FungibleAsset<Terms<P>>>,
-                                          tx: LedgerTransaction,
-                                          setLifecycleCommand: CommandWithParties<Commands.SetLifecycle>) {
+    private fun verifySetLifecycleCommand(
+        inputs: List<FungibleAsset<Terms<P>>>,
+        outputs: List<FungibleAsset<Terms<P>>>,
+        tx: LedgerTransaction,
+        setLifecycleCommand: CommandWithParties<Commands.SetLifecycle>
+    ) {
         // Default must not change anything except lifecycle, so number of inputs and outputs must match
         // exactly.
         require(inputs.size == outputs.size) { "Number of inputs and outputs must match" }
@@ -471,9 +479,11 @@ class Obligation<P : Any> : Contract {
      * @param inputs two or more states, which must be compatible for bilateral netting (same issuance definitions,
      * and same parties involved).
      */
-    fun generateCloseOutNetting(tx: TransactionBuilder,
-                                signer: AbstractParty,
-                                vararg inputs: StateAndRef<State<P>>) {
+    fun generateCloseOutNetting(
+        tx: TransactionBuilder,
+        signer: AbstractParty,
+        vararg inputs: StateAndRef<State<P>>
+    ) {
         val states = inputs.map { it.state.data }
         val netState = states.firstOrNull()?.bilateralNetState
 
@@ -501,9 +511,12 @@ class Obligation<P : Any> : Contract {
      * @return the public keys which must sign the transaction for it to be valid.
      */
     @Suppress("unused")
-    fun generateExit(tx: TransactionBuilder, amountIssued: Amount<Issued<Terms<P>>>,
-                     assetStates: List<StateAndRef<Obligation.State<P>>>): Set<PublicKey>
-            = OnLedgerAsset.generateExit(tx, amountIssued, assetStates,
+    fun generateExit(
+        tx: TransactionBuilder,
+        amountIssued: Amount<Issued<Terms<P>>>,
+        assetStates: List<StateAndRef<Obligation.State<P>>>
+    ): Set<PublicKey> =
+            OnLedgerAsset.generateExit(tx, amountIssued, assetStates,
             deriveState = { state, amount, owner -> state.copy(data = state.data.withNewOwnerAndAmount(amount, owner)) },
             generateMoveCommand = { -> Commands.Move() },
             generateExitCommand = { amount -> Commands.Exit(amount) }
@@ -522,13 +535,15 @@ class Obligation<P : Any> : Contract {
      * @param beneficiary the party the obligor is expected to pay.
      * @param notary the notary for this transaction's outputs.
      */
-    fun generateCashIssue(tx: TransactionBuilder,
-                          obligor: AbstractParty,
-                          acceptableContract: SecureHash,
-                          amount: Amount<Issued<Currency>>,
-                          dueBefore: Instant,
-                          beneficiary: AbstractParty,
-                          notary: Party) {
+    fun generateCashIssue(
+        tx: TransactionBuilder,
+        obligor: AbstractParty,
+        acceptableContract: SecureHash,
+        amount: Amount<Issued<Currency>>,
+        dueBefore: Instant,
+        beneficiary: AbstractParty,
+        notary: Party
+    ) {
         val issuanceDef = Terms(NonEmptySet.of(acceptableContract), NonEmptySet.of(amount.token), dueBefore)
         OnLedgerAsset.generateIssue(tx, TransactionState(State(Lifecycle.NORMAL, obligor, issuanceDef, amount.quantity, beneficiary), PROGRAM_ID, notary), Commands.Issue())
     }
@@ -544,18 +559,22 @@ class Obligation<P : Any> : Contract {
      * @param beneficiary the party the obligor is expected to pay.
      * @param notary the notary for this transaction's outputs.
      */
-    fun generateIssue(tx: TransactionBuilder,
-                      obligor: AbstractParty,
-                      issuanceDef: Terms<P>,
-                      pennies: Long,
-                      beneficiary: AbstractParty,
-                      notary: Party)
-            = OnLedgerAsset.generateIssue(tx, TransactionState(State(Lifecycle.NORMAL, obligor, issuanceDef, pennies, beneficiary), PROGRAM_ID, notary), Commands.Issue())
+    fun generateIssue(
+        tx: TransactionBuilder,
+        obligor: AbstractParty,
+        issuanceDef: Terms<P>,
+        pennies: Long,
+        beneficiary: AbstractParty,
+        notary: Party
+    ) =
+            OnLedgerAsset.generateIssue(tx, TransactionState(State(Lifecycle.NORMAL, obligor, issuanceDef, pennies, beneficiary), PROGRAM_ID, notary), Commands.Issue())
 
-    fun generatePaymentNetting(tx: TransactionBuilder,
-                               issued: Issued<Obligation.Terms<P>>,
-                               notary: Party,
-                               vararg inputs: StateAndRef<State<P>>) {
+    fun generatePaymentNetting(
+        tx: TransactionBuilder,
+        issued: Issued<Obligation.Terms<P>>,
+        notary: Party,
+        vararg inputs: StateAndRef<State<P>>
+    ) {
         val states = inputs.map { it.state.data }
         requireThat {
             "all states are in the normal lifecycle state " using (states.all { it.lifecycle == Lifecycle.NORMAL })
@@ -586,7 +605,6 @@ class Obligation<P : Any> : Contract {
                     .forEach { tx.addOutputState(it, PROGRAM_ID, notary) }
             tx.addCommand(Commands.Net(NetType.PAYMENT), signers.map { it.owningKey })
         }
-
     }
 
     /**
@@ -595,10 +613,12 @@ class Obligation<P : Any> : Contract {
      * @param statesAndRefs a list of state objects, which MUST all have the same issuance definition. This avoids
      * potential complications arising from different deadlines applying to different states.
      */
-    fun generateSetLifecycle(tx: TransactionBuilder,
-                             statesAndRefs: List<StateAndRef<State<P>>>,
-                             lifecycle: Lifecycle,
-                             notary: Party) {
+    fun generateSetLifecycle(
+        tx: TransactionBuilder,
+        statesAndRefs: List<StateAndRef<State<P>>>,
+        lifecycle: Lifecycle,
+        notary: Party
+    ) {
         val states = statesAndRefs.map { it.state.data }
         val issuanceDef = getTermsOrThrow(states)
         val existingLifecycle = when (lifecycle) {
@@ -630,11 +650,13 @@ class Obligation<P : Any> : Contract {
      * It is strongly encouraged that these all have the same beneficiary.
      * @param moveCommand the command used to move the asset state objects to their new owner.
      */
-    fun generateSettle(tx: TransactionBuilder,
-                       statesAndRefs: Iterable<StateAndRef<State<P>>>,
-                       assetStatesAndRefs: Iterable<StateAndRef<FungibleAsset<P>>>,
-                       moveCommand: MoveCommand,
-                       notary: Party) {
+    fun generateSettle(
+        tx: TransactionBuilder,
+        statesAndRefs: Iterable<StateAndRef<State<P>>>,
+        assetStatesAndRefs: Iterable<StateAndRef<FungibleAsset<P>>>,
+        moveCommand: MoveCommand,
+        notary: Party
+    ) {
         val states = statesAndRefs.map { it.state }
         val obligationIssuer = states.first().data.obligor
         val obligationOwner = states.first().data.beneficiary
@@ -700,7 +722,6 @@ class Obligation<P : Any> : Contract {
     private fun getTermsOrThrow(states: Iterable<State<P>>) =
             states.map { it.template }.distinct().single()
 }
-
 
 /**
  * Convert a list of settlement states into total from each obligor to a beneficiary.

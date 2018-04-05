@@ -40,7 +40,6 @@ internal class VisualiserView {
     var scrollPane: ScrollPane? = null
     var hideButton = Button("«").apply { styleClass += "hide-sidebar-button" }
 
-
     // -23.2031,29.8406,33.0469,64.3209
     val mapImage = ImageView(Image(NetworkMapVisualiser::class.java.getResourceAsStream("Europe.jpg")))
 
@@ -56,9 +55,11 @@ internal class VisualiserView {
     // This row height is controlled in the CSS and needs to match.
     val sideBarStepHeight = 40.0
 
-    fun setup(runningPausedState: NetworkMapVisualiser.RunningPausedState,
-              displayStyle: Style,
-              presentationMode: Boolean) {
+    fun setup(
+        runningPausedState: NetworkMapVisualiser.RunningPausedState,
+        displayStyle: Style,
+        presentationMode: Boolean
+    ) {
         NetworkMapVisualiser::class.java.getResourceAsStream("SourceSansPro-Regular.otf").use {
             Font.loadFont(it, 120.0)
         }
@@ -135,7 +136,6 @@ internal class VisualiserView {
         }
     }
 
-
     fun makeHideButton(defaultSplitterPosition: Double): Button {
         var hideButtonToggled = false
         hideButton.isFocusTraversable = false
@@ -198,9 +198,11 @@ internal class VisualiserView {
         return sp
     }
 
-    fun makeTopBar(runningPausedState: NetworkMapVisualiser.RunningPausedState,
-                   displayStyle: Style,
-                   presentationMode: Boolean): VBox {
+    fun makeTopBar(
+        runningPausedState: NetworkMapVisualiser.RunningPausedState,
+        displayStyle: Style,
+        presentationMode: Boolean
+    ): VBox {
         nextButton = Button("Next").apply {
             styleClass += "button"
             styleClass += "next-button"

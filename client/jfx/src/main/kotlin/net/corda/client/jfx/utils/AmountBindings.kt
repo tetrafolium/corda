@@ -23,8 +23,8 @@ object AmountBindings {
     ) { sum -> Amount(sum.toLong(), token) }
 
     fun exchange(
-            observableCurrency: ObservableValue<Currency>,
-            observableExchangeRate: ObservableValue<ExchangeRate>
+        observableCurrency: ObservableValue<Currency>,
+        observableExchangeRate: ObservableValue<ExchangeRate>
     ): ObservableValue<Pair<Currency, (Amount<Currency>) -> Long>> {
         return EasyBind.combine(observableCurrency, observableExchangeRate) { currency, exchangeRate ->
             Pair<Currency, (Amount<Currency>) -> Long>(
@@ -35,9 +35,9 @@ object AmountBindings {
     }
 
     fun sumAmountExchange(
-            amounts: ObservableList<Amount<Currency>>,
-            currency: ObservableValue<Currency>,
-            exchangeRate: ObservableValue<ExchangeRate>
+        amounts: ObservableList<Amount<Currency>>,
+        currency: ObservableValue<Currency>,
+        exchangeRate: ObservableValue<ExchangeRate>
     ): ObservableValue<Amount<Currency>> {
         return EasyBind.monadic(exchange(currency, exchangeRate)).flatMap {
             val (currencyValue, exchange: (Amount<Currency>) -> Long) = it

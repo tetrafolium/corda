@@ -11,8 +11,8 @@ abstract class Watch {
     private val latch = CountDownLatch(1)
 
     open fun await(
-            observable: Observable<String>,
-            timeout: Duration = 10.seconds
+        observable: Observable<String>,
+        timeout: Duration = 10.seconds
     ): Boolean {
         observable
                 .filter { match(it) }
@@ -29,5 +29,4 @@ abstract class Watch {
     operator fun div(other: Watch): Watch {
         return DisjunctiveWatch(this, other)
     }
-
 }

@@ -122,10 +122,10 @@ class InitiatorFlow(val arg1: Boolean, val arg2: Int, private val counterparty: 
                 organisation = "NodeA",
                 locality = "London",
                 country = "GB")
-        val namedCounterparty: Party = serviceHub.identityService.wellKnownPartyFromX500Name(counterpartyName) ?:
-                throw IllegalArgumentException("Couldn't find counterparty for NodeA in identity service")
-        val keyedCounterparty: Party = serviceHub.identityService.partyFromKey(dummyPubKey) ?:
-                throw IllegalArgumentException("Couldn't find counterparty with key: $dummyPubKey in identity service")
+        val namedCounterparty: Party = serviceHub.identityService.wellKnownPartyFromX500Name(counterpartyName)
+                ?: throw IllegalArgumentException("Couldn't find counterparty for NodeA in identity service")
+        val keyedCounterparty: Party = serviceHub.identityService.partyFromKey(dummyPubKey)
+                ?: throw IllegalArgumentException("Couldn't find counterparty with key: $dummyPubKey in identity service")
         // DOCEND 02
 
         /**-----------------------------
@@ -268,7 +268,7 @@ class InitiatorFlow(val arg1: Boolean, val arg2: Int, private val counterparty: 
 
         // We then need to pair our output state with a contract.
         // DOCSTART 47
-        val  ourOutput: StateAndContract = StateAndContract(ourOutputState, DummyContract.PROGRAM_ID)
+        val ourOutput: StateAndContract = StateAndContract(ourOutputState, DummyContract.PROGRAM_ID)
         // DOCEND 47
 
         // Commands pair a ``CommandData`` instance with a list of

@@ -82,15 +82,21 @@ class CashViewer : CordaView("Cash") {
     /**
      * This holds the data for each row in the TreeTable.
      */
-    sealed class ViewerNode(val equivAmount: ObservableValue<out Amount<Currency>>,
-                            val states: ObservableList<StateAndRef<Cash.State>>) {
-        class IssuerNode(val issuer: AbstractParty,
-                         sumEquivAmount: ObservableValue<out Amount<Currency>>,
-                         states: ObservableList<StateAndRef<Cash.State>>) : ViewerNode(sumEquivAmount, states)
+    sealed class ViewerNode(
+        val equivAmount: ObservableValue<out Amount<Currency>>,
+        val states: ObservableList<StateAndRef<Cash.State>>
+    ) {
+        class IssuerNode(
+            val issuer: AbstractParty,
+            sumEquivAmount: ObservableValue<out Amount<Currency>>,
+            states: ObservableList<StateAndRef<Cash.State>>
+        ) : ViewerNode(sumEquivAmount, states)
 
-        class CurrencyNode(val amount: ObservableValue<Amount<Currency>>,
-                           equivAmount: ObservableValue<Amount<Currency>>,
-                           states: ObservableList<StateAndRef<Cash.State>>) : ViewerNode(equivAmount, states)
+        class CurrencyNode(
+            val amount: ObservableValue<Amount<Currency>>,
+            equivAmount: ObservableValue<Amount<Currency>>,
+            states: ObservableList<StateAndRef<Cash.State>>
+        ) : ViewerNode(equivAmount, states)
     }
 
     /**
@@ -322,7 +328,7 @@ class CashViewer : CordaView("Cash") {
                         // If amount is not the same - always add a data point.
                         if (lastAmount == null || lastAmount != currAmount) {
                             // If update arrived in very close succession to the previous one - kill the last point received to eliminate un-necessary noise on the graph.
-                            if(lastTimeStamp != null && currentTimeStamp - lastTimeStamp.toLong() < 1.seconds.toMillis()) {
+                            if (lastTimeStamp != null && currentTimeStamp - lastTimeStamp.toLong() < 1.seconds.toMillis()) {
                                 data.safelyTransition {
                                     remove(size - 1, size)
                                 }

@@ -36,12 +36,12 @@ private val log = loggerFor<LoadTest<*, *>>()
  */
 // DOCS START 1
 data class LoadTest<T, S>(
-        val testName: String,
-        val generate: Nodes.(S, Int) -> Generator<List<T>>,
-        val interpret: (S, T) -> S,
-        val execute: Nodes.(T) -> Unit,
-        val gatherRemoteState: Nodes.(S?) -> S,
-        val isConsistent: (S) -> Boolean = { true }
+    val testName: String,
+    val generate: Nodes.(S, Int) -> Generator<List<T>>,
+    val interpret: (S, T) -> S,
+    val execute: Nodes.(T) -> Unit,
+    val gatherRemoteState: Nodes.(S?) -> S,
+    val isConsistent: (S) -> Boolean = { true }
 ) {
 // DOCS END 1
 
@@ -58,12 +58,12 @@ data class LoadTest<T, S>(
      *     be interleaved with the specified disruptions.
      */
     data class RunParameters(
-            val parallelism: Int,
-            val generateCount: Int,
-            val clearDatabaseBeforeRun: Boolean,
-            val executionFrequency: Int?,
-            val gatherFrequency: Int,
-            val disruptionPatterns: List<List<DisruptionSpec>>
+        val parallelism: Int,
+        val generateCount: Int,
+        val clearDatabaseBeforeRun: Boolean,
+        val executionFrequency: Int?,
+        val gatherFrequency: Int,
+        val disruptionPatterns: List<List<DisruptionSpec>>
     )
     // DOCS END 2
 
@@ -150,8 +150,8 @@ data class LoadTest<T, S>(
 }
 
 data class Nodes(
-        val notary: NodeConnection,
-        val simpleNodes: List<NodeConnection>
+    val notary: NodeConnection,
+    val simpleNodes: List<NodeConnection>
 ) {
     val allNodes by lazy { (listOf(notary) + simpleNodes).associateBy { it.info }.values }
 }

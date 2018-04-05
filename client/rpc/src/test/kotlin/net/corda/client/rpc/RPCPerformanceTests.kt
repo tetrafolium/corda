@@ -42,8 +42,8 @@ class RPCPerformanceTests : AbstractRPCTest() {
     }
 
     private fun RPCDriverDSL.testProxy(
-            clientConfiguration: CordaRPCClientConfigurationImpl,
-            serverConfiguration: RPCServerConfiguration
+        clientConfiguration: CordaRPCClientConfigurationImpl,
+        serverConfiguration: RPCServerConfiguration
     ): TestProxy<TestOps> {
         return testProxy<TestOps>(
                 TestOpsImpl(),
@@ -72,9 +72,9 @@ class RPCPerformanceTests : AbstractRPCTest() {
     }
 
     data class SimpleRPCResult(
-            val requestPerSecond: Double,
-            val averageIndividualMs: Double,
-            val Mbps: Double
+        val requestPerSecond: Double,
+        val averageIndividualMs: Double,
+        val Mbps: Double
     )
 
     @Test
@@ -146,7 +146,7 @@ class RPCPerformanceTests : AbstractRPCTest() {
     }
 
     data class BigMessagesResult(
-            val Mbps: Double
+        val Mbps: Double
     )
 
     @Test

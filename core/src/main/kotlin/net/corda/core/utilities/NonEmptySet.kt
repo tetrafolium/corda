@@ -39,7 +39,7 @@ class NonEmptySet<T> private constructor(private val elements: Set<T>) : Set<T> 
                 1 -> of(elements.first())
                 else -> {
                     val copy = LinkedHashSet<T>(elements.size)
-                    elements.forEach { copy += it }  // Can't use Collection.addAll as it doesn't specify insertion order
+                    elements.forEach { copy += it } // Can't use Collection.addAll as it doesn't specify insertion order
                     NonEmptySet(copy)
                 }
             }

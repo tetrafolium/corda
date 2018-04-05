@@ -51,10 +51,10 @@ class CommercialPaper : Contract {
     }
 
     data class State(
-            val issuance: PartyAndReference,
-            override val owner: AbstractParty,
-            val faceValue: Amount<Issued<Currency>>,
-            val maturityDate: Instant
+        val issuance: PartyAndReference,
+        override val owner: AbstractParty,
+        val faceValue: Amount<Issued<Currency>>,
+        val maturityDate: Instant
     ) : OwnableState, QueryableState, ICommercialPaperState {
         override val participants = listOf(owner)
 
@@ -165,8 +165,12 @@ class CommercialPaper : Contract {
      * an existing transaction because you aren't able to issue multiple pieces of CP in a single transaction
      * at the moment: this restriction is not fundamental and may be lifted later.
      */
-    fun generateIssue(issuance: PartyAndReference, faceValue: Amount<Issued<Currency>>, maturityDate: Instant,
-                      notary: Party): TransactionBuilder {
+    fun generateIssue(
+        issuance: PartyAndReference,
+        faceValue: Amount<Issued<Currency>>,
+        maturityDate: Instant,
+        notary: Party
+    ): TransactionBuilder {
         val state = State(issuance, issuance.party, faceValue, maturityDate)
         return TransactionBuilder(notary = notary).withItems(StateAndContract(state, CP_PROGRAM_ID), Command(Commands.Issue(), issuance.party.owningKey))
     }

@@ -79,10 +79,12 @@ abstract class NodeBasedTest(private val cordappPackages: List<String> = emptyLi
     }
 
     @JvmOverloads
-    fun startNode(legalName: CordaX500Name,
-                  platformVersion: Int = 1,
-                  rpcUsers: List<User> = emptyList(),
-                  configOverrides: Map<String, Any> = emptyMap()): StartedNode<Node> {
+    fun startNode(
+        legalName: CordaX500Name,
+        platformVersion: Int = 1,
+        rpcUsers: List<User> = emptyList(),
+        configOverrides: Map<String, Any> = emptyMap()
+    ): StartedNode<Node> {
         val baseDirectory = baseDirectory(legalName).createDirectories()
         val localPort = getFreeLocalPorts("localhost", 3)
         val p2pAddress = configOverrides["p2pAddress"] ?: localPort[0].toString()
@@ -130,7 +132,10 @@ abstract class NodeBasedTest(private val cordappPackages: List<String> = emptyLi
 }
 
 class InProcessNode(
-        configuration: NodeConfiguration, versionInfo: VersionInfo, cordappPackages: List<String>) : Node(
+    configuration: NodeConfiguration,
+    versionInfo: VersionInfo,
+    cordappPackages: List<String>
+) : Node(
         configuration, versionInfo, false, CordappLoader.createDefaultWithTestPackages(configuration, cordappPackages)) {
     override fun getRxIoScheduler() = CachedThreadScheduler(testThreadFactory()).also { runOnStop += it::shutdown }
 }

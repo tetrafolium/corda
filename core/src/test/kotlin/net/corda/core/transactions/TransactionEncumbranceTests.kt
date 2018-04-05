@@ -59,7 +59,7 @@ class TransactionEncumbranceTests {
         }
 
         data class State(
-                val validFrom: Instant
+            val validFrom: Instant
         ) : ContractState {
             override val participants: List<AbstractParty> = emptyList()
         }

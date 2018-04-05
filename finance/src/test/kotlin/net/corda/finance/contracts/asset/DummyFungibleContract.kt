@@ -18,13 +18,13 @@ import java.security.PublicKey
 import java.util.*
 
 class DummyFungibleContract : OnLedgerAsset<Currency, DummyFungibleContract.Commands, DummyFungibleContract.State>() {
-    override fun extractCommands(commands: Collection<CommandWithParties<CommandData>>): List<CommandWithParties<DummyFungibleContract.Commands>>
-            = commands.select<DummyFungibleContract.Commands>()
+    override fun extractCommands(commands: Collection<CommandWithParties<CommandData>>): List<CommandWithParties<DummyFungibleContract.Commands>> =
+            commands.select<DummyFungibleContract.Commands>()
 
     data class State(
-            override val amount: Amount<Issued<Currency>>,
+        override val amount: Amount<Issued<Currency>>,
 
-            override val owner: AbstractParty
+        override val owner: AbstractParty
     ) : FungibleAsset<Currency>, QueryableState {
         constructor(deposit: PartyAndReference, amount: Amount<Currency>, owner: AbstractParty)
                 : this(Amount(amount.quantity, Issued(deposit, amount.token)), owner)
@@ -32,8 +32,8 @@ class DummyFungibleContract : OnLedgerAsset<Currency, DummyFungibleContract.Comm
         override val exitKeys = setOf(owner.owningKey, amount.token.issuer.party.owningKey)
         override val participants = listOf(owner)
 
-        override fun withNewOwnerAndAmount(newAmount: Amount<Issued<Currency>>, newOwner: AbstractParty): FungibleAsset<Currency>
-                = copy(amount = amount.copy(newAmount.quantity), owner = newOwner)
+        override fun withNewOwnerAndAmount(newAmount: Amount<Issued<Currency>>, newOwner: AbstractParty): FungibleAsset<Currency> =
+                copy(amount = amount.copy(newAmount.quantity), owner = newOwner)
 
         override fun toString() = "${Emoji.bagOfCash}Cash($amount at ${amount.token.issuer} owned by $owner)"
 
@@ -82,8 +82,8 @@ class DummyFungibleContract : OnLedgerAsset<Currency, DummyFungibleContract.Comm
         data class Exit(val amount: Amount<Issued<Currency>>) : CommandData
     }
 
-    override fun deriveState(txState: TransactionState<State>, amount: Amount<Issued<Currency>>, owner: AbstractParty)
-            = txState.copy(data = txState.data.copy(amount = amount, owner = owner))
+    override fun deriveState(txState: TransactionState<State>, amount: Amount<Issued<Currency>>, owner: AbstractParty) =
+            txState.copy(data = txState.data.copy(amount = amount, owner = owner))
 
     override fun generateExitCommand(amount: Amount<Issued<Currency>>) = Commands.Exit(amount)
     override fun generateMoveCommand() = Commands.Move()
@@ -123,12 +123,14 @@ class DummyFungibleContract : OnLedgerAsset<Currency, DummyFungibleContract.Comm
         }
     }
 
-    private fun verifyIssueCommand(inputs: List<State>,
-                                   outputs: List<State>,
-                                   tx: LedgerTransaction,
-                                   issueCommand: CommandWithParties<Commands.Issue>,
-                                   currency: Currency,
-                                   issuer: PartyAndReference) {
+    private fun verifyIssueCommand(
+        inputs: List<State>,
+        outputs: List<State>,
+        tx: LedgerTransaction,
+        issueCommand: CommandWithParties<Commands.Issue>,
+        currency: Currency,
+        issuer: PartyAndReference
+    ) {
         // If we have an issue command, perform special processing: the group is allowed to have no inputs,
         // and the output states must have a deposit reference owned by the signer.
         //
@@ -152,4 +154,3 @@ class DummyFungibleContract : OnLedgerAsset<Currency, DummyFungibleContract.Comm
         }
     }
 }
-

@@ -69,16 +69,20 @@ object CustomVaultQuery {
 
 object TopupIssuerFlow {
     @CordaSerializable
-    data class TopupRequest(val issueToParty: Party,
-                            val issuerPartyRef: OpaqueBytes,
-                            val notaryParty: Party)
+    data class TopupRequest(
+        val issueToParty: Party,
+        val issuerPartyRef: OpaqueBytes,
+        val notaryParty: Party
+    )
 
     @InitiatingFlow
     @StartableByRPC
-    class TopupIssuanceRequester(val issueToParty: Party,
-                                 val issueToPartyRef: OpaqueBytes,
-                                 val issuerBankParty: Party,
-                                 val notaryParty: Party) : FlowLogic<List<AbstractCashFlow.Result>>() {
+    class TopupIssuanceRequester(
+        val issueToParty: Party,
+        val issueToPartyRef: OpaqueBytes,
+        val issuerBankParty: Party,
+        val notaryParty: Party
+    ) : FlowLogic<List<AbstractCashFlow.Result>>() {
         @Suspendable
         @Throws(CashException::class)
         override fun call(): List<AbstractCashFlow.Result> {
@@ -126,9 +130,11 @@ object TopupIssuerFlow {
         // DOCEND TopupIssuer
 
         @Suspendable
-        private fun issueCashTo(amount: Amount<Currency>,
-                                issueTo: Party,
-                                issuerPartyRef: OpaqueBytes): AbstractCashFlow.Result {
+        private fun issueCashTo(
+            amount: Amount<Currency>,
+            issueTo: Party,
+            issuerPartyRef: OpaqueBytes
+        ): AbstractCashFlow.Result {
             // TODO: pass notary in as request parameter
             val notaryParty = serviceHub.networkMapCache.notaryIdentities.firstOrNull()
                     ?: throw IllegalArgumentException("Couldn't find any notary in NetworkMapCache")

@@ -28,19 +28,19 @@ import java.util.function.Predicate
 // DOCSTART 1
 @CordaSerializable
 data class LedgerTransaction @JvmOverloads constructor(
-        /** The resolved input states which will be consumed/invalidated by the execution of this transaction. */
-        override val inputs: List<StateAndRef<ContractState>>,
-        override val outputs: List<TransactionState<ContractState>>,
-        /** Arbitrary data passed to the program of each input state. */
-        val commands: List<CommandWithParties<CommandData>>,
-        /** A list of [Attachment] objects identified by the transaction that are needed for this transaction to verify. */
-        val attachments: List<Attachment>,
-        /** The hash of the original serialised WireTransaction. */
-        override val id: SecureHash,
-        override val notary: Party?,
-        val timeWindow: TimeWindow?,
-        val privacySalt: PrivacySalt,
-        private val networkParameters: NetworkParameters? = null
+    /** The resolved input states which will be consumed/invalidated by the execution of this transaction. */
+    override val inputs: List<StateAndRef<ContractState>>,
+    override val outputs: List<TransactionState<ContractState>>,
+    /** Arbitrary data passed to the program of each input state. */
+    val commands: List<CommandWithParties<CommandData>>,
+    /** A list of [Attachment] objects identified by the transaction that are needed for this transaction to verify. */
+    val attachments: List<Attachment>,
+    /** The hash of the original serialised WireTransaction. */
+    override val id: SecureHash,
+    override val notary: Party?,
+    val timeWindow: TimeWindow?,
+    val privacySalt: PrivacySalt,
+    private val networkParameters: NetworkParameters? = null
 ) : FullTransaction() {
     //DOCEND 1
     init {
@@ -397,14 +397,14 @@ data class LedgerTransaction @JvmOverloads constructor(
      */
     fun getAttachment(id: SecureHash): Attachment = attachments.first { it.id == id }
 
-    fun copy(inputs: List<StateAndRef<ContractState>>,
-             outputs: List<TransactionState<ContractState>>,
-             commands: List<CommandWithParties<CommandData>>,
-             attachments: List<Attachment>,
-             id: SecureHash,
-             notary: Party?,
-             timeWindow: TimeWindow?,
-             privacySalt: PrivacySalt
+    fun copy(
+        inputs: List<StateAndRef<ContractState>>,
+        outputs: List<TransactionState<ContractState>>,
+        commands: List<CommandWithParties<CommandData>>,
+        attachments: List<Attachment>,
+        id: SecureHash,
+        notary: Party?,
+        timeWindow: TimeWindow?,
+        privacySalt: PrivacySalt
     ) = copy(inputs = inputs, outputs = outputs, commands = commands, attachments = attachments, id = id, notary = notary, timeWindow = timeWindow, privacySalt = privacySalt, networkParameters = null)
 }
-

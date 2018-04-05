@@ -15,9 +15,11 @@ import java.util.*
 
 @InitiatingFlow
 @StartableByRPC
-class SellerFlow(private val otherParty: Party,
-                 private val amount: Amount<Currency>,
-                 override val progressTracker: ProgressTracker) : FlowLogic<SignedTransaction>() {
+class SellerFlow(
+    private val otherParty: Party,
+    private val amount: Amount<Currency>,
+    override val progressTracker: ProgressTracker
+) : FlowLogic<SignedTransaction>() {
     constructor(otherParty: Party, amount: Amount<Currency>) : this(otherParty, amount, tracker())
 
     companion object {

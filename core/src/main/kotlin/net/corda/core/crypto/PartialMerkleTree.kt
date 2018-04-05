@@ -97,9 +97,9 @@ class PartialMerkleTree(val root: PartialTree) {
          * Second element refers to that subtree.
          */
         private fun buildPartialTree(
-                root: MerkleTree,
-                includeHashes: List<SecureHash>,
-                usedHashes: MutableList<SecureHash>
+            root: MerkleTree,
+            includeHashes: List<SecureHash>,
+            usedHashes: MutableList<SecureHash>
         ): Pair<Boolean, PartialTree> {
             return when (root) {
                 is MerkleTree.Leaf ->
@@ -155,9 +155,9 @@ class PartialMerkleTree(val root: PartialTree) {
     fun verify(merkleRootHash: SecureHash, hashesToCheck: List<SecureHash>): Boolean {
         val usedHashes = ArrayList<SecureHash>()
         val verifyRoot = rootAndUsedHashes(root, usedHashes)
-        return verifyRoot == merkleRootHash // Tree roots match.
-                && hashesToCheck.size == usedHashes.size // Obtained the same number of hashes (leaves).
-                && hashesToCheck.toSet().containsAll(usedHashes) // Lists contain the same elements.
+        return verifyRoot == merkleRootHash // Tree roots match. &&
+                hashesToCheck.size == usedHashes.size // Obtained the same number of hashes (leaves). &&
+                hashesToCheck.toSet().containsAll(usedHashes) // Lists contain the same elements.
     }
 
     /**

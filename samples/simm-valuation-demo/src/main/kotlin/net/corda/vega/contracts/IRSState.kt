@@ -16,10 +16,12 @@ const val IRS_PROGRAM_ID: ContractClassName = "net.corda.vega.contracts.OGTrade"
  *
  * TODO: Merge with the existing demo IRS code.
  */
-data class IRSState(val swap: SwapData,
-                    val buyer: AbstractParty,
-                    val seller: AbstractParty,
-                    override val linearId: UniqueIdentifier = UniqueIdentifier(swap.id.first + swap.id.second)) : DealState {
+data class IRSState(
+    val swap: SwapData,
+    val buyer: AbstractParty,
+    val seller: AbstractParty,
+    override val linearId: UniqueIdentifier = UniqueIdentifier(swap.id.first + swap.id.second)
+) : DealState {
     val ref: String get() = linearId.externalId!! // Same as the constructor for UniqueIdentified
     override val participants: List<AbstractParty> get() = listOf(buyer, seller)
 

@@ -17,8 +17,10 @@ import java.util.*
  *
  * @property identityService The [IdentityService] which contains the given identities.
  */
-class MockKeyManagementService(val identityService: IdentityService,
-                               vararg initialKeys: KeyPair) : SingletonSerializeAsToken(), KeyManagementService {
+class MockKeyManagementService(
+    val identityService: IdentityService,
+    vararg initialKeys: KeyPair
+) : SingletonSerializeAsToken(), KeyManagementService {
     private val keyStore: MutableMap<PublicKey, PrivateKey> = initialKeys.associateByTo(HashMap(), { it.public }, { it.private })
 
     override val keys: Set<PublicKey> get() = keyStore.keys

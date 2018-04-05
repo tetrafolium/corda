@@ -2,8 +2,6 @@ package net.corda.testing.node
 
 import com.google.common.collect.MutableClassToInstanceMap
 import net.corda.core.contracts.ContractClassName
-import net.corda.core.contracts.ContractState
-import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.StateRef
 import net.corda.core.cordapp.CordappProvider
 import net.corda.core.crypto.*
@@ -17,7 +15,6 @@ import net.corda.core.node.services.*
 import net.corda.core.serialization.SerializeAsToken
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.NetworkHostAndPort
-import net.corda.node.VersionInfo
 import net.corda.node.internal.ServicesForResolutionImpl
 import net.corda.node.internal.configureDatabase
 import net.corda.node.internal.cordapp.CordappLoader
@@ -59,12 +56,12 @@ fun makeTestIdentityService(vararg identities: PartyAndCertificate) = InMemoryId
  * must have at least an identity of its own. The other components have defaults that work in most situations.
  */
 open class MockServices private constructor(
-        cordappLoader: CordappLoader,
-        override val validatedTransactions: TransactionStorage,
-        override val identityService: IdentityService,
-        final override val networkParameters: NetworkParameters,
-        private val initialIdentity: TestIdentity,
-        private val moreKeys: Array<out KeyPair>
+    cordappLoader: CordappLoader,
+    override val validatedTransactions: TransactionStorage,
+    override val identityService: IdentityService,
+    final override val networkParameters: NetworkParameters,
+    private val initialIdentity: TestIdentity,
+    private val moreKeys: Array<out KeyPair>
 ) : ServiceHub {
     companion object {
         /**
@@ -94,11 +91,13 @@ open class MockServices private constructor(
          */
         @JvmStatic
         @JvmOverloads
-        fun makeTestDatabaseAndMockServices(cordappPackages: List<String>,
-                                            identityService: IdentityService,
-                                            initialIdentity: TestIdentity,
-                                            networkParameters: NetworkParameters = testNetworkParameters(),
-                                            vararg moreKeys: KeyPair): Pair<CordaPersistence, MockServices> {
+        fun makeTestDatabaseAndMockServices(
+            cordappPackages: List<String>,
+            identityService: IdentityService,
+            initialIdentity: TestIdentity,
+            networkParameters: NetworkParameters = testNetworkParameters(),
+            vararg moreKeys: KeyPair
+        ): Pair<CordaPersistence, MockServices> {
             val cordappLoader = CordappLoader.createWithTestPackages(cordappPackages)
             val dataSourceProps = makeTestDataSourceProperties()
             val schemaService = NodeSchemaService(cordappLoader.cordappSchemas)
@@ -128,8 +127,13 @@ open class MockServices private constructor(
         }
     }
 
-    private constructor(cordappLoader: CordappLoader, identityService: IdentityService, networkParameters: NetworkParameters,
-                        initialIdentity: TestIdentity, moreKeys: Array<out KeyPair>)
+    private constructor(
+        cordappLoader: CordappLoader,
+        identityService: IdentityService,
+        networkParameters: NetworkParameters,
+        initialIdentity: TestIdentity,
+        moreKeys: Array<out KeyPair>
+    )
             : this(cordappLoader, MockTransactionStorage(), identityService, networkParameters, initialIdentity, moreKeys)
 
     /**
@@ -137,17 +141,21 @@ open class MockServices private constructor(
      * (you can get one from [makeTestIdentityService]) and represents the given identity.
      */
     @JvmOverloads
-    constructor(cordappPackages: List<String>,
-                initialIdentity: TestIdentity,
-                identityService: IdentityService = makeTestIdentityService(),
-                vararg moreKeys: KeyPair) :
+    constructor(
+        cordappPackages: List<String>,
+        initialIdentity: TestIdentity,
+        identityService: IdentityService = makeTestIdentityService(),
+        vararg moreKeys: KeyPair
+    ) :
             this(CordappLoader.createWithTestPackages(cordappPackages), identityService, testNetworkParameters(), initialIdentity, moreKeys)
 
-    constructor(cordappPackages: List<String>,
-                initialIdentity: TestIdentity,
-                identityService: IdentityService,
-                networkParameters: NetworkParameters,
-                vararg moreKeys: KeyPair) :
+    constructor(
+        cordappPackages: List<String>,
+        initialIdentity: TestIdentity,
+        identityService: IdentityService,
+        networkParameters: NetworkParameters,
+        vararg moreKeys: KeyPair
+    ) :
             this(CordappLoader.createWithTestPackages(cordappPackages), identityService, networkParameters, initialIdentity, moreKeys)
 
     /**

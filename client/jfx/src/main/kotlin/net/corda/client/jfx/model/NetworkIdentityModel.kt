@@ -9,7 +9,6 @@ import net.corda.client.jfx.utils.filterNotNull
 import net.corda.client.jfx.utils.fold
 import net.corda.client.jfx.utils.map
 import net.corda.core.identity.AnonymousParty
-import net.corda.core.identity.Party
 import net.corda.core.node.NodeInfo
 import net.corda.core.node.services.NetworkMapCache.MapChange
 import java.security.PublicKey

@@ -44,7 +44,6 @@ import kotlin.test.assertEquals
  * A example of calculating the margin for a portfolio of two swaps using Strata and SIMM.
  */
 
-
 fun main(args: Array<String>) {
     val swapExample = SwapExample()
     swapExample.testingEqualitymain(args)
@@ -141,7 +140,6 @@ class SwapExample {
             totalCurrencyExposure1 = totalCurrencyExposure1.plus(currencyExposure)
         }
 
-
         var totalSensitivities2 = CurrencyParameterSensitivities.empty()
         var totalCurrencyExposure2 = MultiCurrencyAmount.empty()
 
@@ -190,8 +188,6 @@ class SwapExample {
                 calculatorTotal2,
                 totalSensitivities2,
                 totalCurrencyExposure2)
-
-
 
         println(margin1)
         println(margin2)

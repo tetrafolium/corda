@@ -168,5 +168,4 @@ class FXSwap {
     fun `pretty print`() {
         println ( prettyPrint(contract) )
     }
-
 }

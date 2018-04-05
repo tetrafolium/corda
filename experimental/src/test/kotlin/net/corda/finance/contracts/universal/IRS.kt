@@ -21,7 +21,6 @@ class IRS {
 
     val tradeDate: LocalDate = LocalDate.of(2016, 9, 1)
 
-
     /*
 
     (roll-out "2016-09-01" "2018-09-01" Quarterly
@@ -209,5 +208,4 @@ class IRS {
 
         println ( prettyPrint(contractAfterExecutionFirst) )
     }
-
 }

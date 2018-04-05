@@ -20,19 +20,23 @@ import net.corda.testing.core.singleIdentity
 import java.util.*
 
 @CordaSerializable
-private data class FxRequest(val tradeId: String,
-                             val amount: Amount<Issued<Currency>>,
-                             val owner: Party,
-                             val counterparty: Party,
-                             val notary: Party? = null)
+private data class FxRequest(
+    val tradeId: String,
+    val amount: Amount<Issued<Currency>>,
+    val owner: Party,
+    val counterparty: Party,
+    val notary: Party? = null
+)
 
 // DOCSTART 1
 // This is equivalent to the Cash.generateSpend
 // Which is brought here to make the filtering logic more visible in the example
-private fun gatherOurInputs(serviceHub: ServiceHub,
-                            lockId: UUID,
-                            amountRequired: Amount<Issued<Currency>>,
-                            notary: Party?): Pair<List<StateAndRef<Cash.State>>, Long> {
+private fun gatherOurInputs(
+    serviceHub: ServiceHub,
+    lockId: UUID,
+    amountRequired: Amount<Issued<Currency>>,
+    notary: Party?
+): Pair<List<StateAndRef<Cash.State>>, Long> {
     // extract our identity for convenience
     val ourKeys = serviceHub.keyManagementService.keys
     val ourParties = ourKeys.map { serviceHub.identityService.partyFromKey(it) ?: throw IllegalStateException("Unable to resolve party from key") }
@@ -86,11 +90,13 @@ private fun prepareOurInputsAndOutputs(serviceHub: ServiceHub, lockId: UUID, req
 // A flow representing creating a transaction that
 // carries out exchange of cash assets.
 @InitiatingFlow
-class ForeignExchangeFlow(private val tradeId: String,
-                          private val baseCurrencyAmount: Amount<Issued<Currency>>,
-                          private val quoteCurrencyAmount: Amount<Issued<Currency>>,
-                          private val counterparty: Party,
-                          private val weAreBaseCurrencySeller: Boolean) : FlowLogic<SecureHash>() {
+class ForeignExchangeFlow(
+    private val tradeId: String,
+    private val baseCurrencyAmount: Amount<Issued<Currency>>,
+    private val quoteCurrencyAmount: Amount<Issued<Currency>>,
+    private val counterparty: Party,
+    private val weAreBaseCurrencySeller: Boolean
+) : FlowLogic<SecureHash>() {
     @Suspendable
     override fun call(): SecureHash {
         // Select correct sides of the Fx exchange to query for.
@@ -166,10 +172,12 @@ class ForeignExchangeFlow(private val tradeId: String,
     }
 
     // DOCSTART 3
-    private fun buildTradeProposal(ourInputStates: List<StateAndRef<Cash.State>>,
-                                   ourOutputState: List<Cash.State>,
-                                   theirInputStates: List<StateAndRef<Cash.State>>,
-                                   theirOutputState: List<Cash.State>): SignedTransaction {
+    private fun buildTradeProposal(
+        ourInputStates: List<StateAndRef<Cash.State>>,
+        ourOutputState: List<Cash.State>,
+        theirInputStates: List<StateAndRef<Cash.State>>,
+        theirOutputState: List<Cash.State>
+    ): SignedTransaction {
         // This is the correct way to create a TransactionBuilder,
         // do not construct directly.
         // We also set the notary to match the input notary

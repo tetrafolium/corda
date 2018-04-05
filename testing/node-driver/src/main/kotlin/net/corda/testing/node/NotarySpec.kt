@@ -15,11 +15,11 @@ import net.corda.testing.driver.VerifierType
  * @property cluster [ClusterSpec] if this is a distributed cluster notary. If null then this is a single-node notary.
  */
 data class NotarySpec(
-        val name: CordaX500Name,
-        val validating: Boolean = true,
-        val rpcUsers: List<User> = emptyList(),
-        val verifierType: VerifierType = VerifierType.InMemory,
-        val cluster: ClusterSpec? = null
+    val name: CordaX500Name,
+    val validating: Boolean = true,
+    val rpcUsers: List<User> = emptyList(),
+    val verifierType: VerifierType = VerifierType.InMemory,
+    val cluster: ClusterSpec? = null
 )
 
 /**
@@ -32,7 +32,7 @@ abstract class ClusterSpec {
 
     /** A class representing the configuration of a raft consensus algorithm used for a cluster of nodes. **/
     data class Raft(
-            override val clusterSize: Int
+        override val clusterSize: Int
     ) : ClusterSpec() {
         init {
             require(clusterSize > 0)

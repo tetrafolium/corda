@@ -27,10 +27,10 @@ class CommandLineOptionParser {
             .accepts("commands-directory", "The directory with additional CrAsH shell commands.")
             .withOptionalArg()
     private val hostArg = optionParser
-            .acceptsAll(listOf("h","host"), "The host of the Corda node.")
+            .acceptsAll(listOf("h", "host"), "The host of the Corda node.")
             .withRequiredArg()
     private val portArg = optionParser
-            .acceptsAll(listOf("p","port"), "The port of the Corda node.")
+            .acceptsAll(listOf("p", "port"), "The port of the Corda node.")
             .withRequiredArg()
     private val userArg = optionParser
             .accepts("user", "The RPC user name.")
@@ -96,23 +96,25 @@ class CommandLineOptionParser {
     fun printHelp(sink: PrintStream) = optionParser.printHelpOn(sink)
 }
 
-data class CommandLineOptions(val configFile: String?,
-                              val commandsDirectory: Path?,
-                              val cordappsDirectory: Path?,
-                              val host: String?,
-                              val port: String?,
-                              val user: String?,
-                              val password: String?,
-                              val help: Boolean,
-                              val loggingLevel: Level,
-                              val sshdPort: String?,
-                              val sshdHostKeyDirectory: Path?,
-                              val keyStorePassword: String?,
-                              val trustStorePassword: String?,
-                              val keyStoreFile: Path?,
-                              val trustStoreFile: Path?,
-                              val keyStoreType: String?,
-                              val trustStoreType: String?) {
+data class CommandLineOptions(
+    val configFile: String?,
+    val commandsDirectory: Path?,
+    val cordappsDirectory: Path?,
+    val host: String?,
+    val port: String?,
+    val user: String?,
+    val password: String?,
+    val help: Boolean,
+    val loggingLevel: Level,
+    val sshdPort: String?,
+    val sshdHostKeyDirectory: Path?,
+    val keyStorePassword: String?,
+    val trustStorePassword: String?,
+    val keyStoreFile: Path?,
+    val trustStoreFile: Path?,
+    val keyStoreType: String?,
+    val trustStoreType: String?
+) {
 
     private fun toConfigFile(): Config {
         val cmdOpts = mutableMapOf<String, Any?>()
@@ -152,54 +154,55 @@ data class CommandLineOptions(val configFile: String?,
 /** Object representation of Shell configuration file */
 private class ShellConfigurationFile {
     data class Rpc(
-            val host: String,
-            val port: Int)
+        val host: String,
+        val port: Int
+    )
 
     data class Addresses(
-            val rpc: Rpc
+        val rpc: Rpc
     )
 
     data class Node(
-            val addresses: Addresses,
-            val user: String?,
-            val password: String?
+        val addresses: Addresses,
+        val user: String?,
+        val password: String?
     )
 
     data class Cordapps(
-            val path: String
+        val path: String
     )
 
     data class Sshd(
-            val enabled: Boolean,
-            val port: Int,
-            val hostkeypath: String?
+        val enabled: Boolean,
+        val port: Int,
+        val hostkeypath: String?
     )
 
     data class Commands(
-            val path: String
+        val path: String
     )
 
     data class Extensions(
-            val cordapps: Cordapps,
-            val sshd: Sshd,
-            val commands: Commands?
+        val cordapps: Cordapps,
+        val sshd: Sshd,
+        val commands: Commands?
     )
 
     data class KeyStore(
-            val path: String,
-            val type: String,
-            val password: String
+        val path: String,
+        val type: String,
+        val password: String
     )
 
     data class Ssl(
-            val keystore: KeyStore,
-            val truststore: KeyStore
+        val keystore: KeyStore,
+        val truststore: KeyStore
     )
 
     data class ShellConfigFile(
-            val node: Node,
-            val extensions: Extensions?,
-            val ssl: Ssl?
+        val node: Node,
+        val extensions: Extensions?,
+        val ssl: Ssl?
     ) {
         fun toShellConfiguration(): ShellConfiguration {
 

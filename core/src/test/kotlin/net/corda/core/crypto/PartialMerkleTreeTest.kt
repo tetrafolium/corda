@@ -259,10 +259,10 @@ class PartialMerkleTreeTest {
     }
 
     private fun makeSimpleCashWtx(
-            notary: Party,
-            privacySalt: PrivacySalt = PrivacySalt(),
-            timeWindow: TimeWindow? = null,
-            attachments: List<SecureHash> = emptyList()
+        notary: Party,
+        privacySalt: PrivacySalt = PrivacySalt(),
+        timeWindow: TimeWindow? = null,
+        attachments: List<SecureHash> = emptyList()
     ): WireTransaction {
         return WireTransaction(
                 inputs = testTx.inputs,

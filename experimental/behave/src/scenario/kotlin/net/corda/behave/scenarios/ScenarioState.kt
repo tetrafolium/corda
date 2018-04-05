@@ -18,7 +18,7 @@ class ScenarioState {
         error<Unit>(message)
     }
 
-    fun<T> error(message: String, ex: Throwable? = null): T {
+    fun <T> error(message: String, ex: Throwable? = null): T {
         this.network?.signalFailure(message, ex)
         if (ex != null) {
             throw Exception(message, ex)
@@ -82,5 +82,4 @@ class ScenarioState {
         nodes.add(builder)
         return builder
     }
-
 }

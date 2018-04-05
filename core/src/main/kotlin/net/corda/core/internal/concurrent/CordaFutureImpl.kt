@@ -45,7 +45,7 @@ fun <V, W> CordaFuture<out V>.map(transform: (V) -> W): CordaFuture<W> = CordaFu
  * In the case where this future fails, the transform is not invoked.
  */
 fun <V, W> CordaFuture<out V>.flatMap(transform: (V) -> CordaFuture<out W>): CordaFuture<W> = CordaFutureImpl<W>().also { result ->
-    thenMatch(success@ {
+    thenMatch(success@{
         result.captureLater(try {
             transform(it)
         } catch (t: Throwable) {

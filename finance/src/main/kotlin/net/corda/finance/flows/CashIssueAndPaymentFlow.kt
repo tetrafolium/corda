@@ -21,17 +21,21 @@ import java.util.*
  * @param notary the notary to set on the output states.
  */
 @StartableByRPC
-class CashIssueAndPaymentFlow(val amount: Amount<Currency>,
-                              val issueRef: OpaqueBytes,
-                              val recipient: Party,
-                              val anonymous: Boolean,
-                              val notary: Party,
-                              progressTracker: ProgressTracker) : AbstractCashFlow<AbstractCashFlow.Result>(progressTracker) {
-     constructor(amount: Amount<Currency>,
-                issueRef: OpaqueBytes,
-                recipient: Party,
-                anonymous: Boolean,
-                notary: Party) : this(amount, issueRef, recipient, anonymous, notary, tracker())
+class CashIssueAndPaymentFlow(
+    val amount: Amount<Currency>,
+    val issueRef: OpaqueBytes,
+    val recipient: Party,
+    val anonymous: Boolean,
+    val notary: Party,
+    progressTracker: ProgressTracker
+) : AbstractCashFlow<AbstractCashFlow.Result>(progressTracker) {
+     constructor(
+         amount: Amount<Currency>,
+         issueRef: OpaqueBytes,
+         recipient: Party,
+         anonymous: Boolean,
+         notary: Party
+     ) : this(amount, issueRef, recipient, anonymous, notary, tracker())
 
     constructor(request: IssueAndPaymentRequest) : this(request.amount, request.issueRef, request.recipient, request.anonymous, request.notary, tracker())
 
@@ -42,9 +46,11 @@ class CashIssueAndPaymentFlow(val amount: Amount<Currency>,
     }
 
     @CordaSerializable
-    class IssueAndPaymentRequest(amount: Amount<Currency>,
-                                 val issueRef: OpaqueBytes,
-                                 val recipient: Party,
-                                 val notary: Party,
-                                 val anonymous: Boolean) : AbstractRequest(amount)
+    class IssueAndPaymentRequest(
+        amount: Amount<Currency>,
+        val issueRef: OpaqueBytes,
+        val recipient: Party,
+        val notary: Party,
+        val anonymous: Boolean
+    ) : AbstractRequest(amount)
 }

@@ -41,7 +41,7 @@ class InteractiveShellTest {
 
     private fun check(input: String, expected: String) {
         var output: String? = null
-        InteractiveShell.runFlowFromString( { clazz, args ->
+        InteractiveShell.runFlowFromString({ clazz, args ->
 
             val instance = clazz.getConstructor(*args.map { it!!::class.java }.toTypedArray()).newInstance(*args) as FlowA
             output = instance.a

@@ -45,5 +45,4 @@ fun configurationSteps(steps: StepsBlock) = steps {
     Given<String, String>("^node (\\w+) has app installed: (.+)$") { name, app ->
         node(name).withApp(app)
     }
-
 }

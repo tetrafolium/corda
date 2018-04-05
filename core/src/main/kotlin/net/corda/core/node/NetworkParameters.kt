@@ -22,13 +22,13 @@ import java.time.Instant
 //  It needs separate design.
 @CordaSerializable
 data class NetworkParameters(
-        val minimumPlatformVersion: Int,
-        val notaries: List<NotaryInfo>,
-        val maxMessageSize: Int,
-        val maxTransactionSize: Int,
-        val modifiedTime: Instant,
-        val epoch: Int,
-        val whitelistedContractImplementations: Map<String, List<AttachmentId>>
+    val minimumPlatformVersion: Int,
+    val notaries: List<NotaryInfo>,
+    val maxMessageSize: Int,
+    val maxTransactionSize: Int,
+    val modifiedTime: Instant,
+    val epoch: Int,
+    val whitelistedContractImplementations: Map<String, List<AttachmentId>>
 ) {
     init {
         require(minimumPlatformVersion > 0) { "minimumPlatformVersion must be at least 1" }

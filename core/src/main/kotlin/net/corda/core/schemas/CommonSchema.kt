@@ -22,19 +22,19 @@ object CommonSchemaV1 : MappedSchema(schemaFamily = CommonSchema.javaClass, vers
     open class LinearState(
             /** [ContractState] attributes */
 
-            /** X500Name of participant parties **/
-            @Transient
-            open var participants: MutableSet<AbstractParty>? = null,
+        /** X500Name of participant parties **/
+        @Transient
+        open var participants: MutableSet<AbstractParty>? = null,
 
-            /**
-             *  Represents a [LinearState] [UniqueIdentifier]
-             */
-            @Column(name = "external_id")
-            var externalId: String?,
+        /**
+         *  Represents a [LinearState] [UniqueIdentifier]
+         */
+        @Column(name = "external_id")
+        var externalId: String?,
 
-            @Column(name = "uuid", nullable = false)
-            @Type(type = "uuid-char")
-            var uuid: UUID
+        @Column(name = "uuid", nullable = false)
+        @Type(type = "uuid-char")
+        var uuid: UUID
 
     ) : PersistentState() {
         constructor(uid: UniqueIdentifier, _participants: Set<AbstractParty>)
@@ -47,15 +47,15 @@ object CommonSchemaV1 : MappedSchema(schemaFamily = CommonSchema.javaClass, vers
     open class FungibleState(
             /** [ContractState] attributes */
 
-            /** X500Name of participant parties **/
-            @Transient
-            open var participants: MutableSet<AbstractParty>? = null,
+        /** X500Name of participant parties **/
+        @Transient
+        open var participants: MutableSet<AbstractParty>? = null,
 
             /** [OwnableState] attributes */
 
-            /** X500Name of owner party **/
-            @Column(name = "owner_name")
-            var owner: AbstractParty,
+        /** X500Name of owner party **/
+        @Column(name = "owner_name")
+        var owner: AbstractParty,
 
             /** [FungibleAsset] attributes
              *
@@ -63,18 +63,18 @@ object CommonSchemaV1 : MappedSchema(schemaFamily = CommonSchema.javaClass, vers
              *  custom contract itself (eg. see currency in Cash contract state)
              */
 
-            /** Amount attributes */
-            @Column(name = "quantity")
-            var quantity: Long,
+        /** Amount attributes */
+        @Column(name = "quantity")
+        var quantity: Long,
 
             /** Issuer attributes */
 
-            /** X500Name of issuer party **/
-            @Column(name = "issuer_name")
-            var issuer: AbstractParty,
+        /** X500Name of issuer party **/
+        @Column(name = "issuer_name")
+        var issuer: AbstractParty,
 
-            @Column(name = "issuer_ref", length = MAX_ISSUER_REF_SIZE)
-            @Type(type = "corda-wrapper-binary")
-            var issuerRef: ByteArray
+        @Column(name = "issuer_ref", length = MAX_ISSUER_REF_SIZE)
+        @Type(type = "corda-wrapper-binary")
+        var issuerRef: ByteArray
     ) : PersistentState()
 }

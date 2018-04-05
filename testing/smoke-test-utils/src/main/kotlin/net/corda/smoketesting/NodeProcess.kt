@@ -21,10 +21,10 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit.SECONDS
 
 class NodeProcess(
-        private val config: NodeConfig,
-        private val nodeDir: Path,
-        private val node: Process,
-        private val client: CordaRPCClient
+    private val config: NodeConfig,
+    private val nodeDir: Path,
+    private val node: Process,
+    private val client: CordaRPCClient
 ) : AutoCloseable {
     companion object {
         const val CORDAPPS_DIR_NAME = "cordapps"
@@ -51,8 +51,8 @@ class NodeProcess(
     // TODO All use of this factory have duplicate code which is either bundling the calling module or a 3rd party module
     // as a CorDapp for the nodes.
     class Factory(
-            private val buildDirectory: Path = Paths.get("build"),
-            private val cordaJarUrl: URL? = this::class.java.getResource("/corda.jar")
+        private val buildDirectory: Path = Paths.get("build"),
+        private val cordaJarUrl: URL? = this::class.java.getResource("/corda.jar")
     ) {
         val cordaJar: Path by lazy {
             require(cordaJarUrl != null, { "corda.jar could not be found in classpath" })

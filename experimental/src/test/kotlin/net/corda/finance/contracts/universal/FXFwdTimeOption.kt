@@ -133,5 +133,4 @@ class FXFwdTimeOption {
 
         println ( prettyPrint(outContract2) )
     }
-
 }

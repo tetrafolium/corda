@@ -69,7 +69,6 @@ class SideEffectFlow : FlowLogic<List<StackSnapshotFrame>>() {
         val snapshot = flowStackSnapshot()
         return convertToStackSnapshotFrames(snapshot!!)
     }
-
 }
 
 /**
@@ -104,7 +103,6 @@ object Constants {
     val IN_RETRIEVE_STACK_SNAPSHOT_VALUE = "inRetrieveStackSnapshot"
     val USER = "User"
     val PASSWORD = "Password"
-
 }
 
 /**

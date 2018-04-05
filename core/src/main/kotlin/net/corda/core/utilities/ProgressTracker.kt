@@ -33,7 +33,7 @@ import java.util.*
 class ProgressTracker(vararg steps: Step) {
     @CordaSerializable
     sealed class Change(val progressTracker: ProgressTracker) {
-        data class Position(val tracker: ProgressTracker,  val newStep: Step) : Change(tracker) {
+        data class Position(val tracker: ProgressTracker, val newStep: Step) : Change(tracker) {
             override fun toString() = newStep.label
         }
 
@@ -82,8 +82,6 @@ class ProgressTracker(vararg steps: Step) {
     private val _changes by transient { PublishSubject.create<Change>() }
     private val _stepsTreeChanges by transient { PublishSubject.create<List<Pair<Int, String>>>() }
     private val _stepsTreeIndexChanges by transient { PublishSubject.create<Int>() }
-
-
 
     init {
         steps.forEach {
@@ -256,7 +254,7 @@ class ProgressTracker(vararg steps: Step) {
     /**
      * An observable stream of changes to the [allStepsLabels]
      */
-    val stepsTreeChanges: Observable<List<Pair<Int,String>>> get() = _stepsTreeChanges
+    val stepsTreeChanges: Observable<List<Pair<Int, String>>> get() = _stepsTreeChanges
 
     /**
      * An observable stream of changes to the [stepsTreeIndex]
@@ -268,6 +266,4 @@ class ProgressTracker(vararg steps: Step) {
 }
 // TODO: Expose the concept of errors.
 // TODO: It'd be helpful if this class was at least partly thread safe.
-
-
 

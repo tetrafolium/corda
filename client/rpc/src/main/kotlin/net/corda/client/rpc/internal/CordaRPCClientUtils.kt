@@ -10,16 +10,16 @@ import rx.Observable
 
 /** Utility which exposes the internal Corda RPC constructor to other internal Corda components */
 fun createCordaRPCClientWithSsl(
-        hostAndPort: NetworkHostAndPort,
-        configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
-        sslConfiguration: SSLConfiguration? = null
+    hostAndPort: NetworkHostAndPort,
+    configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
+    sslConfiguration: SSLConfiguration? = null
 ) = CordaRPCClient.createWithSsl(hostAndPort, configuration, sslConfiguration)
 
 fun createCordaRPCClientWithSslAndClassLoader(
-        hostAndPort: NetworkHostAndPort,
-        configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
-        sslConfiguration: SSLConfiguration? = null,
-        classLoader: ClassLoader? = null
+    hostAndPort: NetworkHostAndPort,
+    configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
+    sslConfiguration: SSLConfiguration? = null,
+    classLoader: ClassLoader? = null
 ) = CordaRPCClient.createWithSslAndClassLoader(hostAndPort, configuration, sslConfiguration, classLoader)
 
 fun CordaRPCOps.drainAndShutdown(): Observable<Unit> {
@@ -29,5 +29,5 @@ fun CordaRPCOps.drainAndShutdown(): Observable<Unit> {
             .doOnError { error ->
                 throw error
             }
-            .doOnCompleted { shutdown() }.map {  }
+            .doOnCompleted { shutdown() }.map { }
 }

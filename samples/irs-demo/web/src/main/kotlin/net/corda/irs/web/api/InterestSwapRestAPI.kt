@@ -48,7 +48,6 @@ class InterestRateSwapAPI {
         }
     }
 
-
     @Autowired
     lateinit var rpc: CordaRPCOps
 

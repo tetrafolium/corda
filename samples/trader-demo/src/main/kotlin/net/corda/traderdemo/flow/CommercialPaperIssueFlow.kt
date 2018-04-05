@@ -22,11 +22,13 @@ import java.util.*
  * Flow for the Bank of Corda node to issue some commercial paper to the seller's node, to sell to the buyer.
  */
 @StartableByRPC
-class CommercialPaperIssueFlow(private val amount: Amount<Currency>,
-                               private val issueRef: OpaqueBytes,
-                               private val recipient: Party,
-                               private val notary: Party,
-                               override val progressTracker: ProgressTracker) : FlowLogic<SignedTransaction>() {
+class CommercialPaperIssueFlow(
+    private val amount: Amount<Currency>,
+    private val issueRef: OpaqueBytes,
+    private val recipient: Party,
+    private val notary: Party,
+    override val progressTracker: ProgressTracker
+) : FlowLogic<SignedTransaction>() {
     constructor(amount: Amount<Currency>, issueRef: OpaqueBytes, recipient: Party, notary: Party) : this(amount, issueRef, recipient, notary, tracker())
 
     companion object {

@@ -54,10 +54,12 @@ object SimmFlow {
      * portfolio update offer.
      */
     @CordaSerializable
-    data class OfferMessage(val notary: Party,
-                            val dealBeingOffered: PortfolioState,
-                            val stateRef: StateRef?,
-                            val valuationDate: LocalDate)
+    data class OfferMessage(
+        val notary: Party,
+        val dealBeingOffered: PortfolioState,
+        val stateRef: StateRef?,
+        val valuationDate: LocalDate
+    )
 
     /**
      * Initiates with the other party by sending a portfolio to agree on and then comes to consensus over initial
@@ -65,9 +67,11 @@ object SimmFlow {
      */
     @InitiatingFlow
     @StartableByRPC
-    class Requester(private val otherParty: Party,
-                    private val valuationDate: LocalDate,
-                    private val existing: StateAndRef<PortfolioState>?)
+    class Requester(
+        private val otherParty: Party,
+        private val valuationDate: LocalDate,
+        private val existing: StateAndRef<PortfolioState>?
+    )
         : FlowLogic<RevisionedState<PortfolioState.Update>>() {
         constructor(otherParty: Party, valuationDate: LocalDate) : this(otherParty, valuationDate, null)
 
@@ -182,7 +186,6 @@ object SimmFlow {
                     PVs
             )
         }
-
 
         // TODO: In the real world, this would be tolerance aware for different types
         @Suspendable
@@ -299,7 +302,6 @@ object SimmFlow {
                     cordaIMMap,
                     PVs
             )
-
         }
 
         @Suspendable

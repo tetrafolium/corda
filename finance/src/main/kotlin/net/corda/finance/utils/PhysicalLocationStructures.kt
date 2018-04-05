@@ -22,8 +22,14 @@ data class WorldCoordinate(val latitude: Double, val longitude: Double) {
      * of 85.0511 to -85.0511 = arctan(sinh(π)).
      */
     @Suppress("unused") // Used from the visualiser GUI.
-    fun project(screenWidth: Double, screenHeight: Double, topLatitude: Double, bottomLatitude: Double,
-                leftLongitude: Double, rightLongitude: Double): ScreenCoordinate {
+    fun project(
+        screenWidth: Double,
+        screenHeight: Double,
+        topLatitude: Double,
+        bottomLatitude: Double,
+        leftLongitude: Double,
+        rightLongitude: Double
+    ): ScreenCoordinate {
         require(latitude in bottomLatitude..topLatitude)
         require(longitude in leftLongitude..rightLongitude)
 

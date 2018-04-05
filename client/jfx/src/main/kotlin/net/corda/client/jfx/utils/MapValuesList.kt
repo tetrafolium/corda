@@ -10,9 +10,9 @@ import javafx.collections.ObservableMap
  * The order of returned elements is deterministic but unspecified.
  */
 class MapValuesList<K, A, C> private constructor(
-        val sourceMap: ObservableMap<K, A>,
-        private val backingList: ObservableList<Map.Entry<K, A>>, // sorted by K.hashCode()
-        private val exposedList: ObservableList<C>
+    val sourceMap: ObservableMap<K, A>,
+    private val backingList: ObservableList<Map.Entry<K, A>>, // sorted by K.hashCode()
+    private val exposedList: ObservableList<C>
 ) : ObservableList<C> by exposedList {
 
     companion object {

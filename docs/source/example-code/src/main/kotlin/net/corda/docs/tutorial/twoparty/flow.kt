@@ -6,22 +6,16 @@ import net.corda.core.contracts.Command
 import net.corda.core.contracts.StateAndContract
 import net.corda.core.flows.*
 import net.corda.core.identity.Party
-import net.corda.core.messaging.CordaRPCOps
-import net.corda.core.serialization.SerializationWhitelist
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
-import java.util.function.Function
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
 // DOCEND 01
 
 @InitiatingFlow
 @StartableByRPC
-class IOUFlow(val iouValue: Int,
-              val otherParty: Party) : FlowLogic<Unit>() {
+class IOUFlow(
+    val iouValue: Int,
+    val otherParty: Party
+) : FlowLogic<Unit>() {
 
     /** The progress tracker provides checkpoints indicating the progress of the flow to observers. */
     override val progressTracker = ProgressTracker()

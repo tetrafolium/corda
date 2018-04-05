@@ -8,7 +8,7 @@ class MockCordappConfigProvider : CordappConfigProvider {
     val cordappConfigs = mutableMapOf<String, Config> ()
 
     override fun getConfigByName(name: String): Config {
-        return if(cordappConfigs.containsKey(name)) {
+        return if (cordappConfigs.containsKey(name)) {
              cordappConfigs[name]!!
         } else {
             ConfigFactory.empty()

@@ -143,7 +143,6 @@ enum class DateRollConvention(val direction: () -> DateRollDirection, val isModi
     ModifiedPrevious({ DateRollDirection.BACKWARD }, true);
 }
 
-
 /**
  * This forms the day part of the "Day Count Basis" used for interest calculation.
  * Note that the first character cannot be a number (enum naming constraints), so we drop that
@@ -182,7 +181,7 @@ enum class PaymentRule {
  * Frequency at which an event occurs - the enumerator also casts to an integer specifying the number of times per year
  * that would divide into (eg annually = 1, semiannual = 2, monthly = 12 etc).
  */
-@Suppress("unused")   // TODO: Revisit post-Vega and see if annualCompoundCount is still needed.
+@Suppress("unused") // TODO: Revisit post-Vega and see if annualCompoundCount is still needed.
 @CordaSerializable
 enum class Frequency(val annualCompoundCount: Int, val offset: LocalDate.(Long) -> LocalDate) {
     Annual(1, { plusYears(1 * it) }),
@@ -214,10 +213,12 @@ open class BusinessCalendar(val holidayDates: List<LocalDate>) {
         }.toMap()
 
         @JvmStatic
-        fun calculateDaysBetween(startDate: LocalDate,
-                                 endDate: LocalDate,
-                                 dcbYear: DayCountBasisYear,
-                                 dcbDay: DayCountBasisDay): Int {
+        fun calculateDaysBetween(
+            startDate: LocalDate,
+            endDate: LocalDate,
+            dcbYear: DayCountBasisYear,
+            dcbDay: DayCountBasisDay
+        ): Int {
             // Right now we are only considering Actual/360 and 30/360 .. We'll do the rest later.
             // TODO: The rest.
             return when {
@@ -234,21 +235,23 @@ open class BusinessCalendar(val holidayDates: List<LocalDate>) {
         /** Returns a business calendar that combines all the named holiday calendars into one list of holiday dates. */
         @JvmStatic
         fun getInstance(vararg calname: String) = BusinessCalendar(
-                calname.flatMap { (TEST_CALENDAR_DATA[it] ?: throw UnknownCalendar(it)).split(",") }.
-                        toSet().
-                        map { parseDateFromString(it) }.
-                        toList().sorted()
+                calname.flatMap { (TEST_CALENDAR_DATA[it] ?: throw UnknownCalendar(it)).split(",") }
+                        .toSet()
+                        .map { parseDateFromString(it) }
+                        .toList().sorted()
         )
 
         /** Calculates an event schedule that moves events around to ensure they fall on working days. */
         @JvmStatic
-        fun createGenericSchedule(startDate: LocalDate,
-                                  period: Frequency,
-                                  calendar: BusinessCalendar = getInstance(),
-                                  dateRollConvention: DateRollConvention = DateRollConvention.Following,
-                                  noOfAdditionalPeriods: Int = Integer.MAX_VALUE,
-                                  endDate: LocalDate? = null,
-                                  periodOffset: Int? = null): List<LocalDate> {
+        fun createGenericSchedule(
+            startDate: LocalDate,
+            period: Frequency,
+            calendar: BusinessCalendar = getInstance(),
+            dateRollConvention: DateRollConvention = DateRollConvention.Following,
+            noOfAdditionalPeriods: Int = Integer.MAX_VALUE,
+            endDate: LocalDate? = null,
+            periodOffset: Int? = null
+        ): List<LocalDate> {
             val ret = ArrayList<LocalDate>()
             var ctr = 0
             var currentDate = startDate
@@ -374,9 +377,11 @@ enum class NetType {
  * this commodity.
  */
 @CordaSerializable
-data class Commodity(val commodityCode: String,
-                     val displayName: String,
-                     val defaultFractionDigits: Int = 0) : TokenizableAssetInfo {
+data class Commodity(
+    val commodityCode: String,
+    val displayName: String,
+    val defaultFractionDigits: Int = 0
+) : TokenizableAssetInfo {
     override val displayTokenSize: BigDecimal
         get() = BigDecimal.ONE.scaleByPowerOfTen(-defaultFractionDigits)
 
@@ -386,8 +391,8 @@ data class Commodity(val commodityCode: String,
                 Pair("FCOJ", Commodity("FCOJ", "Frozen concentrated orange juice"))
         )
 
-        fun getInstance(commodityCode: String): Commodity?
-                = registry[commodityCode]
+        fun getInstance(commodityCode: String): Commodity? =
+                registry[commodityCode]
     }
 }
 
@@ -430,7 +435,6 @@ interface FixableDealState : DealState {
      */
     fun generateFix(ptx: TransactionBuilder, oldState: StateAndRef<*>, fix: Fix)
 }
-
 
 /**
  * Interface for state objects that support being netted with other state objects.

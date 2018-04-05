@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
     }
     val config = try {
         cmdlineOptions.toConfig()
-    } catch(e: Exception) {
+    } catch (e: Exception) {
         println("Configuration exception: ${e.message}")
         exitProcess(1)
     }
@@ -102,7 +102,7 @@ class StandaloneShell(private val configuration: ShellConfiguration) {
         InteractiveShell.runLocalShell {
             exit.countDown()
         }
-        configuration.sshdPort?.apply{ println("SSH server listening on port $this.") }
+        configuration.sshdPort?.apply { println("SSH server listening on port $this.") }
 
         exit.await()
         // because we can't clean certain Crash Shell threads that block on read()

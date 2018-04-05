@@ -7,5 +7,4 @@ fun networkSteps(steps: StepsBlock) = steps {
     When("^the network is ready$") {
         state.ensureNetworkIsRunning()
     }
-
 }

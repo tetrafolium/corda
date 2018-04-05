@@ -45,16 +45,16 @@ import java.util.*
  * vaults can ignore the issuer/depositRefs and just examine the amount fields.
  */
 class Cash : OnLedgerAsset<Currency, Cash.Commands, Cash.State>() {
-    override fun extractCommands(commands: Collection<CommandWithParties<CommandData>>): List<CommandWithParties<Cash.Commands>>
-            = commands.select<Cash.Commands>()
+    override fun extractCommands(commands: Collection<CommandWithParties<CommandData>>): List<CommandWithParties<Cash.Commands>> =
+            commands.select<Cash.Commands>()
 
     // DOCSTART 1
     /** A state representing a cash claim against some party. */
     data class State(
-            override val amount: Amount<Issued<Currency>>,
+        override val amount: Amount<Issued<Currency>>,
 
-            /** There must be a MoveCommand signed by this key to claim the amount. */
-            override val owner: AbstractParty
+        /** There must be a MoveCommand signed by this key to claim the amount. */
+        override val owner: AbstractParty
     ) : FungibleAsset<Currency>, QueryableState {
         constructor(deposit: PartyAndReference, amount: Amount<Currency>, owner: AbstractParty)
                 : this(Amount(amount.quantity, Issued(deposit, amount.token)), owner)
@@ -62,8 +62,8 @@ class Cash : OnLedgerAsset<Currency, Cash.Commands, Cash.State>() {
         override val exitKeys = setOf(owner.owningKey, amount.token.issuer.party.owningKey)
         override val participants = listOf(owner)
 
-        override fun withNewOwnerAndAmount(newAmount: Amount<Issued<Currency>>, newOwner: AbstractParty): FungibleAsset<Currency>
-                = copy(amount = amount.copy(newAmount.quantity), owner = newOwner)
+        override fun withNewOwnerAndAmount(newAmount: Amount<Issued<Currency>>, newOwner: AbstractParty): FungibleAsset<Currency> =
+                copy(amount = amount.copy(newAmount.quantity), owner = newOwner)
 
         override fun toString() = "${Emoji.bagOfCash}Cash($amount at ${amount.token.issuer} owned by $owner)"
 
@@ -120,17 +120,17 @@ class Cash : OnLedgerAsset<Currency, Cash.Commands, Cash.State>() {
     /**
      * Puts together an issuance transaction from the given template, that starts out being owned by the given pubkey.
      */
-    fun generateIssue(tx: TransactionBuilder, tokenDef: Issued<Currency>, pennies: Long, owner: AbstractParty, notary: Party)
-            = generateIssue(tx, Amount(pennies, tokenDef), owner, notary)
+    fun generateIssue(tx: TransactionBuilder, tokenDef: Issued<Currency>, pennies: Long, owner: AbstractParty, notary: Party) =
+            generateIssue(tx, Amount(pennies, tokenDef), owner, notary)
 
     /**
      * Puts together an issuance transaction for the specified amount that starts out being owned by the given pubkey.
      */
-    fun generateIssue(tx: TransactionBuilder, amount: Amount<Issued<Currency>>, owner: AbstractParty, notary: Party)
-            = generateIssue(tx, TransactionState(State(amount, owner), PROGRAM_ID, notary), Commands.Issue())
+    fun generateIssue(tx: TransactionBuilder, amount: Amount<Issued<Currency>>, owner: AbstractParty, notary: Party) =
+            generateIssue(tx, TransactionState(State(amount, owner), PROGRAM_ID, notary), Commands.Issue())
 
-    override fun deriveState(txState: TransactionState<State>, amount: Amount<Issued<Currency>>, owner: AbstractParty)
-            = txState.copy(data = txState.data.copy(amount = amount, owner = owner))
+    override fun deriveState(txState: TransactionState<State>, amount: Amount<Issued<Currency>>, owner: AbstractParty) =
+            txState.copy(data = txState.data.copy(amount = amount, owner = owner))
 
     override fun generateExitCommand(amount: Amount<Issued<Currency>>) = Commands.Exit(amount)
     override fun generateMoveCommand() = Commands.Move()
@@ -173,12 +173,14 @@ class Cash : OnLedgerAsset<Currency, Cash.Commands, Cash.State>() {
         }
     }
 
-    private fun verifyIssueCommand(inputs: List<State>,
-                                   outputs: List<State>,
-                                   tx: LedgerTransaction,
-                                   issueCommand: CommandWithParties<Commands.Issue>,
-                                   currency: Currency,
-                                   issuer: PartyAndReference) {
+    private fun verifyIssueCommand(
+        inputs: List<State>,
+        outputs: List<State>,
+        tx: LedgerTransaction,
+        issueCommand: CommandWithParties<Commands.Issue>,
+        currency: Currency,
+        issuer: PartyAndReference
+    ) {
         // If we have an issue command, perform special processing: the group is allowed to have no inputs,
         // and the output states must have a deposit reference owned by the signer.
         //
@@ -228,11 +230,13 @@ class Cash : OnLedgerAsset<Currency, Cash.Commands, Cash.State>() {
         @Throws(InsufficientBalanceException::class)
         @Suspendable
         @Deprecated("Our identity should be specified", replaceWith = ReplaceWith("generateSpend(services, tx, amount, to, ourIdentity, onlyFromParties)"))
-        fun generateSpend(services: ServiceHub,
-                          tx: TransactionBuilder,
-                          amount: Amount<Currency>,
-                          to: AbstractParty,
-                          onlyFromParties: Set<AbstractParty> = emptySet()) = generateSpend(services, tx, listOf(PartyAndAmount(to, amount)), services.myInfo.legalIdentitiesAndCerts.single(), onlyFromParties)
+        fun generateSpend(
+            services: ServiceHub,
+            tx: TransactionBuilder,
+            amount: Amount<Currency>,
+            to: AbstractParty,
+            onlyFromParties: Set<AbstractParty> = emptySet()
+        ) = generateSpend(services, tx, listOf(PartyAndAmount(to, amount)), services.myInfo.legalIdentitiesAndCerts.single(), onlyFromParties)
 
         /**
          * Generate a transaction that moves an amount of currency to the given party.
@@ -256,12 +260,14 @@ class Cash : OnLedgerAsset<Currency, Cash.Commands, Cash.State>() {
         @JvmStatic
         @Throws(InsufficientBalanceException::class)
         @Suspendable
-        fun generateSpend(services: ServiceHub,
-                          tx: TransactionBuilder,
-                          amount: Amount<Currency>,
-                          ourIdentity: PartyAndCertificate,
-                          to: AbstractParty,
-                          onlyFromParties: Set<AbstractParty> = emptySet()): Pair<TransactionBuilder, List<PublicKey>> {
+        fun generateSpend(
+            services: ServiceHub,
+            tx: TransactionBuilder,
+            amount: Amount<Currency>,
+            ourIdentity: PartyAndCertificate,
+            to: AbstractParty,
+            onlyFromParties: Set<AbstractParty> = emptySet()
+        ): Pair<TransactionBuilder, List<PublicKey>> {
             return generateSpend(services, tx, listOf(PartyAndAmount(to, amount)), ourIdentity, onlyFromParties)
         }
 
@@ -287,10 +293,12 @@ class Cash : OnLedgerAsset<Currency, Cash.Commands, Cash.State>() {
         @Throws(InsufficientBalanceException::class)
         @Suspendable
         @Deprecated("Our identity should be specified", replaceWith = ReplaceWith("generateSpend(services, tx, amount, to, ourIdentity, onlyFromParties)"))
-        fun generateSpend(services: ServiceHub,
-                          tx: TransactionBuilder,
-                          payments: List<PartyAndAmount<Currency>>,
-                          onlyFromParties: Set<AbstractParty> = emptySet()) = generateSpend(services, tx, payments, services.myInfo.legalIdentitiesAndCerts.single(), onlyFromParties)
+        fun generateSpend(
+            services: ServiceHub,
+            tx: TransactionBuilder,
+            payments: List<PartyAndAmount<Currency>>,
+            onlyFromParties: Set<AbstractParty> = emptySet()
+        ) = generateSpend(services, tx, payments, services.myInfo.legalIdentitiesAndCerts.single(), onlyFromParties)
 
         /**
          * Generate a transaction that moves money of the given amounts to the recipients specified.
@@ -313,13 +321,15 @@ class Cash : OnLedgerAsset<Currency, Cash.Commands, Cash.State>() {
         @JvmStatic
         @Throws(InsufficientBalanceException::class)
         @Suspendable
-        fun generateSpend(services: ServiceHub,
-                          tx: TransactionBuilder,
-                          payments: List<PartyAndAmount<Currency>>,
-                          ourIdentity: PartyAndCertificate,
-                          onlyFromParties: Set<AbstractParty> = emptySet()): Pair<TransactionBuilder, List<PublicKey>> {
-            fun deriveState(txState: TransactionState<Cash.State>, amt: Amount<Issued<Currency>>, owner: AbstractParty)
-                    = txState.copy(data = txState.data.copy(amount = amt, owner = owner))
+        fun generateSpend(
+            services: ServiceHub,
+            tx: TransactionBuilder,
+            payments: List<PartyAndAmount<Currency>>,
+            ourIdentity: PartyAndCertificate,
+            onlyFromParties: Set<AbstractParty> = emptySet()
+        ): Pair<TransactionBuilder, List<PublicKey>> {
+            fun deriveState(txState: TransactionState<Cash.State>, amt: Amount<Issued<Currency>>, owner: AbstractParty) =
+                    txState.copy(data = txState.data.copy(amount = amt, owner = owner))
 
             // Retrieve unspent and unlocked cash states that meet our spending criteria.
             val totalAmount = payments.map { it.amount }.sumOrThrow()

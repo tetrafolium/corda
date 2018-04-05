@@ -17,9 +17,10 @@ import org.fxmisc.easybind.EasyBind
  * because of permissioning)
  */
 data class PartiallyResolvedTransaction(
-        val transaction: SignedTransaction,
-        val inputs: List<ObservableValue<InputResolution>>,
-        val outputs: List<ObservableValue<out OutputResolution>>) {
+    val transaction: SignedTransaction,
+    val inputs: List<ObservableValue<InputResolution>>,
+    val outputs: List<ObservableValue<out OutputResolution>>
+) {
     val id = transaction.id
 
     sealed class InputResolution {
@@ -42,8 +43,8 @@ data class PartiallyResolvedTransaction(
 
     companion object {
         fun fromSignedTransaction(
-                transaction: SignedTransaction,
-                stateMap: ObservableMap<StateRef, StateAndRef<ContractState>>
+            transaction: SignedTransaction,
+            stateMap: ObservableMap<StateRef, StateAndRef<ContractState>>
         ) = PartiallyResolvedTransaction(
                 transaction = transaction,
                 inputs = transaction.inputs.map { stateRef ->

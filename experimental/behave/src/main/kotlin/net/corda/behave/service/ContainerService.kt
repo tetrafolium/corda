@@ -11,9 +11,9 @@ import rx.Observable
 import java.io.Closeable
 
 abstract class ContainerService(
-        name: String,
-        port: Int,
-        settings: ServiceSettings = ServiceSettings()
+    name: String,
+    port: Int,
+    settings: ServiceSettings = ServiceSettings()
 ) : Service(name, port, settings), Closeable {
 
     protected val client: DockerClient = DefaultDockerClient.fromEnv().build()
@@ -118,5 +118,4 @@ abstract class ContainerService(
             client.close()
         }
     }
-
 }

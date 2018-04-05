@@ -12,15 +12,16 @@ import java.time.LocalDate
  * JSON required to create a swap.
  */
 data class SwapDataModel(
-        val id: String,
-        val description: String,
-        val tradeDate: LocalDate,
-        val convention: String,
-        val startDate: LocalDate,
-        val endDate: LocalDate,
-        val buySell: BuySell,
-        val notional: BigDecimal,
-        val fixedRate: BigDecimal) {
+    val id: String,
+    val description: String,
+    val tradeDate: LocalDate,
+    val convention: String,
+    val startDate: LocalDate,
+    val endDate: LocalDate,
+    val buySell: BuySell,
+    val notional: BigDecimal,
+    val fixedRate: BigDecimal
+) {
 
     /**
      * Turn this model into the internal representation of SwapData.

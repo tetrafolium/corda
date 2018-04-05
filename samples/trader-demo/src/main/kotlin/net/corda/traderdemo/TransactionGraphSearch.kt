@@ -22,9 +22,11 @@ import java.util.concurrent.Callable
  * @property startPoints transactions to use as starting points for the search.
  * @property query query to test transactions within the graph for matching.
  */
-class TransactionGraphSearch(private val transactions: TransactionStorage,
-                             private val startPoints: List<WireTransaction>,
-                             private val query: Query) : Callable<List<WireTransaction>> {
+class TransactionGraphSearch(
+    private val transactions: TransactionStorage,
+    private val startPoints: List<WireTransaction>,
+    private val query: Query
+) : Callable<List<WireTransaction>> {
     /**
      * Query criteria to match transactions against.
      *
@@ -33,8 +35,8 @@ class TransactionGraphSearch(private val transactions: TransactionStorage,
      * @property followInputsOfType contract output state class to follow the corresponding inputs to. Matches this exact class only.
      */
     data class Query(
-            val withCommandOfType: Class<out CommandData>? = null,
-            val followInputsOfType: Class<out ContractState>? = null
+        val withCommandOfType: Class<out CommandData>? = null,
+        val followInputsOfType: Class<out ContractState>? = null
     ) {
         /**
          * Test if the given transaction matches this query. Currently only supports checking if the transaction that

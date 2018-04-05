@@ -60,5 +60,4 @@ class MonitoringTests {
         val aggregate = watch1 / watch2 / watch3
         assertThat(aggregate.await(observable, 1.second)).isFalse()
     }
-
 }

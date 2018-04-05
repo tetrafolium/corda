@@ -50,7 +50,6 @@ import java.time.LocalDate
  * This makes use of the example market data environment.
  */
 
-
 fun main(args: Array<String>) {
     val swapPricingExample = SwapPricingExample()
     swapPricingExample.main()
@@ -155,7 +154,7 @@ class SwapPricingExample {
                 LocalDate.of(2021, 9, 12), // the end date
                 BuySell.BUY, // indicates wheter this trade is a buy or sell
                 100000000.0, // the notional amount
-                0.015)                    // the fixed interest rate
+                0.015) // the fixed interest rate
     }
 
     // create a libor 3m vs libor 6m basis swap with spread
@@ -177,17 +176,17 @@ class SwapPricingExample {
                 .calculation(IborRateCalculation.of(IborIndices.USD_LIBOR_6M)).build()
 
         val receiveLeg =
-                RateCalculationSwapLeg.builder().
-                        payReceive(PayReceive.RECEIVE)
+                RateCalculationSwapLeg.builder()
+                        .payReceive(PayReceive.RECEIVE)
                         .accrualSchedule(PeriodicSchedule
                                 .builder()
                                 .startDate(LocalDate.of(2014, 8, 27))
                                 .endDate(LocalDate.of(2024, 8, 27))
                                 .frequency(Frequency.P3M)
-                                .businessDayAdjustment(BusinessDayAdjustment.
-                                        of(MODIFIED_FOLLOWING, HolidayCalendarIds.USNY)).
-                                build()).
-                        paymentSchedule(PaymentSchedule
+                                .businessDayAdjustment(BusinessDayAdjustment
+                                        .of(MODIFIED_FOLLOWING, HolidayCalendarIds.USNY))
+                                .build())
+                        .paymentSchedule(PaymentSchedule
                                 .builder()
                                 .paymentFrequency(Frequency.P3M)
                                 .paymentDateOffset(DaysAdjustment.NONE)
@@ -246,7 +245,7 @@ class SwapPricingExample {
                 LocalDate.of(2020, 9, 12), // the end date
                 BuySell.BUY, // indicates wheter this trade is a buy or sell
                 100000000.0, // the notional amount
-                0.015)                    // the fixed interest rate
+                0.015) // the fixed interest rate
     }
 
     // Create a fixed vs overnight swap with fixing
@@ -261,7 +260,7 @@ class SwapPricingExample {
                 LocalDate.of(2014, 3, 17), // the end date
                 BuySell.BUY, // indicates wheter this trade is a buy or sell
                 100000000.0, // the notional amount
-                0.00123)                  // the fixed interest rate
+                0.00123) // the fixed interest rate
     }
 
     // Create a fixed vs libor 3m swap
@@ -404,5 +403,4 @@ class SwapPricingExample {
 
         return SwapTrade.builder().product(Swap.of(payLeg, receiveLeg)).info(TradeInfo.builder().id(StandardId.of("example", "16")).addAttribute(TradeAttributeType.DESCRIPTION, "USD fixed vs GBP Libor 3m (notional exchange)").counterparty(StandardId.of("example", "A")).settlementDate(LocalDate.of(2014, 1, 24)).build()).build()
     }
-
 }

@@ -31,8 +31,8 @@ private val log = LoggerFactory.getLogger("CrossCash")
  */
 
 data class CrossCashCommand(
-        val request: AbstractRequest,
-        val node: NodeConnection
+    val request: AbstractRequest,
+    val node: NodeConnection
 ) {
     override fun toString(): String {
         return when (request) {
@@ -54,7 +54,7 @@ data class CrossCashCommand(
  * Map from node to (map from issuer to USD quantity)
  */
 data class CrossCashState(
-        val nodeVaults: Map<AbstractParty, Map<AbstractParty, Long>>,
+    val nodeVaults: Map<AbstractParty, Map<AbstractParty, Long>>,
 
         // node -> (notifying node -> [(issuer, amount)])
         // This map holds the queues that encode the non-determinism of how tx notifications arrive in the background.
@@ -72,7 +72,7 @@ data class CrossCashState(
         // requires more concurrent code which is conceptually also more complex than the current design.
         // TODO: Alternative: We may possibly reduce the complexity of the search even further using some form of
         //     knapsack instead of the naive search
-        val diffQueues: Map<AbstractParty, Map<AbstractParty, List<Pair<AbstractParty, Long>>>>
+    val diffQueues: Map<AbstractParty, Map<AbstractParty, List<Pair<AbstractParty, Long>>>>
 ) {
     fun copyVaults(): HashMap<AbstractParty, HashMap<AbstractParty, Long>> {
         val newNodeVaults = HashMap<AbstractParty, HashMap<AbstractParty, Long>>()
@@ -304,9 +304,9 @@ val crossCashTest = LoadTest<CrossCashCommand, CrossCashState>(
  * @return List of (node -> number of txs consumed) maps, each of which results in [searchedState].
  */
 private fun <A> searchForState(
-        searchedState: Map<A, Long>,
-        baseState: Map<A, Long>,
-        diffQueues: Map<A, List<Pair<A, Long>>>
+    searchedState: Map<A, Long>,
+    baseState: Map<A, Long>,
+    diffQueues: Map<A, List<Pair<A, Long>>>
 ): List<Map<A, Int>> {
 
     val diffQueuesList = diffQueues.toList()
@@ -336,10 +336,10 @@ private fun <A> searchForState(
 
 // Returns null if we exceeded the searched quantity.
 private fun <A> applyDiff(
-        issuer: A,
-        quantity: Long,
-        state: Map<A, Long>,
-        searchedState: Map<A, Long>
+    issuer: A,
+    quantity: Long,
+    state: Map<A, Long>,
+    searchedState: Map<A, Long>
 ): Map<A, Long>? {
     val newState = HashMap(state)
     val newQuantity = (newState[issuer] ?: 0L) + quantity

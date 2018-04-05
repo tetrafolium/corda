@@ -45,4 +45,3 @@ Please refer to the documentation in docs/build/index.html for more info.
     parser.printHelpOn(System.out)
 }
 
-

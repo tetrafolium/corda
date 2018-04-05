@@ -20,8 +20,10 @@ import java.util.*
  *
  * @return a list of verified [SignedTransaction] objects, in a depth-first order.
  */
-class ResolveTransactionsFlow(private val txHashes: Set<SecureHash>,
-                              private val otherSide: FlowSession) : FlowLogic<List<SignedTransaction>>() {
+class ResolveTransactionsFlow(
+    private val txHashes: Set<SecureHash>,
+    private val otherSide: FlowSession
+) : FlowLogic<List<SignedTransaction>>() {
     /**
      * Resolves and validates the dependencies of the specified [SignedTransaction]. Fetches the attachments, but does
      * *not* validate or store the [SignedTransaction] itself.
@@ -123,7 +125,7 @@ class ResolveTransactionsFlow(private val txHashes: Set<SecureHash>,
         // the db contain the identities that were resolved when the transaction was first checked, or should we
         // accept this kind of change is possible? Most likely solution is for identity data to be an attachment.
 
-        val nextRequests = LinkedHashSet<SecureHash>()   // Keep things unique but ordered, for unit test stability.
+        val nextRequests = LinkedHashSet<SecureHash>() // Keep things unique but ordered, for unit test stability.
         nextRequests.addAll(depsToCheck)
         val resultQ = LinkedHashMap<SecureHash, SignedTransaction>()
 
@@ -135,14 +137,14 @@ class ResolveTransactionsFlow(private val txHashes: Set<SecureHash>,
             val notAlreadyFetched = nextRequests.filterNot { it in resultQ }.toSet()
             nextRequests.clear()
 
-            if (notAlreadyFetched.isEmpty())   // Done early.
+            if (notAlreadyFetched.isEmpty()) // Done early.
                 break
 
             // Request the standalone transaction data (which may refer to things we don't yet have).
             val downloads: List<SignedTransaction> = subFlow(FetchTransactionsFlow(notAlreadyFetched, otherSide)).downloaded
 
             for (stx in downloads)
-                check(resultQ.putIfAbsent(stx.id, stx) == null)   // Assert checks the filter at the start.
+                check(resultQ.putIfAbsent(stx.id, stx) == null) // Assert checks the filter at the start.
 
             // Add all input states to the work queue.
             val inputHashes = downloads.flatMap { it.inputs }.map { it.txhash }

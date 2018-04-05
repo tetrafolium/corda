@@ -147,14 +147,14 @@ class NodeControllerTest {
     }
 
     private fun createConfig(
-            organisation: String = "Unknown",
-            p2pPort: Int = 0,
-            rpcPort: Int = 0,
-            rpcAdminPort: Int = 0,
-            webPort: Int = 0,
-            h2port: Int = 0,
-            notary: NotaryService? = null,
-            users: List<User> = listOf(user("guest"))
+        organisation: String = "Unknown",
+        p2pPort: Int = 0,
+        rpcPort: Int = 0,
+        rpcAdminPort: Int = 0,
+        webPort: Int = 0,
+        h2port: Int = 0,
+        notary: NotaryService? = null,
+        users: List<User> = listOf(user("guest"))
     ): NodeConfigWrapper {
         val nodeConfig = NodeConfig(
                 myLegalName = CordaX500Name(

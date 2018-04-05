@@ -2,30 +2,25 @@
 
 package net.corda.testing.node
 
-import net.corda.core.concurrent.CordaFuture
 import net.corda.core.context.Actor
 import net.corda.core.context.AuthServiceId
 import net.corda.core.context.InvocationContext
-import net.corda.core.flows.FlowLogic
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.node.ServiceHub
 import net.corda.core.serialization.internal.effectiveSerializationEnv
 import net.corda.core.transactions.TransactionBuilder
-import net.corda.core.utilities.getOrThrow
-import net.corda.node.services.api.StartedNodeServices
 import net.corda.testing.core.SerializationEnvironmentRule
 import net.corda.testing.core.TestIdentity
 import net.corda.testing.dsl.*
-import net.corda.testing.internal.chooseIdentity
 
 /**
  * Creates and tests a ledger built by the passed in dsl.
  */
 @JvmOverloads
 fun ServiceHub.ledger(
-        notary: Party = TestIdentity.fresh("ledger notary").party,
-        script: LedgerDSL<TestTransactionDSLInterpreter, TestLedgerDSLInterpreter>.() -> Unit
+    notary: Party = TestIdentity.fresh("ledger notary").party,
+    script: LedgerDSL<TestTransactionDSLInterpreter, TestLedgerDSLInterpreter>.() -> Unit
 ): LedgerDSL<TestTransactionDSLInterpreter, TestLedgerDSLInterpreter> {
     val serializationExists = try {
         effectiveSerializationEnv
@@ -49,8 +44,8 @@ fun ServiceHub.ledger(
  */
 @JvmOverloads
 fun ServiceHub.transaction(
-        notary: Party = TestIdentity.fresh("transaction notary").party,
-        script: TransactionDSL<TransactionDSLInterpreter>.() -> EnforceVerifyOrFail
+    notary: Party = TestIdentity.fresh("transaction notary").party,
+    script: TransactionDSL<TransactionDSLInterpreter>.() -> EnforceVerifyOrFail
 ) = ledger(notary) {
     TransactionDSL(TestTransactionDSLInterpreter(interpreter, TransactionBuilder(notary)), notary).script()
 }

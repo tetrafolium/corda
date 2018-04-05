@@ -6,8 +6,8 @@ import java.sql.*
 import java.util.*
 
 class DatabaseConnection(
-        private val config: DatabaseConfiguration,
-        template: DatabaseConfigurationTemplate
+    private val config: DatabaseConfiguration,
+    template: DatabaseConfigurationTemplate
 ) : Closeable {
 
     private val connectionString = template.connectionString(config)
@@ -81,5 +81,4 @@ class DatabaseConnection(
             i -= 1
         }
     }
-
 }

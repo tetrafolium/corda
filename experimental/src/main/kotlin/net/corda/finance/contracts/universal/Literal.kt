@@ -54,7 +54,7 @@ class ActionsBuilder {
 open class ContractBuilder {
     private val contracts = mutableListOf<Arrangement>()
 
-    operator fun Arrangement.unaryPlus() : Arrangement {
+    operator fun Arrangement.unaryPlus(): Arrangement {
         contracts.add(this)
         return this
     }
@@ -89,12 +89,16 @@ open class ContractBuilder {
     }
 
     fun <T1> next(@Suppress("UNUSED_PARAMETER") p1: kotlin.Pair<Parameter<T1>, Perceivable<T1>>) = Continuation()
-    fun <T1, T2> next(@Suppress("UNUSED_PARAMETER") p1: kotlin.Pair<Parameter<T1>, Perceivable<T1>>,
-                      @Suppress("UNUSED_PARAMETER") p2: kotlin.Pair<Parameter<T2>, Perceivable<T2>>) = Continuation()
+    fun <T1, T2> next(
+        @Suppress("UNUSED_PARAMETER") p1: kotlin.Pair<Parameter<T1>, Perceivable<T1>>,
+        @Suppress("UNUSED_PARAMETER") p2: kotlin.Pair<Parameter<T2>, Perceivable<T2>>
+    ) = Continuation()
 
-    fun <T1, T2, T3> next(@Suppress("UNUSED_PARAMETER") p1: kotlin.Pair<Parameter<T1>, Perceivable<T1>>,
-                          @Suppress("UNUSED_PARAMETER") p2: kotlin.Pair<Parameter<T2>, Perceivable<T2>>,
-                          @Suppress("UNUSED_PARAMETER") p3: kotlin.Pair<Parameter<T3>, Perceivable<T3>>) = Continuation()
+    fun <T1, T2, T3> next(
+        @Suppress("UNUSED_PARAMETER") p1: kotlin.Pair<Parameter<T1>, Perceivable<T1>>,
+        @Suppress("UNUSED_PARAMETER") p2: kotlin.Pair<Parameter<T2>, Perceivable<T2>>,
+        @Suppress("UNUSED_PARAMETER") p3: kotlin.Pair<Parameter<T3>, Perceivable<T3>>
+    ) = Continuation()
 
     fun rollOut(startDate: LocalDate, endDate: LocalDate, frequency: Frequency, init: RollOutBuilder<Dummy>.() -> Unit): RollOut {
         val b = RollOutBuilder(startDate, endDate, frequency, Dummy())
@@ -121,7 +125,6 @@ open class ContractBuilder {
                 else -> And(contracts.toSet())
             }
 }
-
 
 interface GivenThatResolve {
     fun resolve(contract: Arrangement)

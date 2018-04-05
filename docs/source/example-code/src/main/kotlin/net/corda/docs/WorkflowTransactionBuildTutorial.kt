@@ -32,18 +32,20 @@ val TRADE_APPROVAL_PROGRAM_ID = "net.corda.docs.TradeApprovalContract"
 data class TradeApprovalContract(val blank: Unit? = null) : Contract {
 
     interface Commands : CommandData {
-        class Issue : TypeOnlyCommandData(), Commands  // Record receipt of deal details
-        class Completed : TypeOnlyCommandData(), Commands  // Record match
+        class Issue : TypeOnlyCommandData(), Commands // Record receipt of deal details
+        class Completed : TypeOnlyCommandData(), Commands // Record match
     }
 
     /**
      * Truly minimal state that just records a tradeId string and the parties involved.
      */
-    data class State(val tradeId: String,
-                     val source: Party,
-                     val counterparty: Party,
-                     val state: WorkflowState = WorkflowState.NEW,
-                     override val linearId: UniqueIdentifier = UniqueIdentifier(tradeId)) : LinearState {
+    data class State(
+        val tradeId: String,
+        val source: Party,
+        val counterparty: Party,
+        val state: WorkflowState = WorkflowState.NEW,
+        override val linearId: UniqueIdentifier = UniqueIdentifier(tradeId)
+    ) : LinearState {
         override val participants: List<AbstractParty> get() = listOf(source, counterparty)
     }
 
@@ -91,8 +93,10 @@ data class TradeApprovalContract(val blank: Unit? = null) : Contract {
  * The protocol then sends a copy to the other node. We don't require the other party to sign
  * as their approval/rejection is to follow.
  */
-class SubmitTradeApprovalFlow(private val tradeId: String,
-                              private val counterparty: Party) : FlowLogic<StateAndRef<TradeApprovalContract.State>>() {
+class SubmitTradeApprovalFlow(
+    private val tradeId: String,
+    private val counterparty: Party
+) : FlowLogic<StateAndRef<TradeApprovalContract.State>>() {
     @Suspendable
     override fun call(): StateAndRef<TradeApprovalContract.State> {
         // Manufacture an initial state
@@ -158,8 +162,8 @@ class SubmitCompletionFlow(private val ref: StateRef, private val verdict: Workf
         // To destroy the old proposal state and replace with the new completion state.
         // Also add the Completed command with keys of all parties to signal the Tx purpose
         // to the Contract verify method.
-        val tx = TransactionBuilder(notary).
-                withItems(
+        val tx = TransactionBuilder(notary)
+                .withItems(
                         latestRecord,
                         StateAndContract(newState, TRADE_APPROVAL_PROGRAM_ID),
                         Command(TradeApprovalContract.Commands.Completed(),

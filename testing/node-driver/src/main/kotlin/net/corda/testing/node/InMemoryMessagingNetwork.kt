@@ -50,23 +50,24 @@ import kotlin.concurrent.thread
  */
 @ThreadSafe
 class InMemoryMessagingNetwork private constructor(
-        private val sendManuallyPumped: Boolean,
-        private val servicePeerAllocationStrategy: ServicePeerAllocationStrategy = InMemoryMessagingNetwork.ServicePeerAllocationStrategy.Random(),
-        private val messagesInFlight: ReusableLatch = ReusableLatch()
+    private val sendManuallyPumped: Boolean,
+    private val servicePeerAllocationStrategy: ServicePeerAllocationStrategy = InMemoryMessagingNetwork.ServicePeerAllocationStrategy.Random(),
+    private val messagesInFlight: ReusableLatch = ReusableLatch()
 ) : SingletonSerializeAsToken() {
     companion object {
         private const val MESSAGES_LOG_NAME = "messages"
         private val log = LoggerFactory.getLogger(MESSAGES_LOG_NAME)
 
         internal fun create(
-                sendManuallyPumped: Boolean,
-                servicePeerAllocationStrategy: ServicePeerAllocationStrategy = InMemoryMessagingNetwork.ServicePeerAllocationStrategy.Random(),
-                messagesInFlight: ReusableLatch = ReusableLatch()): InMemoryMessagingNetwork {
+            sendManuallyPumped: Boolean,
+            servicePeerAllocationStrategy: ServicePeerAllocationStrategy = InMemoryMessagingNetwork.ServicePeerAllocationStrategy.Random(),
+            messagesInFlight: ReusableLatch = ReusableLatch()
+        ): InMemoryMessagingNetwork {
             return InMemoryMessagingNetwork(sendManuallyPumped, servicePeerAllocationStrategy, messagesInFlight)
         }
     }
 
-    private var counter = 0   // -1 means stopped.
+    private var counter = 0 // -1 means stopped.
     private val handleEndpointMap = HashMap<PeerHandle, InMemoryMessaging>()
 
     /** A class which represents a message being transferred from sender to recipients, within the [InMemoryMessageNetwork]. **/
@@ -110,7 +111,7 @@ class InMemoryMessagingNetwork private constructor(
         get() = _receivedMessages
     internal val endpoints: List<InternalMockMessagingService> @Synchronized get() = handleEndpointMap.values.toList()
     /** Get a [List] of all the [MockMessagingService] endpoints **/
-    val endpointsExternal: List<MockMessagingService> @Synchronized get() = handleEndpointMap.values.map{ MockMessagingService.createMockMessagingService(it) }.toList()
+    val endpointsExternal: List<MockMessagingService> @Synchronized get() = handleEndpointMap.values.map { MockMessagingService.createMockMessagingService(it) }.toList()
 
     /**
      * Creates a node at the given address: useful if you want to recreate a node to simulate a restart.
@@ -123,13 +124,13 @@ class InMemoryMessagingNetwork private constructor(
      * @param description text string that identifies this node for message logging (if is enabled) or null to autogenerate.
      */
     internal fun createNodeWithID(
-            manuallyPumped: Boolean,
-            id: Int,
-            executor: AffinityExecutor,
-            notaryService: PartyAndCertificate?,
-            description: CordaX500Name = CordaX500Name(organisation = "In memory node $id", locality = "London", country = "UK"),
-            database: CordaPersistence)
-            : InternalMockMessagingService {
+        manuallyPumped: Boolean,
+        id: Int,
+        executor: AffinityExecutor,
+        notaryService: PartyAndCertificate?,
+        description: CordaX500Name = CordaX500Name(organisation = "In memory node $id", locality = "London", country = "UK"),
+        database: CordaPersistence
+    ): InternalMockMessagingService {
         val peerHandle = PeerHandle(id, description)
         peersMapping[peerHandle.name] = peerHandle // Assume that the same name - the same entity in MockNetwork.
         notaryService?.let { if (it.owningKey !is CompositeKey) peersMapping[it.name] = peerHandle }
@@ -287,12 +288,14 @@ class InMemoryMessagingNetwork private constructor(
         _sentMessages.onNext(transfer)
     }
 
-    private data class InMemoryReceivedMessage(override val topic: String,
-                                               override val data: ByteSequence,
-                                               override val platformVersion: Int,
-                                               override val uniqueMessageId: String,
-                                               override val debugTimestamp: Instant,
-                                               override val peer: CordaX500Name) : ReceivedMessage
+    private data class InMemoryReceivedMessage(
+        override val topic: String,
+        override val data: ByteSequence,
+        override val platformVersion: Int,
+        override val uniqueMessageId: String,
+        override val debugTimestamp: Instant,
+        override val peer: CordaX500Name
+    ) : ReceivedMessage
 
     /**
      * A class that provides an abstraction over the nodes' messaging service that also contains the ability to
@@ -315,10 +318,12 @@ class InMemoryMessagingNetwork private constructor(
     }
 
     @ThreadSafe
-    private inner class InMemoryMessaging(private val manuallyPumped: Boolean,
-                                          private val peerHandle: PeerHandle,
-                                          private val executor: AffinityExecutor,
-                                          private val database: CordaPersistence) : SingletonSerializeAsToken(), InternalMockMessagingService {
+    private inner class InMemoryMessaging(
+        private val manuallyPumped: Boolean,
+        private val peerHandle: PeerHandle,
+        private val executor: AffinityExecutor,
+        private val database: CordaPersistence
+    ) : SingletonSerializeAsToken(), InternalMockMessagingService {
         private inner class Handler(val topicSession: String, val callback: (ReceivedMessage, MessageHandlerRegistration) -> Unit) : MessageHandlerRegistration
 
         @Volatile
@@ -490,4 +495,3 @@ class InMemoryMessagingNetwork private constructor(
                 sender.name)
     }
 }
-

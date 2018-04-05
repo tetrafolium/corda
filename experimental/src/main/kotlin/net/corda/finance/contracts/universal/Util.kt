@@ -12,7 +12,7 @@ fun Instant.toLocalDate(): LocalDate = LocalDate.ofEpochDay(this.epochSecond / 6
 
 fun LocalDate.toInstant(): Instant = Instant.ofEpochSecond(this.toEpochDay() * 60 * 60 * 24)
 
-private fun signingParties(perceivable: Perceivable<Boolean>) : ImmutableSet<Party> =
+private fun signingParties(perceivable: Perceivable<Boolean>): ImmutableSet<Party> =
     when (perceivable) {
         is ActorPerceivable -> ImmutableSet.of( perceivable.actor )
         is PerceivableAnd -> Sets.union( signingParties( perceivable.left ), signingParties(perceivable.right) ).immutableCopy()

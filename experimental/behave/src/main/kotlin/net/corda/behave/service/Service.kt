@@ -4,9 +4,9 @@ import net.corda.behave.logging.getLogger
 import java.io.Closeable
 
 abstract class Service(
-        val name: String,
-        val port: Int,
-        val settings: ServiceSettings = ServiceSettings()
+    val name: String,
+    val port: Int,
+    val settings: ServiceSettings = ServiceSettings()
 ) : Closeable {
 
     private var isRunning: Boolean = false
@@ -68,5 +68,4 @@ abstract class Service(
     protected open fun verify() = true
 
     protected open fun waitUntilStarted() = true
-
 }

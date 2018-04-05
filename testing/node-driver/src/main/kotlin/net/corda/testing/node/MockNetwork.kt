@@ -36,10 +36,11 @@ import java.nio.file.Path
  */
 @Suppress("unused")
 data class MockNodeParameters(
-        val forcedID: Int? = null,
-        val legalName: CordaX500Name? = null,
-        val entropyRoot: BigInteger = BigInteger.valueOf(random63BitValue()),
-        val configOverrides: (NodeConfiguration) -> Any? = {}) {
+    val forcedID: Int? = null,
+    val legalName: CordaX500Name? = null,
+    val entropyRoot: BigInteger = BigInteger.valueOf(random63BitValue()),
+    val configOverrides: (NodeConfiguration) -> Any? = {}
+) {
     fun withForcedID(forcedID: Int?): MockNodeParameters = copy(forcedID = forcedID)
     fun withLegalName(legalName: CordaX500Name?): MockNodeParameters = copy(legalName = legalName)
     fun withEntropyRoot(entropyRoot: BigInteger): MockNodeParameters = copy(entropyRoot = entropyRoot)
@@ -66,11 +67,11 @@ data class MockNodeParameters(
  */
 @Suppress("unused")
 data class MockNetworkParameters(
-        val networkSendManuallyPumped: Boolean = false,
-        val threadPerNode: Boolean = false,
-        val servicePeerAllocationStrategy: InMemoryMessagingNetwork.ServicePeerAllocationStrategy = InMemoryMessagingNetwork.ServicePeerAllocationStrategy.Random(),
-        val notarySpecs: List<MockNetworkNotarySpec> = listOf(MockNetworkNotarySpec(DUMMY_NOTARY_NAME)),
-        val networkParameters: NetworkParameters = testNetworkParameters()
+    val networkSendManuallyPumped: Boolean = false,
+    val threadPerNode: Boolean = false,
+    val servicePeerAllocationStrategy: InMemoryMessagingNetwork.ServicePeerAllocationStrategy = InMemoryMessagingNetwork.ServicePeerAllocationStrategy.Random(),
+    val notarySpecs: List<MockNetworkNotarySpec> = listOf(MockNetworkNotarySpec(DUMMY_NOTARY_NAME)),
+    val networkParameters: NetworkParameters = testNetworkParameters()
 ) {
     fun withNetworkParameters(networkParameters: NetworkParameters): MockNetworkParameters = copy(networkParameters = networkParameters)
     fun withNetworkSendManuallyPumped(networkSendManuallyPumped: Boolean): MockNetworkParameters = copy(networkSendManuallyPumped = networkSendManuallyPumped)
@@ -99,7 +100,7 @@ class UnstartedMockNode private constructor(private val node: InternalMockNetwor
     }
 
     /** An identifier for the node. By default this is allocated sequentially in a [MockNetwork] **/
-    val id get() : Int = node.id
+    val id get(): Int = node.id
 
     /**
      * Start the node
@@ -202,13 +203,14 @@ class StartedMockNode private constructor(private val node: StartedNode<Internal
  */
 @Suppress("MemberVisibilityCanBePrivate", "CanBeParameter")
 open class MockNetwork(
-        val cordappPackages: List<String>,
-        val defaultParameters: MockNetworkParameters = MockNetworkParameters(),
-        val networkSendManuallyPumped: Boolean = defaultParameters.networkSendManuallyPumped,
-        val threadPerNode: Boolean = defaultParameters.threadPerNode,
-        val servicePeerAllocationStrategy: InMemoryMessagingNetwork.ServicePeerAllocationStrategy = defaultParameters.servicePeerAllocationStrategy,
-        val notarySpecs: List<MockNetworkNotarySpec> = defaultParameters.notarySpecs,
-        val networkParameters: NetworkParameters = defaultParameters.networkParameters) {
+    val cordappPackages: List<String>,
+    val defaultParameters: MockNetworkParameters = MockNetworkParameters(),
+    val networkSendManuallyPumped: Boolean = defaultParameters.networkSendManuallyPumped,
+    val threadPerNode: Boolean = defaultParameters.threadPerNode,
+    val servicePeerAllocationStrategy: InMemoryMessagingNetwork.ServicePeerAllocationStrategy = defaultParameters.servicePeerAllocationStrategy,
+    val notarySpecs: List<MockNetworkNotarySpec> = defaultParameters.notarySpecs,
+    val networkParameters: NetworkParameters = defaultParameters.networkParameters
+) {
     @JvmOverloads
     constructor(cordappPackages: List<String>, parameters: MockNetworkParameters = MockNetworkParameters()) : this(cordappPackages, defaultParameters = parameters)
 
@@ -251,10 +253,12 @@ open class MockNetwork(
      * @param version The mock node's platform, release, revision and vendor versions.
      */
     @JvmOverloads
-    fun createNode(legalName: CordaX500Name? = null,
-                   forcedID: Int? = null,
-                   entropyRoot: BigInteger = BigInteger.valueOf(random63BitValue()),
-                   configOverrides: (NodeConfiguration) -> Any? = {}): StartedMockNode {
+    fun createNode(
+        legalName: CordaX500Name? = null,
+        forcedID: Int? = null,
+        entropyRoot: BigInteger = BigInteger.valueOf(random63BitValue()),
+        configOverrides: (NodeConfiguration) -> Any? = {}
+    ): StartedMockNode {
         val parameters = MockNodeParameters(forcedID, legalName, entropyRoot, configOverrides)
         return StartedMockNode.create(internalMockNetwork.createNode(InternalMockNodeParameters(parameters)))
     }
@@ -273,10 +277,12 @@ open class MockNetwork(
      * @param version The mock node's platform, release, revision and vendor versions.
      */
     @JvmOverloads
-    fun createUnstartedNode(legalName: CordaX500Name? = null,
-                            forcedID: Int? = null,
-                            entropyRoot: BigInteger = BigInteger.valueOf(random63BitValue()),
-                            configOverrides: (NodeConfiguration) -> Any? = {}): UnstartedMockNode {
+    fun createUnstartedNode(
+        legalName: CordaX500Name? = null,
+        forcedID: Int? = null,
+        entropyRoot: BigInteger = BigInteger.valueOf(random63BitValue()),
+        configOverrides: (NodeConfiguration) -> Any? = {}
+    ): UnstartedMockNode {
         val parameters = MockNodeParameters(forcedID, legalName, entropyRoot, configOverrides)
         return UnstartedMockNode.create(internalMockNetwork.createUnstartedNode(InternalMockNodeParameters(parameters)))
     }

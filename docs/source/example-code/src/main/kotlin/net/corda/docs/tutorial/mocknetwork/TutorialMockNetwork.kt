@@ -7,20 +7,11 @@ import net.corda.core.flows.FlowSession
 import net.corda.core.flows.InitiatedBy
 import net.corda.core.flows.InitiatingFlow
 import net.corda.core.identity.Party
-import net.corda.core.messaging.MessageRecipients
-import net.corda.core.serialization.deserialize
-import net.corda.core.serialization.serialize
-import net.corda.core.utilities.OpaqueBytes
-import net.corda.core.utilities.getOrThrow
 import net.corda.core.utilities.unwrap
-import net.corda.node.services.messaging.Message
-import net.corda.node.services.statemachine.DataSessionMessage
-import net.corda.node.services.statemachine.ExistingSessionMessage
 import net.corda.testing.node.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.junit.rules.ExpectedException
 
 class TutorialMockNetwork {
@@ -52,9 +43,9 @@ class TutorialMockNetwork {
         }
     }
 
-    lateinit private var mockNet: MockNetwork
-    lateinit private var nodeA: StartedMockNode
-    lateinit private var nodeB: StartedMockNode
+    private lateinit var mockNet: MockNetwork
+    private lateinit var nodeA: StartedMockNode
+    private lateinit var nodeB: StartedMockNode
 
     @Rule
     @JvmField

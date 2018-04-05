@@ -65,14 +65,14 @@ class AttachmentResolutionException(attachmentId: SecureHash) : FlowException("A
  * that transactions corresponding to input states are not verified. Use [LedgerDSL.verifies] for that.
  */
 data class TestTransactionDSLInterpreter private constructor(
-        override val ledgerInterpreter: TestLedgerDSLInterpreter,
-        val transactionBuilder: TransactionBuilder,
-        internal val labelToIndexMap: HashMap<String, Int>
+    override val ledgerInterpreter: TestLedgerDSLInterpreter,
+    val transactionBuilder: TransactionBuilder,
+    internal val labelToIndexMap: HashMap<String, Int>
 ) : TransactionDSLInterpreter, OutputStateLookup by ledgerInterpreter {
 
     constructor(
-            ledgerInterpreter: TestLedgerDSLInterpreter,
-            transactionBuilder: TransactionBuilder
+        ledgerInterpreter: TestLedgerDSLInterpreter,
+        transactionBuilder: TransactionBuilder
     ) : this(ledgerInterpreter, transactionBuilder, HashMap())
 
     val services = object : ServicesForResolution by ledgerInterpreter.services {
@@ -97,12 +97,13 @@ data class TestTransactionDSLInterpreter private constructor(
         transactionBuilder.addInputState(StateAndRef(state, stateRef))
     }
 
-    override fun output(contractClassName: ContractClassName,
-                         label: String?,
-                         notary: Party,
-                         encumbrance: Int?,
-                         attachmentConstraint: AttachmentConstraint,
-                         contractState: ContractState
+    override fun output(
+        contractClassName: ContractClassName,
+        label: String?,
+        notary: Party,
+        encumbrance: Int?,
+        attachmentConstraint: AttachmentConstraint,
+        contractState: ContractState
     ) {
         transactionBuilder.addOutputState(contractState, contractClassName, notary, encumbrance, attachmentConstraint)
         if (label != null) {
@@ -145,10 +146,10 @@ data class TestTransactionDSLInterpreter private constructor(
 }
 
 data class TestLedgerDSLInterpreter private constructor(
-        val services: ServiceHub,
-        internal val labelToOutputStateAndRefs: HashMap<String, StateAndRef<ContractState>> = HashMap(),
-        private val transactionWithLocations: HashMap<SecureHash, WireTransactionWithLocation> = LinkedHashMap(),
-        private val nonVerifiedTransactionWithLocations: HashMap<SecureHash, WireTransactionWithLocation> = HashMap()
+    val services: ServiceHub,
+    internal val labelToOutputStateAndRefs: HashMap<String, StateAndRef<ContractState>> = HashMap(),
+    private val transactionWithLocations: HashMap<SecureHash, WireTransactionWithLocation> = LinkedHashMap(),
+    private val nonVerifiedTransactionWithLocations: HashMap<SecureHash, WireTransactionWithLocation> = HashMap()
 ) : LedgerDSLInterpreter<TestTransactionDSLInterpreter> {
     val wireTransactions: List<WireTransaction> get() = transactionWithLocations.values.map { it.transaction }
 
@@ -169,9 +170,9 @@ data class TestLedgerDSLInterpreter private constructor(
     }
 
     internal data class WireTransactionWithLocation(
-            val label: String?,
-            val transaction: WireTransaction,
-            val location: String?
+        val label: String?,
+        val transaction: WireTransaction,
+        val location: String?
     )
 
     class VerifiesFailed(transactionName: String, cause: Throwable) :
@@ -190,9 +191,9 @@ data class TestLedgerDSLInterpreter private constructor(
 
     internal inline fun <reified S : ContractState> resolveStateRef(stateRef: StateRef): TransactionState<S> {
         val transactionWithLocation =
-                transactionWithLocations[stateRef.txhash] ?:
-                        nonVerifiedTransactionWithLocations[stateRef.txhash] ?:
-                        throw TransactionResolutionException(stateRef.txhash)
+                transactionWithLocations[stateRef.txhash]
+                        ?: nonVerifiedTransactionWithLocations[stateRef.txhash]
+                        ?: throw TransactionResolutionException(stateRef.txhash)
         val output = transactionWithLocation.transaction.outputs[stateRef.index]
         return if (S::class.java.isAssignableFrom(output.data.javaClass)) {
             uncheckedCast(output)
@@ -206,8 +207,8 @@ data class TestLedgerDSLInterpreter private constructor(
     }
 
     private fun <R> interpretTransactionDsl(
-            transactionBuilder: TransactionBuilder,
-            dsl: TestTransactionDSLInterpreter.() -> R
+        transactionBuilder: TransactionBuilder,
+        dsl: TestTransactionDSLInterpreter.() -> R
     ): TestTransactionDSLInterpreter {
         return TestTransactionDSLInterpreter(this, transactionBuilder).apply { dsl() }
     }
@@ -225,12 +226,12 @@ data class TestLedgerDSLInterpreter private constructor(
             labelToOutputStateAndRefs.filter { it.value.state.data == state }.keys.firstOrNull()
 
     private fun <R> recordTransactionWithTransactionMap(
-            transactionLabel: String?,
-            transactionBuilder: TransactionBuilder,
-            dsl: TestTransactionDSLInterpreter.() -> R,
-            transactionMap: HashMap<SecureHash, WireTransactionWithLocation> = HashMap(),
-            /** If set to true, will add dummy components to [transactionBuilder] to make it valid. */
-            fillTransaction: Boolean
+        transactionLabel: String?,
+        transactionBuilder: TransactionBuilder,
+        dsl: TestTransactionDSLInterpreter.() -> R,
+        transactionMap: HashMap<SecureHash, WireTransactionWithLocation> = HashMap(),
+        /** If set to true, will add dummy components to [transactionBuilder] to make it valid. */
+        fillTransaction: Boolean
     ): WireTransaction {
         val transactionLocation = getCallerLocation()
         val transactionInterpreter = interpretTransactionDsl(transactionBuilder, dsl)
@@ -266,15 +267,15 @@ data class TestLedgerDSLInterpreter private constructor(
     }
 
     override fun _transaction(
-            transactionLabel: String?,
-            transactionBuilder: TransactionBuilder,
-            dsl: TestTransactionDSLInterpreter.() -> EnforceVerifyOrFail
+        transactionLabel: String?,
+        transactionBuilder: TransactionBuilder,
+        dsl: TestTransactionDSLInterpreter.() -> EnforceVerifyOrFail
     ) = recordTransactionWithTransactionMap(transactionLabel, transactionBuilder, dsl, transactionWithLocations, false)
 
     override fun _unverifiedTransaction(
-            transactionLabel: String?,
-            transactionBuilder: TransactionBuilder,
-            dsl: TestTransactionDSLInterpreter.() -> Unit
+        transactionLabel: String?,
+        transactionBuilder: TransactionBuilder,
+        dsl: TestTransactionDSLInterpreter.() -> Unit
     ) = recordTransactionWithTransactionMap(transactionLabel, transactionBuilder, dsl, nonVerifiedTransactionWithLocations, true)
 
     override fun _tweak(dsl: LedgerDSLInterpreter<TestTransactionDSLInterpreter>.() -> Unit) =

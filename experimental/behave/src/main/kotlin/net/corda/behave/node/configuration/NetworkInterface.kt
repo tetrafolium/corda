@@ -4,13 +4,13 @@ import java.net.Socket
 import java.util.concurrent.atomic.AtomicInteger
 
 data class NetworkInterface(
-        val host: String = "localhost",
-        val sshPort: Int = getPort(2222 + nodeIndex),
-        val p2pPort: Int = getPort(12001 + (nodeIndex * 5)),
-        val rpcPort: Int = getPort(12002 + (nodeIndex * 5)),
-        val rpcAdminPort: Int = getPort(12003 + (nodeIndex * 5)),
-        val webPort: Int = getPort(12004 + (nodeIndex * 5)),
-        val dbPort: Int = getPort(12005 + (nodeIndex * 5))
+    val host: String = "localhost",
+    val sshPort: Int = getPort(2222 + nodeIndex),
+    val p2pPort: Int = getPort(12001 + (nodeIndex * 5)),
+    val rpcPort: Int = getPort(12002 + (nodeIndex * 5)),
+    val rpcAdminPort: Int = getPort(12003 + (nodeIndex * 5)),
+    val webPort: Int = getPort(12004 + (nodeIndex * 5)),
+    val dbPort: Int = getPort(12005 + (nodeIndex * 5))
 ) : ConfigurationTemplate() {
 
     init {
@@ -54,12 +54,9 @@ data class NetworkInterface(
                 val s = Socket("localhost", portNumber)
                 s.close()
                 true
-
             } catch (_: Exception) {
                 false
             }
         }
-
     }
-
 }

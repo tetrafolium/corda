@@ -28,12 +28,14 @@ import java.util.function.Predicate
  *
  * @throws FixOutOfRange if the returned fix was further away from the expected rate by the given amount.
  */
-open class RatesFixFlow(protected val tx: TransactionBuilder,
-                        protected val oracle: Party,
-                        protected val fixOf: FixOf,
-                        protected val expectedRate: BigDecimal,
-                        protected val rateTolerance: BigDecimal,
-                        override val progressTracker: ProgressTracker = RatesFixFlow.tracker(fixOf.name)) : FlowLogic<TransactionSignature>() {
+open class RatesFixFlow(
+    protected val tx: TransactionBuilder,
+    protected val oracle: Party,
+    protected val fixOf: FixOf,
+    protected val expectedRate: BigDecimal,
+    protected val rateTolerance: BigDecimal,
+    override val progressTracker: ProgressTracker = RatesFixFlow.tracker(fixOf.name)
+) : FlowLogic<TransactionSignature>() {
 
     companion object {
         class QUERYING(val name: String) : ProgressTracker.Step("Querying oracle for $name interest rate")
@@ -110,8 +112,11 @@ open class RatesFixFlow(protected val tx: TransactionBuilder,
     }
 
     @InitiatingFlow
-    class FixSignFlow(val tx: TransactionBuilder, val oracle: Party,
-                      val partialMerkleTx: FilteredTransaction) : FlowLogic<TransactionSignature>() {
+    class FixSignFlow(
+        val tx: TransactionBuilder,
+        val oracle: Party,
+        val partialMerkleTx: FilteredTransaction
+    ) : FlowLogic<TransactionSignature>() {
         @Suspendable
         override fun call(): TransactionSignature {
             val oracleSession = initiateFlow(oracle)

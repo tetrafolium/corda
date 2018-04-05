@@ -21,26 +21,26 @@ object SampleCashSchemaV3 : MappedSchema(schemaFamily = CashSchema.javaClass, ve
     class PersistentCashState(
             /** [ContractState] attributes */
 
-            /** X500Name of participant parties **/
-            @ElementCollection
-            var participants: MutableSet<AbstractParty>? = null,
+        /** X500Name of participant parties **/
+        @ElementCollection
+        var participants: MutableSet<AbstractParty>? = null,
 
-            /** X500Name of owner party **/
-            @Column(name = "owner_name")
-            var owner: AbstractParty,
+        /** X500Name of owner party **/
+        @Column(name = "owner_name")
+        var owner: AbstractParty,
 
-            @Column(name = "pennies")
-            var pennies: Long,
+        @Column(name = "pennies")
+        var pennies: Long,
 
-            @Column(name = "ccy_code", length = 3)
-            var currency: String,
+        @Column(name = "ccy_code", length = 3)
+        var currency: String,
 
-            /** X500Name of issuer party **/
-            @Column(name = "issuer_name")
-            var issuer: AbstractParty,
+        /** X500Name of issuer party **/
+        @Column(name = "issuer_name")
+        var issuer: AbstractParty,
 
-            @Column(name = "issuer_ref", length = MAX_ISSUER_REF_SIZE)
-            @Type(type = "corda-wrapper-binary")
-            var issuerRef: ByteArray
+        @Column(name = "issuer_ref", length = MAX_ISSUER_REF_SIZE)
+        @Type(type = "corda-wrapper-binary")
+        var issuerRef: ByteArray
     ) : PersistentState()
 }

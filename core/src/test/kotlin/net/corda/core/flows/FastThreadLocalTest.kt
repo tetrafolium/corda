@@ -144,11 +144,12 @@ class FastThreadLocalTest {
     }
 
     private class FiberTask2(
-            @Transient private val threadLocalGet: () -> UnserializableObj,
-            private val retainObj: Boolean,
-            @Transient private val serializer: ByteArraySerializer,
-            @Transient private val bytesFuture: OpenFuture<ByteArray>,
-            private val returnValue: UUID) : SuspendableCallable<UUID> {
+        @Transient private val threadLocalGet: () -> UnserializableObj,
+        private val retainObj: Boolean,
+        @Transient private val serializer: ByteArraySerializer,
+        @Transient private val bytesFuture: OpenFuture<ByteArray>,
+        private val returnValue: UUID
+    ) : SuspendableCallable<UUID> {
         @Suspendable
         override fun run(): UUID {
             var obj: UnserializableObj? = threadLocalGet()

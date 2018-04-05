@@ -20,14 +20,14 @@ import java.security.spec.AlgorithmParameterSpec
  * @param desc a human-readable description for this scheme.
  */
 data class SignatureScheme(
-        val schemeNumberID: Int,
-        val schemeCodeName: String,
-        val signatureOID: AlgorithmIdentifier,
-        val alternativeOIDs: List<AlgorithmIdentifier>,
-        val providerName: String,
-        val algorithmName: String,
-        val signatureName: String,
-        val algSpec: AlgorithmParameterSpec?,
-        val keySize: Int?,
-        val desc: String
+    val schemeNumberID: Int,
+    val schemeCodeName: String,
+    val signatureOID: AlgorithmIdentifier,
+    val alternativeOIDs: List<AlgorithmIdentifier>,
+    val providerName: String,
+    val algorithmName: String,
+    val signatureName: String,
+    val algSpec: AlgorithmParameterSpec?,
+    val keySize: Int?,
+    val desc: String
 )

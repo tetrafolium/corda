@@ -72,4 +72,3 @@ fun ServiceHub.getCashBalances(): Map<Currency, Amount<Currency>> {
     val sums = this.vaultService.queryBy<FungibleAsset<*>>(generateCashSumsCriteria()).otherResults
     return rowsToBalances(sums)
 }
-

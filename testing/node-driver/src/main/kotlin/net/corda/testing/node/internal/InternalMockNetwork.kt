@@ -14,7 +14,6 @@ import net.corda.core.internal.VisibleForTesting
 import net.corda.core.internal.createDirectories
 import net.corda.core.internal.createDirectory
 import net.corda.core.internal.uncheckedCast
-import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.MessageRecipients
 import net.corda.core.messaging.RPCOps
 import net.corda.core.messaging.SingleMessageRecipient
@@ -70,19 +69,20 @@ fun StartedNode<InternalMockNetwork.MockNode>.pumpReceive(block: Boolean = false
 }
 
 data class MockNodeArgs(
-        val config: NodeConfiguration,
-        val network: InternalMockNetwork,
-        val id: Int,
-        val entropyRoot: BigInteger,
-        val version: VersionInfo = MOCK_VERSION_INFO
+    val config: NodeConfiguration,
+    val network: InternalMockNetwork,
+    val id: Int,
+    val entropyRoot: BigInteger,
+    val version: VersionInfo = MOCK_VERSION_INFO
 )
 
 data class InternalMockNodeParameters(
-        val forcedID: Int? = null,
-        val legalName: CordaX500Name? = null,
-        val entropyRoot: BigInteger = BigInteger.valueOf(random63BitValue()),
-        val configOverrides: (NodeConfiguration) -> Any? = {},
-        val version: VersionInfo = MOCK_VERSION_INFO) {
+    val forcedID: Int? = null,
+    val legalName: CordaX500Name? = null,
+    val entropyRoot: BigInteger = BigInteger.valueOf(random63BitValue()),
+    val configOverrides: (NodeConfiguration) -> Any? = {},
+    val version: VersionInfo = MOCK_VERSION_INFO
+) {
     constructor(mockNodeParameters: MockNodeParameters) : this(
             mockNodeParameters.forcedID,
             mockNodeParameters.legalName,
@@ -90,14 +90,16 @@ data class InternalMockNodeParameters(
             mockNodeParameters.configOverrides)
 }
 
-open class InternalMockNetwork(private val cordappPackages: List<String>,
-                               defaultParameters: MockNetworkParameters = MockNetworkParameters(),
-                               val networkSendManuallyPumped: Boolean = defaultParameters.networkSendManuallyPumped,
-                               val threadPerNode: Boolean = defaultParameters.threadPerNode,
-                               servicePeerAllocationStrategy: InMemoryMessagingNetwork.ServicePeerAllocationStrategy = defaultParameters.servicePeerAllocationStrategy,
-                               val notarySpecs: List<MockNetworkNotarySpec> = defaultParameters.notarySpecs,
-                               networkParameters: NetworkParameters = testNetworkParameters(),
-                               val defaultFactory: (MockNodeArgs) -> MockNode = InternalMockNetwork::MockNode) {
+open class InternalMockNetwork(
+    private val cordappPackages: List<String>,
+    defaultParameters: MockNetworkParameters = MockNetworkParameters(),
+    val networkSendManuallyPumped: Boolean = defaultParameters.networkSendManuallyPumped,
+    val threadPerNode: Boolean = defaultParameters.threadPerNode,
+    servicePeerAllocationStrategy: InMemoryMessagingNetwork.ServicePeerAllocationStrategy = defaultParameters.servicePeerAllocationStrategy,
+    val notarySpecs: List<MockNetworkNotarySpec> = defaultParameters.notarySpecs,
+    networkParameters: NetworkParameters = testNetworkParameters(),
+    val defaultFactory: (MockNodeArgs) -> MockNode = InternalMockNetwork::MockNode
+) {
     init {
         // Apache SSHD for whatever reason registers a SFTP FileSystemProvider - which gets loaded by JimFS.
         // This SFTP support loads BouncyCastle, which we want to avoid.
@@ -435,7 +437,6 @@ open class InternalMockNetwork(private val cordappPackages: List<String>,
     fun waitQuiescent() {
         busyLatch.await()
     }
-
 }
 
 open class MessagingServiceSpy(val messagingService: MessagingService) : MessagingService by messagingService

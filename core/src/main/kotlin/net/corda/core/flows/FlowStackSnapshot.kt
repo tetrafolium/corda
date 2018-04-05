@@ -6,13 +6,13 @@ import java.time.Instant
  * Main data object representing snapshot of the flow stack, extracted from the Quasar stack.
  */
 data class FlowStackSnapshot(
-        val time: Instant,
-        val flowClass: String,
-        val stackFrames: List<Frame>
+    val time: Instant,
+    val flowClass: String,
+    val stackFrames: List<Frame>
 ) {
     data class Frame(
-            val stackTraceElement: StackTraceElement, // This should be the call that *pushed* the frame of [objects]
-            val stackObjects: List<Any?>
+        val stackTraceElement: StackTraceElement, // This should be the call that *pushed* the frame of [objects]
+        val stackObjects: List<Any?>
     ) {
         override fun toString(): String = stackTraceElement.toString()
     }

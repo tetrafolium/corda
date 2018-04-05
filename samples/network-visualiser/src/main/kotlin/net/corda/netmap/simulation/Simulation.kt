@@ -11,7 +11,6 @@ import net.corda.node.internal.StartedNode
 import net.corda.node.services.statemachine.StateMachineManager
 import net.corda.testing.core.TestIdentity
 import net.corda.testing.node.InMemoryMessagingNetwork
-import net.corda.testing.node.MockNodeParameters
 import net.corda.testing.node.MockServices.Companion.makeTestDataSourceProperties
 import net.corda.testing.node.TestClock
 import net.corda.testing.node.internal.InternalMockNetwork
@@ -36,9 +35,11 @@ internal val InternalMockNetwork.MockNode.place get() = configuration.myLegalNam
  * Sets up some nodes that can run flows between each other, and exposes their progress trackers. Provides banks
  * in a few cities around the world.
  */
-abstract class Simulation(val networkSendManuallyPumped: Boolean,
-                          runAsync: Boolean,
-                          latencyInjector: InMemoryMessagingNetwork.LatencyCalculator?) {
+abstract class Simulation(
+    val networkSendManuallyPumped: Boolean,
+    runAsync: Boolean,
+    latencyInjector: InMemoryMessagingNetwork.LatencyCalculator?
+) {
     private companion object {
         val defaultParams // The get() is necessary so that entropyRoot isn't shared.
             get() = InternalMockNodeParameters(configOverrides = {
@@ -170,7 +171,6 @@ abstract class Simulation(val networkSendManuallyPumped: Boolean,
             _allFlowSteps.onNext(Pair(node, change))
         }
     }
-
 
     protected fun showConsensusFor(nodes: List<InternalMockNetwork.MockNode>) {
         val node = nodes.first()

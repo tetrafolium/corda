@@ -20,12 +20,12 @@ private val log = LoggerFactory.getLogger("SelfIssue")
 
 // DOCS START 1
 data class SelfIssueCommand(
-        val request: IssueAndPaymentRequest,
-        val node: NodeConnection
+    val request: IssueAndPaymentRequest,
+    val node: NodeConnection
 )
 
 data class SelfIssueState(
-        val vaultsSelfIssued: Map<AbstractParty, Long>
+    val vaultsSelfIssued: Map<AbstractParty, Long>
 ) {
     fun copyVaults(): HashMap<AbstractParty, Long> {
         return HashMap(vaultsSelfIssued)

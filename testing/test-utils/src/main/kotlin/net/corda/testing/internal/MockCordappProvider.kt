@@ -13,10 +13,10 @@ import java.nio.file.Paths
 import java.util.*
 
 class MockCordappProvider(
-        cordappLoader: CordappLoader,
-        attachmentStorage: AttachmentStorage,
-        whitelistedContractImplementations: Map<String, List<AttachmentId>>,
-        cordappConfigProvider: MockCordappConfigProvider = MockCordappConfigProvider()
+    cordappLoader: CordappLoader,
+    attachmentStorage: AttachmentStorage,
+    whitelistedContractImplementations: Map<String, List<AttachmentId>>,
+    cordappConfigProvider: MockCordappConfigProvider = MockCordappConfigProvider()
 ) : CordappProviderImpl(cordappLoader, cordappConfigProvider, attachmentStorage, whitelistedContractImplementations) {
     constructor(cordappLoader: CordappLoader, attachmentStorage: AttachmentStorage, whitelistedContractImplementations: Map<String, List<AttachmentId>>) : this(cordappLoader, attachmentStorage, whitelistedContractImplementations, MockCordappConfigProvider())
 

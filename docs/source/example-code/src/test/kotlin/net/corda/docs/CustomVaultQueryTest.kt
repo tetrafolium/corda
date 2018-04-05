@@ -49,7 +49,7 @@ class CustomVaultQueryTest {
         val (cashBalancesAfterTopup, _) = getBalances()
 
         Assert.assertEquals(cashBalancesOriginal[GBP]?.times(2), cashBalancesAfterTopup[GBP])
-        Assert.assertEquals(cashBalancesOriginal[USD]?.times(2)  , cashBalancesAfterTopup[USD])
+        Assert.assertEquals(cashBalancesOriginal[USD]?.times(2), cashBalancesAfterTopup[USD])
         Assert.assertEquals(cashBalancesOriginal[CHF]?.times( 2), cashBalancesAfterTopup[CHF])
     }
 

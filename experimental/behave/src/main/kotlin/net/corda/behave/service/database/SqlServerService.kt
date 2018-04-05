@@ -8,10 +8,10 @@ import net.corda.behave.service.ContainerService
 import net.corda.behave.service.ServiceSettings
 
 class SqlServerService(
-        name: String,
-        port: Int,
-        private val password: String,
-        settings: ServiceSettings = ServiceSettings()
+    name: String,
+    port: Int,
+    private val password: String,
+    settings: ServiceSettings = ServiceSettings()
 ) : ContainerService(name, port, settings) {
 
     override val baseImage = "microsoft/mssql-server-linux"
@@ -52,7 +52,5 @@ class SqlServerService(
         val database = "master"
         val schema = "dbo"
         val username = "sa"
-
     }
-
 }

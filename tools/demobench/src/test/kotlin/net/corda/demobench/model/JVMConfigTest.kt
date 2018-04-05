@@ -41,8 +41,7 @@ class JVMConfigTest {
         assertEquals(listOf(java.toString(), "-jar", "testapp.jar", "arg1", "arg2", "arg3"), process.command())
     }
 
-    private fun Path.onFileSystem(): Path
-            = if (UIUtil.isWindows) this.parent.resolve(Paths.get(this.fileName.toString() + ".exe"))
+    private fun Path.onFileSystem(): Path =
+            if (UIUtil.isWindows) this.parent.resolve(Paths.get(this.fileName.toString() + ".exe"))
     else this
-
 }

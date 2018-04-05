@@ -27,9 +27,9 @@ import java.util.concurrent.CountDownLatch
  * Corda node.
  */
 class Node(
-        val config: Configuration,
-        private val rootDirectory: File = currentDirectory,
-        private val settings: ServiceSettings = ServiceSettings()
+    val config: Configuration,
+    private val rootDirectory: File = currentDirectory,
+    private val settings: ServiceSettings = ServiceSettings()
 ) {
 
     private val log = getLogger<Node>()
@@ -134,8 +134,8 @@ class Node(
     }
 
     fun ssh(
-            exitLatch: CountDownLatch? = null,
-            clientLogic: (MonitoringSSHClient) -> Unit
+        exitLatch: CountDownLatch? = null,
+        clientLogic: (MonitoringSSHClient) -> Unit
     ) {
         Thread(Runnable {
             val network = config.nodeInterface
@@ -331,13 +331,10 @@ class Node(
         private fun <T> error(message: String): T {
             throw IllegalArgumentException(message)
         }
-
     }
 
     companion object {
 
         fun new() = Builder()
-
     }
-
 }

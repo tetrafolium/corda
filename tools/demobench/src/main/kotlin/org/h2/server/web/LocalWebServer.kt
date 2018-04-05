@@ -17,5 +17,4 @@ class LocalWebServer : WebServer() {
         val s = session.get("sessionId") as String
         return url + "/frame.jsp?jsessionid=" + s
     }
-
 }

@@ -135,6 +135,4 @@ class Examples {
 
         println ( prettyPrint(one_touch) )
     }
-
-
 }

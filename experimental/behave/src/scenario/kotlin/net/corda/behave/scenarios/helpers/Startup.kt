@@ -36,7 +36,6 @@ class Startup(state: ScenarioState) : Substeps(state) {
                             ?.groups?.last()?.value
                     fail("Expected platform version $platformVersion for node '$nodeName', " +
                             "but found version $foundVersion")
-
                 }
             }
         }
@@ -56,10 +55,8 @@ class Startup(state: ScenarioState) : Substeps(state) {
                             ?.groups?.last()?.value
                     fail("Expected version $version for node '$nodeName', " +
                             "but found version $foundVersion")
-
                 }
             }
         }
     }
-
 }

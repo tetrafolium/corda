@@ -300,10 +300,12 @@ object InteractiveShell {
      * @throws NoApplicableConstructor if no constructor could be found for the given set of types.
      */
     @Throws(NoApplicableConstructor::class)
-    fun <T> runFlowFromString(invoke: (Class<out FlowLogic<T>>, Array<out Any?>) -> FlowProgressHandle<T>,
-                              inputData: String,
-                              clazz: Class<out FlowLogic<T>>,
-                              om: ObjectMapper): FlowProgressHandle<T> {
+    fun <T> runFlowFromString(
+        invoke: (Class<out FlowLogic<T>>, Array<out Any?>) -> FlowProgressHandle<T>,
+        inputData: String,
+        clazz: Class<out FlowLogic<T>>,
+        om: ObjectMapper
+    ): FlowProgressHandle<T> {
         // For each constructor, attempt to parse the input data as a method call. Use the first that succeeds,
         // and keep track of the reasons we failed so we can print them out if no constructors are usable.
         val parser = StringToMethodCallParser(clazz, om)
@@ -420,7 +422,6 @@ object InteractiveShell {
         }
         return result
     }
-
 
     @JvmStatic
     fun gracefulShutdown(userSessionOut: RenderPrintWriter, cordaRPCOps: CordaRPCOps, isSsh: Boolean = false) {
@@ -558,5 +559,4 @@ object InteractiveShell {
         uncheckedCast(elements).subscribe(subscriber)
         return subscriber.future
     }
-
 }

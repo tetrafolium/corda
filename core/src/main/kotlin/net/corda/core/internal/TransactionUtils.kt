@@ -12,9 +12,11 @@ import net.corda.core.transactions.NotaryChangeWireTransaction
 import java.io.ByteArrayOutputStream
 
 /** Constructs a [NotaryChangeWireTransaction]. */
-class NotaryChangeTransactionBuilder(val inputs: List<StateRef>,
-                                     val notary: Party,
-                                     val newNotary: Party) {
+class NotaryChangeTransactionBuilder(
+    val inputs: List<StateRef>,
+    val notary: Party,
+    val newNotary: Party
+) {
     fun build(): NotaryChangeWireTransaction {
         val components = listOf(inputs, notary, newNotary).map { it.serialize() }
         return NotaryChangeWireTransaction(components)
@@ -23,12 +25,13 @@ class NotaryChangeTransactionBuilder(val inputs: List<StateRef>,
 
 /** Constructs a [ContractUpgradeWireTransaction]. */
 class ContractUpgradeTransactionBuilder(
-        val inputs: List<StateRef>,
-        val notary: Party,
-        val legacyContractAttachmentId: SecureHash,
-        val upgradedContractClassName: ContractClassName,
-        val upgradedContractAttachmentId: SecureHash,
-        val privacySalt: PrivacySalt = PrivacySalt()) {
+    val inputs: List<StateRef>,
+    val notary: Party,
+    val legacyContractAttachmentId: SecureHash,
+    val upgradedContractClassName: ContractClassName,
+    val upgradedContractAttachmentId: SecureHash,
+    val privacySalt: PrivacySalt = PrivacySalt()
+) {
     fun build(): ContractUpgradeWireTransaction {
         val components = listOf(inputs, notary, legacyContractAttachmentId, upgradedContractClassName, upgradedContractAttachmentId).map { it.serialize() }
         return ContractUpgradeWireTransaction(components, privacySalt)

@@ -11,7 +11,7 @@ import net.corda.explorer.formatters.Formatter
 import org.fxmisc.easybind.EasyBind
 
 fun <S> TableView<S>.setColumnPrefWidthPolicy(
-        getColumnWidth: (tableWidthWithoutPaddingAndBorder: Number, column: TableColumn<S, *>) -> Number
+    getColumnWidth: (tableWidthWithoutPaddingAndBorder: Number, column: TableColumn<S, *>) -> Number
 ) {
     val tableWidthWithoutPaddingAndBorder = Bindings.createDoubleBinding({
         val padding = padding
@@ -27,8 +27,8 @@ fun <S> TableView<S>.setColumnPrefWidthPolicy(
 }
 
 private fun <S> TableColumn<S, *>.setPrefWidthPolicy(
-        widthWithoutPaddingAndBorder: ObservableValue<Number>,
-        getColumnWidth: (tableWidthWithoutPaddingAndBorder: Number, column: TableColumn<S, *>) -> Number
+    widthWithoutPaddingAndBorder: ObservableValue<Number>,
+    getColumnWidth: (tableWidthWithoutPaddingAndBorder: Number, column: TableColumn<S, *>) -> Number
 ) {
     prefWidthProperty().bind(EasyBind.map(widthWithoutPaddingAndBorder) {
         getColumnWidth(it, this)

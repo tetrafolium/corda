@@ -274,8 +274,7 @@ class CompositeKey private constructor(val threshold: Int, children: List<NodeAn
             return if (n > 1)
                 CompositeKey(threshold ?: children.map { (_, weight) -> weight }.sum(), children)
             else if (n == 1) {
-                require(threshold == null || threshold == children.first().weight)
-                { "Trying to build invalid CompositeKey, threshold value different than weight of single child node." }
+                require(threshold == null || threshold == children.first().weight) { "Trying to build invalid CompositeKey, threshold value different than weight of single child node." }
                 // Returning the only child node which is [PublicKey] itself. We need to avoid single-key [CompositeKey] instances,
                 // as there are scenarios where developers expected the underlying key and its composite versions to be equivalent.
                 children.first().node

@@ -42,7 +42,5 @@ enum class DatabaseType(val settings: DatabaseSettings) {
             "sqlserver" -> SQL_SERVER
             else -> null
         }
-
     }
-
 }

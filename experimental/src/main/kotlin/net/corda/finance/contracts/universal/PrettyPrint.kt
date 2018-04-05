@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.security.PublicKey
 import java.time.Instant
 
-private class PrettyPrint(arr : Arrangement) {
+private class PrettyPrint(arr: Arrangement) {
 
     val parties = involvedParties(arr)
 
@@ -45,7 +45,7 @@ private class PrettyPrint(arr : Arrangement) {
     val partyMap = mutableMapOf<PublicKey, String>()
     val usedPartyNames = mutableSetOf<String>()
 
-    fun createPartyName(party : Party) : String
+    fun createPartyName(party: Party): String
     {
         val parts = party.name.organisation.toLowerCase().split(' ')
 
@@ -84,7 +84,7 @@ private class PrettyPrint(arr : Arrangement) {
             }
             is TimePerceivable -> {
                 when (per.cmp) {
-                    Comparison.GT, Comparison.GTE ->  {
+                    Comparison.GT, Comparison.GTE -> {
                         print("after(")
                         prettyPrint(per.instant)
                         print(")")
@@ -215,4 +215,3 @@ fun prettyPrint(arr: Arrangement): String {
     pb.prettyPrint(arr)
     return pb.toString()
 }
-

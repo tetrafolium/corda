@@ -139,5 +139,4 @@ class ProfileController : Controller() {
     private fun parse(path: Path): Config = Files.newBufferedReader(path).use {
         return ConfigFactory.parseReader(it)
     }
-
 }

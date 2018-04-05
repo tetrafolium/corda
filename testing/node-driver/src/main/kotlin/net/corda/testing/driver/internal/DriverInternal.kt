@@ -29,14 +29,14 @@ interface NodeHandleInternal : NodeHandle {
 }
 
 data class OutOfProcessImpl(
-        override val nodeInfo: NodeInfo,
-        override val rpc: CordaRPCOps,
-        override val configuration: NodeConfiguration,
-        override val webAddress: NetworkHostAndPort,
-        override val useHTTPS: Boolean,
-        val debugPort: Int?,
-        override val process: Process,
-        private val onStopCallback: () -> Unit
+    override val nodeInfo: NodeInfo,
+    override val rpc: CordaRPCOps,
+    override val configuration: NodeConfiguration,
+    override val webAddress: NetworkHostAndPort,
+    override val useHTTPS: Boolean,
+    val debugPort: Int?,
+    override val process: Process,
+    private val onStopCallback: () -> Unit
 ) : OutOfProcess, NodeHandleInternal {
     override val rpcUsers: List<User> = configuration.rpcUsers.map { User(it.username, it.password, it.permissions) }
     override fun stop() {
@@ -51,14 +51,14 @@ data class OutOfProcessImpl(
 }
 
 data class InProcessImpl(
-        override val nodeInfo: NodeInfo,
-        override val rpc: CordaRPCOps,
-        override val configuration: NodeConfiguration,
-        override val webAddress: NetworkHostAndPort,
-        override val useHTTPS: Boolean,
-        private val nodeThread: Thread,
-        private val onStopCallback: () -> Unit,
-        private val node: StartedNode<Node>
+    override val nodeInfo: NodeInfo,
+    override val rpc: CordaRPCOps,
+    override val configuration: NodeConfiguration,
+    override val webAddress: NetworkHostAndPort,
+    override val useHTTPS: Boolean,
+    private val nodeThread: Thread,
+    private val onStopCallback: () -> Unit,
+    private val node: StartedNode<Node>
 ) : InProcess, NodeHandleInternal {
     val database: CordaPersistence = node.database
     override val services: StartedNodeServices get() = node.services

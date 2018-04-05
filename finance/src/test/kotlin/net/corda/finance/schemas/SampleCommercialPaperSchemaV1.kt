@@ -27,30 +27,30 @@ object SampleCommercialPaperSchemaV1 : MappedSchema(schemaFamily = CommercialPap
                     Index(name = "maturity_index", columnList = "maturity_instant"),
                     Index(name = "face_value_index", columnList = "face_value")))
     class PersistentCommercialPaperState(
-            @Column(name = "issuance_key_hash", length = MAX_HASH_HEX_SIZE)
-            var issuancePartyHash: String,
+        @Column(name = "issuance_key_hash", length = MAX_HASH_HEX_SIZE)
+        var issuancePartyHash: String,
 
-            @Column(name = "issuance_ref")
-            @Type(type = "corda-wrapper-binary")
-            var issuanceRef: ByteArray,
+        @Column(name = "issuance_ref")
+        @Type(type = "corda-wrapper-binary")
+        var issuanceRef: ByteArray,
 
-            @Column(name = "owner_key_hash", length = MAX_HASH_HEX_SIZE)
-            var ownerHash: String,
+        @Column(name = "owner_key_hash", length = MAX_HASH_HEX_SIZE)
+        var ownerHash: String,
 
-            @Column(name = "maturity_instant")
-            var maturity: Instant,
+        @Column(name = "maturity_instant")
+        var maturity: Instant,
 
-            @Column(name = "face_value")
-            var faceValue: Long,
+        @Column(name = "face_value")
+        var faceValue: Long,
 
-            @Column(name = "ccy_code", length = 3)
-            var currency: String,
+        @Column(name = "ccy_code", length = 3)
+        var currency: String,
 
-            @Column(name = "face_value_issuer_key_hash", length = MAX_HASH_HEX_SIZE)
-            var faceValueIssuerPartyHash: String,
+        @Column(name = "face_value_issuer_key_hash", length = MAX_HASH_HEX_SIZE)
+        var faceValueIssuerPartyHash: String,
 
-            @Column(name = "face_value_issuer_ref", length = MAX_ISSUER_REF_SIZE)
-            @Type(type = "corda-wrapper-binary")
-            var faceValueIssuerRef: ByteArray
+        @Column(name = "face_value_issuer_ref", length = MAX_ISSUER_REF_SIZE)
+        @Type(type = "corda-wrapper-binary")
+        var faceValueIssuerRef: ByteArray
     ) : PersistentState()
 }

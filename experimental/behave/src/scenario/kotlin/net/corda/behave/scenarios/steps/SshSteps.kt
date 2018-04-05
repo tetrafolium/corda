@@ -9,5 +9,4 @@ fun sshSteps(steps: StepsBlock) = steps {
             ssh.canConnectTo(name)
         }
     }
-
 }

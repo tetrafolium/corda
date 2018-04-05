@@ -71,13 +71,13 @@ interface DriverDSL {
      * @return A [CordaFuture] on the [NodeHandle] to the node. The future will complete when the node is available.
      */
     fun startNode(
-            defaultParameters: NodeParameters = NodeParameters(),
-            providedName: CordaX500Name? = defaultParameters.providedName,
-            rpcUsers: List<User> = defaultParameters.rpcUsers,
-            verifierType: VerifierType = defaultParameters.verifierType,
-            customOverrides: Map<String, Any?> = defaultParameters.customOverrides,
-            startInSameProcess: Boolean? = defaultParameters.startInSameProcess,
-            maximumHeapSize: String = defaultParameters.maximumHeapSize
+        defaultParameters: NodeParameters = NodeParameters(),
+        providedName: CordaX500Name? = defaultParameters.providedName,
+        rpcUsers: List<User> = defaultParameters.rpcUsers,
+        verifierType: VerifierType = defaultParameters.verifierType,
+        customOverrides: Map<String, Any?> = defaultParameters.customOverrides,
+        startInSameProcess: Boolean? = defaultParameters.startInSameProcess,
+        maximumHeapSize: String = defaultParameters.maximumHeapSize
     ): CordaFuture<NodeHandle>
 
     /**

@@ -129,6 +129,4 @@ class Caplet {
 
         println ( prettyPrint(contractFinal) )
     }
-
-
 }

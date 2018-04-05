@@ -18,11 +18,11 @@ import javax.ws.rs.core.Response
 @Path("bank")
 class BankOfCordaWebApi(private val rpc: CordaRPCOps) {
     data class IssueRequestParams(
-            val amount: Amount<Currency>,
-            val issueToPartyName: CordaX500Name,
-            val issuerBankPartyRef: String,
-            val issuerBankName: CordaX500Name,
-            val notaryName: CordaX500Name
+        val amount: Amount<Currency>,
+        val issueToPartyName: CordaX500Name,
+        val issuerBankPartyRef: String,
+        val issuerBankName: CordaX500Name,
+        val notaryName: CordaX500Name
     )
 
     private companion object {

@@ -65,7 +65,6 @@ data class Amount<T : Any>(val quantity: Long, val displayTokenSize: BigDecimal,
             return Amount(0L, tokenSize, token)
         }
 
-
         /**
          * Determines the representation of one Token quantity in BigDecimal. For Currency and Issued<Currency>
          * the definitions is taken from Currency defaultFractionDigits property e.g. 2 for USD, or 0 for JPY
@@ -264,7 +263,6 @@ data class Amount<T : Any>(val quantity: Long, val displayTokenSize: BigDecimal,
      */
     fun toDecimal(): BigDecimal = BigDecimal.valueOf(quantity, 0) * displayTokenSize
 
-
     /**
      * Convert a currency [Amount] to a display string representation.
      *
@@ -316,10 +314,12 @@ data class SourceAndAmount<T : Any, out P : Any>(val source: P, val amount: Amou
  * or the token source if quantityDelta is negative. The type P should support value equality.
  */
 @CordaSerializable
-class AmountTransfer<T : Any, P : Any>(val quantityDelta: Long,
-                                       val token: T,
-                                       val source: P,
-                                       val destination: P) {
+class AmountTransfer<T : Any, P : Any>(
+    val quantityDelta: Long,
+    val token: T,
+    val source: P,
+    val destination: P
+) {
     companion object {
         /**
          * Construct an AmountTransfer object from an indicative/displayable BigDecimal source, applying rounding as specified.
@@ -334,11 +334,13 @@ class AmountTransfer<T : Any, P : Any>(val quantityDelta: Long,
          */
         @JvmStatic
         @JvmOverloads
-        fun <T : Any, P : Any> fromDecimal(displayQuantityDelta: BigDecimal,
-                                           token: T,
-                                           source: P,
-                                           destination: P,
-                                           rounding: RoundingMode = RoundingMode.DOWN): AmountTransfer<T, P> {
+        fun <T : Any, P : Any> fromDecimal(
+            displayQuantityDelta: BigDecimal,
+            token: T,
+            source: P,
+            destination: P,
+            rounding: RoundingMode = RoundingMode.DOWN
+        ): AmountTransfer<T, P> {
             val tokenSize = Amount.getDisplayTokenSize(token)
             val deltaTokenCount = displayQuantityDelta.divide(tokenSize).setScale(0, rounding).longValueExact()
             return AmountTransfer(deltaTokenCount, token, source, destination)
@@ -346,9 +348,11 @@ class AmountTransfer<T : Any, P : Any>(val quantityDelta: Long,
 
         /** Helper to make a zero size AmountTransfer. */
         @JvmStatic
-        fun <T : Any, P : Any> zero(token: T,
-                                    source: P,
-                                    destination: P): AmountTransfer<T, P> = AmountTransfer(0L, token, source, destination)
+        fun <T : Any, P : Any> zero(
+            token: T,
+            source: P,
+            destination: P
+        ): AmountTransfer<T, P> = AmountTransfer(0L, token, source, destination)
     }
 
     init {
@@ -364,8 +368,8 @@ class AmountTransfer<T : Any, P : Any>(val quantityDelta: Long,
      */
     operator fun plus(other: AmountTransfer<T, P>): AmountTransfer<T, P> {
         require(other.token == token) { "Token mismatch: ${other.token} vs $token" }
-        require((other.source == source && other.destination == destination)
-                || (other.source == destination && other.destination == source)) {
+        require((other.source == source && other.destination == destination) ||
+                (other.source == destination && other.destination == source)) {
             "Only AmountTransfer between the same two parties can be aggregated/netted"
         }
         return if (other.source == source) {
@@ -382,10 +386,12 @@ class AmountTransfer<T : Any, P : Any>(val quantityDelta: Long,
     fun toDecimal(): BigDecimal = BigDecimal.valueOf(quantityDelta, 0) * Amount.getDisplayTokenSize(token)
 
     /** @suppress */
-    fun copy(quantityDelta: Long = this.quantityDelta,
-             token: T = this.token,
-             source: P = this.source,
-             destination: P = this.destination): AmountTransfer<T, P> = AmountTransfer(quantityDelta, token, source, destination)
+    fun copy(
+        quantityDelta: Long = this.quantityDelta,
+        token: T = this.token,
+        source: P = this.source,
+        destination: P = this.destination
+    ): AmountTransfer<T, P> = AmountTransfer(quantityDelta, token, source, destination)
 
     /**
      * Checks value equality of AmountTransfer objects, but also matches the reversed source and destination equivalent.
@@ -455,9 +461,9 @@ class AmountTransfer<T : Any, P : Any>(val quantityDelta: Long,
         var remaining: SourceAndAmount<T, P>? = null
         var newAmount: SourceAndAmount<T, P>? = null
         for (balance in balances) {
-            if (balance.source != payer
-                    || balance.amount.token != token
-                    || residual == 0L) {
+            if (balance.source != payer ||
+                    balance.amount.token != token ||
+                    residual == 0L) {
                 // Just copy across unmodified.
                 outputs += balance
             } else if (balance.amount.quantity < residual) {
@@ -482,4 +488,3 @@ class AmountTransfer<T : Any, P : Any>(val quantityDelta: Long,
         return outputs
     }
 }
-

@@ -29,8 +29,8 @@ object ContractUpgradeFlow {
     // DOCSTART 1
     @StartableByRPC
     class Authorise(
-            val stateAndRef: StateAndRef<*>,
-            private val upgradedContractClass: Class<out UpgradedContract<*, *>>
+        val stateAndRef: StateAndRef<*>,
+        private val upgradedContractClass: Class<out UpgradedContract<*, *>>
     ) : FlowLogic<Void?>() {
         // DOCEND 1
         @Suspendable
@@ -65,8 +65,8 @@ object ContractUpgradeFlow {
     @InitiatingFlow
     @StartableByRPC
     class Initiate<OldState : ContractState, out NewState : ContractState>(
-            originalState: StateAndRef<OldState>,
-            newContractClass: Class<out UpgradedContract<OldState, NewState>>
+        originalState: StateAndRef<OldState>,
+        newContractClass: Class<out UpgradedContract<OldState, NewState>>
     ) : AbstractStateReplacementFlow.Instigator<OldState, NewState, Class<out UpgradedContract<OldState, NewState>>>(originalState, newContractClass) {
 
         @Suspendable

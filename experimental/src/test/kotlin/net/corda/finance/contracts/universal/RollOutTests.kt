@@ -26,7 +26,6 @@ class RollOutTests {
         }
     }
 
-
     val contract2 = arrange {
         rollOut("2016-09-01".ld, "2017-09-01".ld, Frequency.Monthly) {
             actions {
@@ -101,7 +100,6 @@ class RollOutTests {
             }
         }
         next()
-
     }
     val contract_and2 = arrange {
         actions {
@@ -172,5 +170,4 @@ class RollOutTests {
             this.verifies()
         }
     }
-
 }

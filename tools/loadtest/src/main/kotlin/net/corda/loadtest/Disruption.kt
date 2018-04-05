@@ -2,7 +2,6 @@ package net.corda.loadtest
 
 import net.corda.client.mock.*
 import net.corda.core.utilities.loggerFor
-import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -15,14 +14,14 @@ private val log = loggerFor<Disruption>()
  */
 // DOCS START 1
 data class Disruption(
-        val name: String,
-        val disrupt: (NodeConnection, SplittableRandom) -> Unit
+    val name: String,
+    val disrupt: (NodeConnection, SplittableRandom) -> Unit
 )
 
 data class DisruptionSpec(
-        val nodeFilter: (NodeConnection) -> Boolean,
-        val disruption: Disruption,
-        val noDisruptionWindowMs: LongRange
+    val nodeFilter: (NodeConnection) -> Boolean,
+    val disruption: Disruption,
+    val noDisruptionWindowMs: LongRange
 )
 // DOCS END 1
 

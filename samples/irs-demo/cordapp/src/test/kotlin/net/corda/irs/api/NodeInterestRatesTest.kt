@@ -237,12 +237,14 @@ class NodeInterestRatesTest {
         mockNet.stopNodes()
     }
 
-    class FilteredRatesFlow(tx: TransactionBuilder,
-                            oracle: Party,
-                            fixOf: FixOf,
-                            expectedRate: BigDecimal,
-                            rateTolerance: BigDecimal,
-                            progressTracker: ProgressTracker = RatesFixFlow.tracker(fixOf.name))
+    class FilteredRatesFlow(
+        tx: TransactionBuilder,
+        oracle: Party,
+        fixOf: FixOf,
+        expectedRate: BigDecimal,
+        rateTolerance: BigDecimal,
+        progressTracker: ProgressTracker = RatesFixFlow.tracker(fixOf.name)
+    )
         : RatesFixFlow(tx, oracle, fixOf, expectedRate, rateTolerance, progressTracker) {
         override fun filtering(elem: Any): Boolean {
             return when (elem) {

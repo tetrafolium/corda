@@ -208,8 +208,10 @@ inline fun <reified T : Any> ByteSequence.deserialize(serializationFactory: Seri
  * Additionally returns [SerializationContext] which was used for encoding.
  * It might be helpful to know [SerializationContext] to use the same encoding in the reply.
  */
-inline fun <reified T : Any> ByteSequence.deserializeWithCompatibleContext(serializationFactory: SerializationFactory = SerializationFactory.defaultFactory,
-                                                                       context: SerializationContext = serializationFactory.defaultContext): ObjectWithCompatibleContext<T> {
+inline fun <reified T : Any> ByteSequence.deserializeWithCompatibleContext(
+    serializationFactory: SerializationFactory = SerializationFactory.defaultFactory,
+    context: SerializationContext = serializationFactory.defaultContext
+): ObjectWithCompatibleContext<T> {
     return serializationFactory.deserializeWithCompatibleContext(this, T::class.java, context)
 }
 

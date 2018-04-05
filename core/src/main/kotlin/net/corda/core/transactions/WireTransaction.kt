@@ -43,13 +43,14 @@ import java.util.function.Predicate
 class WireTransaction(componentGroups: List<ComponentGroup>, val privacySalt: PrivacySalt = PrivacySalt()) : TraversableTransaction(componentGroups) {
 
     @Deprecated("Required only in some unit-tests and for backwards compatibility purposes.", ReplaceWith("WireTransaction(val componentGroups: List<ComponentGroup>, override val privacySalt: PrivacySalt)"), DeprecationLevel.WARNING)
-    constructor(inputs: List<StateRef>,
-                attachments: List<SecureHash>,
-                outputs: List<TransactionState<ContractState>>,
-                commands: List<Command<*>>,
-                notary: Party?,
-                timeWindow: TimeWindow?,
-                privacySalt: PrivacySalt = PrivacySalt()
+    constructor(
+        inputs: List<StateRef>,
+        attachments: List<SecureHash>,
+        outputs: List<TransactionState<ContractState>>,
+        commands: List<Command<*>>,
+        notary: Party?,
+        timeWindow: TimeWindow?,
+        privacySalt: PrivacySalt = PrivacySalt()
     ) : this(createComponentGroups(inputs, outputs, commands, attachments, notary, timeWindow), privacySalt)
 
     init {
@@ -103,19 +104,19 @@ class WireTransaction(componentGroups: List<ComponentGroup>, val privacySalt: Pr
     @Deprecated("Use toLedgerTransaction(ServicesForTransaction) instead")
     @Throws(AttachmentResolutionException::class, TransactionResolutionException::class)
     fun toLedgerTransaction(
-            resolveIdentity: (PublicKey) -> Party?,
-            resolveAttachment: (SecureHash) -> Attachment?,
-            resolveStateRef: (StateRef) -> TransactionState<*>?,
-            resolveContractAttachment: (TransactionState<ContractState>) -> AttachmentId?
+        resolveIdentity: (PublicKey) -> Party?,
+        resolveAttachment: (SecureHash) -> Attachment?,
+        resolveStateRef: (StateRef) -> TransactionState<*>?,
+        resolveContractAttachment: (TransactionState<ContractState>) -> AttachmentId?
     ): LedgerTransaction {
         return toLedgerTransactionInternal(resolveIdentity, resolveAttachment, resolveStateRef, null)
     }
 
     private fun toLedgerTransactionInternal(
-            resolveIdentity: (PublicKey) -> Party?,
-            resolveAttachment: (SecureHash) -> Attachment?,
-            resolveStateRef: (StateRef) -> TransactionState<*>?,
-            networkParameters: NetworkParameters?
+        resolveIdentity: (PublicKey) -> Party?,
+        resolveAttachment: (SecureHash) -> Attachment?,
+        resolveStateRef: (StateRef) -> TransactionState<*>?,
+        networkParameters: NetworkParameters?
     ): LedgerTransaction {
         // Look up public keys to authenticated identities.
         val authenticatedArgs = commands.map {
@@ -231,12 +232,14 @@ class WireTransaction(componentGroups: List<ComponentGroup>, val privacySalt: Pr
          * Creating list of [ComponentGroup] used in one of the constructors of [WireTransaction] required
          * for backwards compatibility purposes.
          */
-        fun createComponentGroups(inputs: List<StateRef>,
-                                  outputs: List<TransactionState<ContractState>>,
-                                  commands: List<Command<*>>,
-                                  attachments: List<SecureHash>,
-                                  notary: Party?,
-                                  timeWindow: TimeWindow?): List<ComponentGroup> {
+        fun createComponentGroups(
+            inputs: List<StateRef>,
+            outputs: List<TransactionState<ContractState>>,
+            commands: List<Command<*>>,
+            attachments: List<SecureHash>,
+            notary: Party?,
+            timeWindow: TimeWindow?
+        ): List<ComponentGroup> {
             val componentGroupMap: MutableList<ComponentGroup> = mutableListOf()
             if (inputs.isNotEmpty()) componentGroupMap.add(ComponentGroup(INPUTS_GROUP.ordinal, inputs.map { it.serialize() }))
             if (outputs.isNotEmpty()) componentGroupMap.add(ComponentGroup(OUTPUTS_GROUP.ordinal, outputs.map { it.serialize() }))

@@ -43,15 +43,15 @@ class Vault<out T : ContractState>(val states: Iterable<StateAndRef<T>>) {
      */
     @CordaSerializable
     data class Update<U : ContractState>(
-            val consumed: Set<StateAndRef<U>>,
-            val produced: Set<StateAndRef<U>>,
-            val flowId: UUID? = null,
-            /**
-             * Specifies the type of update, currently supported types are general and, contract upgrade and notary change.
-             * Notary change transactions only modify the notary field on states, and potentially need to be handled
-             * differently.
-             */
-            val type: UpdateType = UpdateType.GENERAL
+        val consumed: Set<StateAndRef<U>>,
+        val produced: Set<StateAndRef<U>>,
+        val flowId: UUID? = null,
+        /**
+         * Specifies the type of update, currently supported types are general and, contract upgrade and notary change.
+         * Notary change transactions only modify the notary field on states, and potentially need to be handled
+         * differently.
+         */
+        val type: UpdateType = UpdateType.GENERAL
     ) {
         /** Checks whether the update contains a state of the specified type. */
         inline fun <reified T : ContractState> containsType() = consumed.any { it.state.data is T } || produced.any { it.state.data is T }
@@ -61,8 +61,8 @@ class Vault<out T : ContractState>(val states: Iterable<StateAndRef<T>>) {
                 when (status) {
                     StateStatus.UNCONSUMED -> produced.any { clazz.isAssignableFrom(it.state.data.javaClass) }
                     StateStatus.CONSUMED -> consumed.any { clazz.isAssignableFrom(it.state.data.javaClass) }
-                    else -> consumed.any { clazz.isAssignableFrom(it.state.data.javaClass) }
-                            || produced.any { clazz.isAssignableFrom(it.state.data.javaClass) }
+                    else -> consumed.any { clazz.isAssignableFrom(it.state.data.javaClass) } ||
+                            produced.any { clazz.isAssignableFrom(it.state.data.javaClass) }
                 }
 
         fun isEmpty() = consumed.isEmpty() && produced.isEmpty()
@@ -122,21 +122,25 @@ class Vault<out T : ContractState>(val states: Iterable<StateAndRef<T>>) {
      *  results will be empty).
      */
     @CordaSerializable
-    data class Page<out T : ContractState>(val states: List<StateAndRef<T>>,
-                                           val statesMetadata: List<StateMetadata>,
-                                           val totalStatesAvailable: Long,
-                                           val stateTypes: StateStatus,
-                                           val otherResults: List<Any>)
+    data class Page<out T : ContractState>(
+        val states: List<StateAndRef<T>>,
+        val statesMetadata: List<StateMetadata>,
+        val totalStatesAvailable: Long,
+        val stateTypes: StateStatus,
+        val otherResults: List<Any>
+    )
 
     @CordaSerializable
-    data class StateMetadata(val ref: StateRef,
-                             val contractStateClassName: String,
-                             val recordedTime: Instant,
-                             val consumedTime: Instant?,
-                             val status: Vault.StateStatus,
-                             val notary: AbstractParty?,
-                             val lockId: String?,
-                             val lockUpdateTime: Instant?)
+    data class StateMetadata(
+        val ref: StateRef,
+        val contractStateClassName: String,
+        val recordedTime: Instant,
+        val consumedTime: Instant?,
+        val status: Vault.StateStatus,
+        val notary: AbstractParty?,
+        val lockId: String?,
+        val lockUpdateTime: Instant?
+    )
 
     companion object {
         @Deprecated("No longer used. The vault does not emit empty updates")
@@ -239,10 +243,12 @@ interface VaultService {
      */
     @Suspendable
     @Throws(StatesNotAvailableException::class)
-    fun <T : FungibleAsset<U>, U : Any> tryLockFungibleStatesForSpending(lockId: UUID,
-                                                                         eligibleStatesQuery: QueryCriteria,
-                                                                         amount: Amount<U>,
-                                                                         contractStateType: Class<out T>): List<StateAndRef<T>>
+    fun <T : FungibleAsset<U>, U : Any> tryLockFungibleStatesForSpending(
+        lockId: UUID,
+        eligibleStatesQuery: QueryCriteria,
+        amount: Amount<U>,
+        contractStateType: Class<out T>
+    ): List<StateAndRef<T>>
 
     // DOCSTART VaultQueryAPI
     /**
@@ -265,10 +271,12 @@ interface VaultService {
      *   It is the responsibility of the API user to request further pages and/or specify a more suitable [PageSpecification].
      */
     @Throws(VaultQueryException::class)
-    fun <T : ContractState> _queryBy(criteria: QueryCriteria,
-                                     paging: PageSpecification,
-                                     sorting: Sort,
-                                     contractStateType: Class<out T>): Vault.Page<T>
+    fun <T : ContractState> _queryBy(
+        criteria: QueryCriteria,
+        paging: PageSpecification,
+        sorting: Sort,
+        contractStateType: Class<out T>
+    ): Vault.Page<T>
 
     /**
      * Generic vault query function which takes a [QueryCriteria] object to define filters,
@@ -283,10 +291,12 @@ interface VaultService {
      *        the [QueryCriteria] applies to both snapshot and deltas (streaming updates).
      */
     @Throws(VaultQueryException::class)
-    fun <T : ContractState> _trackBy(criteria: QueryCriteria,
-                                     paging: PageSpecification,
-                                     sorting: Sort,
-                                     contractStateType: Class<out T>): DataFeed<Vault.Page<T>, Vault.Update<T>>
+    fun <T : ContractState> _trackBy(
+        criteria: QueryCriteria,
+        paging: PageSpecification,
+        sorting: Sort,
+        contractStateType: Class<out T>
+    ): DataFeed<Vault.Page<T>, Vault.Update<T>>
     // DOCEND VaultQueryAPI
 
     // Note: cannot apply @JvmOverloads to interfaces nor interface implementations.

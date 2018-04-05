@@ -74,4 +74,3 @@ class CordformNodeRunner(val cordformDefinition: CordformDefinition) {
     }
 }
 
-

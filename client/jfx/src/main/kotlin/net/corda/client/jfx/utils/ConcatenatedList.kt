@@ -14,7 +14,7 @@ class ConcatenatedList<A>(sourceList: ObservableList<ObservableList<A>>) : Trans
     // A wrapper for input lists so we hash differently even if a list is reused in the input.
     @VisibleForTesting
     internal class WrappedObservableList<A>(
-            val observableList: ObservableList<A>
+        val observableList: ObservableList<A>
     )
     // First let's clarify some concepts as it's easy to confuse which list we're handling where.
     // Throughout the commentary and the code we will refer to the lists contained in the source list as "nested lists",
@@ -286,5 +286,4 @@ class ConcatenatedList<A>(sourceList: ObservableList<ObservableList<A>>) : Trans
             return source[rangeListIndex][subListOffset]
         }
     }
-
 }

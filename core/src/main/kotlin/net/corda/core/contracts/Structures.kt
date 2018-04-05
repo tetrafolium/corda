@@ -213,10 +213,10 @@ interface MoveCommand : CommandData {
 /** A [Command] where the signing parties have been looked up if they have a well known/recognised institutional key. */
 @CordaSerializable
 data class CommandWithParties<out T : CommandData>(
-        val signers: List<PublicKey>,
-        /** If any public keys were recognised, the looked up institutions are available here */
-        val signingParties: List<Party>,
-        val value: T
+    val signers: List<PublicKey>,
+    /** If any public keys were recognised, the looked up institutions are available here */
+    val signingParties: List<Party>,
+    val value: T
 )
 // DOCEND 6
 

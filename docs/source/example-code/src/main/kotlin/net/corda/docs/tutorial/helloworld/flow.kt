@@ -16,8 +16,10 @@ import net.corda.core.utilities.ProgressTracker
 // Replace TemplateFlow's definition with:
 @InitiatingFlow
 @StartableByRPC
-class IOUFlow(val iouValue: Int,
-              val otherParty: Party) : FlowLogic<Unit>() {
+class IOUFlow(
+    val iouValue: Int,
+    val otherParty: Party
+) : FlowLogic<Unit>() {
 
     /** The progress tracker provides checkpoints indicating the progress of the flow to observers. */
     override val progressTracker = ProgressTracker()

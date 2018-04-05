@@ -32,10 +32,11 @@ import java.util.*
  * @param rngFactory used by [fillWithSomeTestCash] if no custom [Random] provided.
  */
 class VaultFiller @JvmOverloads constructor(
-        private val services: ServiceHub,
-        private val defaultNotary: TestIdentity,
-        private val altNotary: Party = defaultNotary.party,
-        private val rngFactory: () -> Random = { Random(0L) }) {
+    private val services: ServiceHub,
+    private val defaultNotary: TestIdentity,
+    private val altNotary: Party = defaultNotary.party,
+    private val rngFactory: () -> Random = { Random(0L) }
+) {
     companion object {
         fun calculateRandomlySizedAmounts(howMuch: Amount<Currency>, min: Int, max: Int, rng: Random): LongArray {
             val numSlots = min + Math.floor(rng.nextDouble() * (max - min)).toInt()
@@ -67,9 +68,11 @@ class VaultFiller @JvmOverloads constructor(
     }
 
     @JvmOverloads
-    fun fillWithSomeTestDeals(dealIds: List<String>,
-                              issuerServices: ServiceHub = services,
-                              participants: List<AbstractParty> = emptyList()): Vault<DealState> {
+    fun fillWithSomeTestDeals(
+        dealIds: List<String>,
+        issuerServices: ServiceHub = services,
+        participants: List<AbstractParty> = emptyList()
+    ): Vault<DealState> {
         val myKey: PublicKey = services.myInfo.chooseIdentity().owningKey
         val me = AnonymousParty(myKey)
 
@@ -92,13 +95,15 @@ class VaultFiller @JvmOverloads constructor(
     }
 
     @JvmOverloads
-    fun fillWithSomeTestLinearStates(numberToCreate: Int,
-                                     externalId: String? = null,
-                                     participants: List<AbstractParty> = emptyList(),
-                                     linearString: String = "",
-                                     linearNumber: Long = 0L,
-                                     linearBoolean: Boolean = false,
-                                     linearTimestamp: Instant = now()): Vault<LinearState> {
+    fun fillWithSomeTestLinearStates(
+        numberToCreate: Int,
+        externalId: String? = null,
+        participants: List<AbstractParty> = emptyList(),
+        linearString: String = "",
+        linearNumber: Long = 0L,
+        linearBoolean: Boolean = false,
+        linearTimestamp: Instant = now()
+    ): Vault<LinearState> {
         val myKey: PublicKey = services.myInfo.chooseIdentity().owningKey
         val me = AnonymousParty(myKey)
         val issuerKey = defaultNotary.keyPair
@@ -127,12 +132,14 @@ class VaultFiller @JvmOverloads constructor(
     }
 
     @JvmOverloads
-    fun fillWithSomeTestCash(howMuch: Amount<Currency>,
-                             issuerServices: ServiceHub,
-                             thisManyStates: Int,
-                             issuedBy: PartyAndReference,
-                             owner: AbstractParty? = null,
-                             rng: Random? = null) = fillWithSomeTestCash(howMuch, issuerServices, thisManyStates, thisManyStates, issuedBy, owner, rng)
+    fun fillWithSomeTestCash(
+        howMuch: Amount<Currency>,
+        issuerServices: ServiceHub,
+        thisManyStates: Int,
+        issuedBy: PartyAndReference,
+        owner: AbstractParty? = null,
+        rng: Random? = null
+    ) = fillWithSomeTestCash(howMuch, issuerServices, thisManyStates, thisManyStates, issuedBy, owner, rng)
 
     /**
      * Creates a random set of between (by default) 3 and 10 cash states that add up to the given amount and adds them
@@ -142,13 +149,15 @@ class VaultFiller @JvmOverloads constructor(
      * @param issuerServices service hub of the issuer node, which will be used to sign the transaction.
      * @return a vault object that represents the generated states (it will NOT be the full vault from the service hub!).
      */
-    fun fillWithSomeTestCash(howMuch: Amount<Currency>,
-                             issuerServices: ServiceHub,
-                             atLeastThisManyStates: Int,
-                             atMostThisManyStates: Int,
-                             issuedBy: PartyAndReference,
-                             owner: AbstractParty? = null,
-                             rng: Random? = null): Vault<Cash.State> {
+    fun fillWithSomeTestCash(
+        howMuch: Amount<Currency>,
+        issuerServices: ServiceHub,
+        atLeastThisManyStates: Int,
+        atMostThisManyStates: Int,
+        issuedBy: PartyAndReference,
+        owner: AbstractParty? = null,
+        rng: Random? = null
+    ): Vault<Cash.State> {
         val amounts = calculateRandomlySizedAmounts(howMuch, atLeastThisManyStates, atMostThisManyStates, rng ?: rngFactory())
         // We will allocate one state to one transaction, for simplicities sake.
         val cash = Cash()

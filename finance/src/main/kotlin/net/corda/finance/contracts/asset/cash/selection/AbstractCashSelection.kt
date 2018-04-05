@@ -76,10 +76,17 @@ abstract class AbstractCashSelection {
      * otherwise what is available is returned unlocked for informational purposes.
      * @return The result of the withResultSet function
      */
-    abstract fun executeQuery(connection: Connection, amount: Amount<Currency>, lockId: UUID, notary: Party?,
-                              onlyFromIssuerParties: Set<AbstractParty>, withIssuerRefs: Set<OpaqueBytes>, withResultSet: (ResultSet) -> Boolean): Boolean
+    abstract fun executeQuery(
+        connection: Connection,
+        amount: Amount<Currency>,
+        lockId: UUID,
+        notary: Party?,
+        onlyFromIssuerParties: Set<AbstractParty>,
+        withIssuerRefs: Set<OpaqueBytes>,
+        withResultSet: (ResultSet) -> Boolean
+    ): Boolean
 
-    override abstract fun toString(): String
+    abstract override fun toString(): String
 
     /**
      * Query to gather Cash states that are available and retry if they are temporarily unavailable.
@@ -96,12 +103,14 @@ abstract class AbstractCashSelection {
      * otherwise what is available is returned unlocked for informational purposes.
      */
     @Suspendable
-    fun unconsumedCashStatesForSpending(services: ServiceHub,
-                                        amount: Amount<Currency>,
-                                        onlyFromIssuerParties: Set<AbstractParty> = emptySet(),
-                                        notary: Party? = null,
-                                        lockId: UUID,
-                                        withIssuerRefs: Set<OpaqueBytes> = emptySet()): List<StateAndRef<Cash.State>> {
+    fun unconsumedCashStatesForSpending(
+        services: ServiceHub,
+        amount: Amount<Currency>,
+        onlyFromIssuerParties: Set<AbstractParty> = emptySet(),
+        notary: Party? = null,
+        lockId: UUID,
+        withIssuerRefs: Set<OpaqueBytes> = emptySet()
+    ): List<StateAndRef<Cash.State>> {
         val stateAndRefs = mutableListOf<StateAndRef<Cash.State>>()
 
         // DOCSTART CASHSELECT 1

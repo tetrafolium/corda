@@ -189,9 +189,9 @@ object Crypto {
      * Map of X.509 algorithm identifiers to signature schemes Corda recognises. See RFC 2459 for the format of
      * algorithm identifiers.
      */
-    private val algorithmMap: Map<AlgorithmIdentifier, SignatureScheme>
-            = (signatureSchemeMap.values.flatMap { scheme -> scheme.alternativeOIDs.map { Pair(it, scheme) } }
-            + signatureSchemeMap.values.map { Pair(it.signatureOID, it) })
+    private val algorithmMap: Map<AlgorithmIdentifier, SignatureScheme> =
+            (signatureSchemeMap.values.flatMap { scheme -> scheme.alternativeOIDs.map { Pair(it, scheme) } } +
+            signatureSchemeMap.values.map { Pair(it.signatureOID, it) })
             .toMap()
 
     @JvmStatic
@@ -741,9 +741,9 @@ object Crypto {
         // TODO: We currently use SHA256(seed) when retrying, but BIP32 just skips a counter (i) that results to an invalid key.
         //       Although our hashing approach seems reasonable, we should check if there are alternatives,
         //       especially if we use counters as well.
-        if (deterministicD < ECConstants.TWO
-                || WNafUtil.getNafWeight(deterministicD) < parameterSpec.n.bitLength().ushr(2)
-                || deterministicD >= parameterSpec.n) {
+        if (deterministicD < ECConstants.TWO ||
+                WNafUtil.getNafWeight(deterministicD) < parameterSpec.n.bitLength().ushr(2) ||
+                deterministicD >= parameterSpec.n) {
             // Instead of throwing an exception, we retry with SHA256(seed).
             return deriveKeyPairECDSA(parameterSpec, privateKey, seed.sha256().bytes)
         }

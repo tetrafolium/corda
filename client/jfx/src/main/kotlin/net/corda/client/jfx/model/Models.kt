@@ -1,15 +1,6 @@
 package net.corda.client.jfx.model
 
-import javafx.beans.property.ObjectProperty
-import javafx.beans.value.ObservableValue
-import javafx.beans.value.WritableValue
-import javafx.collections.ObservableList
 import net.corda.core.internal.uncheckedCast
-import org.reactfx.EventSink
-import org.reactfx.EventStream
-import rx.Observable
-import rx.Observer
-import rx.subjects.Subject
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -84,4 +75,3 @@ object Models {
 
     inline fun <reified M : Any> get(origin: KClass<*>): M = get(M::class, origin)
 }
-

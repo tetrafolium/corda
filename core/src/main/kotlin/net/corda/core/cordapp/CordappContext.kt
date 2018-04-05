@@ -16,8 +16,8 @@ import net.corda.core.crypto.SecureHash
  * @property config Configuration for this CorDapp
  */
 class CordappContext internal constructor(
-        val cordapp: Cordapp,
-        val attachmentId: SecureHash?,
-        val classLoader: ClassLoader,
-        val config: CordappConfig
+    val cordapp: Cordapp,
+    val attachmentId: SecureHash?,
+    val classLoader: ClassLoader,
+    val config: CordappConfig
 )

@@ -22,12 +22,12 @@ import java.security.PublicKey
  */
 @CordaSerializable
 data class NotaryChangeWireTransaction(
-        /**
-         * Contains all of the transaction components in serialized form.
-         * This is used for calculating the transaction id in a deterministic fashion, since re-serializing properties
-         * may result in a different byte sequence depending on the serialization context.
-         */
-        val serializedComponents: List<OpaqueBytes>
+    /**
+     * Contains all of the transaction components in serialized form.
+     * This is used for calculating the transaction id in a deterministic fashion, since re-serializing properties
+     * may result in a different byte sequence depending on the serialization context.
+     */
+    val serializedComponents: List<OpaqueBytes>
 ) : CoreTransaction() {
     override val inputs: List<StateRef> = serializedComponents[INPUTS.ordinal].deserialize()
     override val notary: Party = serializedComponents[NOTARY.ordinal].deserialize()
@@ -82,11 +82,11 @@ data class NotaryChangeWireTransaction(
  * needed for signature verification.
  */
 data class NotaryChangeLedgerTransaction(
-        override val inputs: List<StateAndRef<ContractState>>,
-        override val notary: Party,
-        val newNotary: Party,
-        override val id: SecureHash,
-        override val sigs: List<TransactionSignature>
+    override val inputs: List<StateAndRef<ContractState>>,
+    override val notary: Party,
+    val newNotary: Party,
+    override val id: SecureHash,
+    override val sigs: List<TransactionSignature>
 ) : FullTransaction(), TransactionWithSignatures {
     init {
         checkEncumbrances()

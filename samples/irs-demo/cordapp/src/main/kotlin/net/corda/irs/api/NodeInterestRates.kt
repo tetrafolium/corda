@@ -203,10 +203,12 @@ object NodeInterestRates {
      * Stores a mapping between tenors and interest rates.
      * Interpolates missing values using the provided interpolation mechanism.
      */
-    class InterpolatingRateMap(val date: LocalDate,
-                               inputRates: Map<Tenor, BigDecimal>,
-                               val calendar: BusinessCalendar,
-                               val factory: InterpolatorFactory) {
+    class InterpolatingRateMap(
+        val date: LocalDate,
+        inputRates: Map<Tenor, BigDecimal>,
+        val calendar: BusinessCalendar,
+        val factory: InterpolatorFactory
+    ) {
 
         /** Snapshot of the input */
         private val rates = HashMap(inputRates)
@@ -250,12 +252,12 @@ object NodeInterestRates {
 
     /** Parses lines containing fixes */
     fun parseFile(s: String): FixContainer {
-        val fixes = s.lines().
-                map(String::trim).
-                // Filter out comment and empty lines.
-                filterNot { it.startsWith("#") || it.isBlank() }.
-                map(this::parseFix).
-                toSet()
+        val fixes = s.lines()
+                .map(String::trim)
+                .// Filter out comment and empty lines.
+                filterNot { it.startsWith("#") || it.isBlank() }
+                .map(this::parseFix)
+                .toSet()
         return FixContainer(fixes)
     }
 

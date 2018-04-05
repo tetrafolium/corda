@@ -17,27 +17,27 @@ object SampleCashSchemaV2 : MappedSchema(schemaFamily = CashSchema.javaClass, ve
             indexes = arrayOf(Index(name = "ccy_code_idx2", columnList = "ccy_code")))
     class PersistentCashState(
 
-            @ElementCollection
-            @Column(name = "participants")
-            @CollectionTable(name="cash_states_v2_participants", joinColumns = arrayOf(
-                    JoinColumn(name = "output_index", referencedColumnName = "output_index"),
-                    JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")))
-            override var participants: MutableSet<AbstractParty>? = null,
+        @ElementCollection
+        @Column(name = "participants")
+        @CollectionTable(name = "cash_states_v2_participants", joinColumns = arrayOf(
+                JoinColumn(name = "output_index", referencedColumnName = "output_index"),
+                JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")))
+        override var participants: MutableSet<AbstractParty>? = null,
 
-            /** product type */
-            @Column(name = "ccy_code", length = 3)
-            var currency: String,
+        /** product type */
+        @Column(name = "ccy_code", length = 3)
+        var currency: String,
 
-            /** parent attributes */
-            @Transient
-            val _participants: Set<AbstractParty>,
-            @Transient
-            val _owner: AbstractParty,
-            @Transient
-            val _quantity: Long,
-            @Transient
-            val _issuerParty: AbstractParty,
-            @Transient
-            val _issuerRef: OpaqueBytes
+        /** parent attributes */
+        @Transient
+        val _participants: Set<AbstractParty>,
+        @Transient
+        val _owner: AbstractParty,
+        @Transient
+        val _quantity: Long,
+        @Transient
+        val _issuerParty: AbstractParty,
+        @Transient
+        val _issuerRef: OpaqueBytes
     ) : CommonSchemaV1.FungibleState(_participants.toMutableSet(), _owner, _quantity, _issuerParty, _issuerRef.bytes)
 }

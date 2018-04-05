@@ -164,7 +164,7 @@ open class OpaqueBytes(bytes: ByteArray) : ByteSequence(bytes, 0, bytes.size) {
      * compiler is ever able to optimise away the clone. In which case we may need to revisit
      * this later.
      */
-    override final val bytes: ByteArray = bytes
+    final override val bytes: ByteArray = bytes
         get() = field.clone()
 }
 

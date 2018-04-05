@@ -37,12 +37,14 @@ interface TransactionDSLInterpreter : Verifies, OutputStateLookup {
      * @param contractState The state itself.
      * @param contractClassName The class name of the contract that verifies this state.
      */
-    fun output(contractClassName: ContractClassName,
-               label: String?,
-               notary: Party,
-               encumbrance: Int?,
-               attachmentConstraint: AttachmentConstraint,
-               contractState: ContractState)
+    fun output(
+        contractClassName: ContractClassName,
+        label: String?,
+        notary: Party,
+        encumbrance: Int?,
+        attachmentConstraint: AttachmentConstraint,
+        contractState: ContractState
+    )
 
     /**
      * Adds an [Attachment] reference to the transaction.

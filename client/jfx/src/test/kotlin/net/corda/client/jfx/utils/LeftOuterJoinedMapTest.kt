@@ -70,7 +70,6 @@ class LeftOuterJoinedMapTest {
         assertEquals(replayedList[2].second.size, 2)
         assertEquals(replayedList[2].second[0].name, "Bella")
         assertEquals(replayedList[2].second[1].name, "Scruffy")
-
     }
 
     @Test
@@ -112,4 +111,3 @@ class LeftOuterJoinedMapTest {
         assertEquals(replayedList.size, 0)
     }
 }
-

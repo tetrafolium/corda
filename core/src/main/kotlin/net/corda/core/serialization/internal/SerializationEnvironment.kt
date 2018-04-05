@@ -17,12 +17,13 @@ interface SerializationEnvironment {
 }
 
 open class SerializationEnvironmentImpl(
-        override val serializationFactory: SerializationFactory,
-        override val p2pContext: SerializationContext,
-        rpcServerContext: SerializationContext? = null,
-        rpcClientContext: SerializationContext? = null,
-        storageContext: SerializationContext? = null,
-        checkpointContext: SerializationContext? = null) : SerializationEnvironment {
+    override val serializationFactory: SerializationFactory,
+    override val p2pContext: SerializationContext,
+    rpcServerContext: SerializationContext? = null,
+    rpcClientContext: SerializationContext? = null,
+    storageContext: SerializationContext? = null,
+    checkpointContext: SerializationContext? = null
+) : SerializationEnvironment {
     // Those that are passed in as null are never inited:
     override lateinit var rpcServerContext: SerializationContext
     override lateinit var rpcClientContext: SerializationContext

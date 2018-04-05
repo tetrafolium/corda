@@ -29,15 +29,17 @@ object TwoPartyTradeFlow {
      */
     @CordaSerializable
     data class SellerTradeInfo(
-            val price: Amount<Currency>,
-            val payToIdentity: PartyAndCertificate
+        val price: Amount<Currency>,
+        val payToIdentity: PartyAndCertificate
     )
 
-    open class Seller(private val otherSideSession: FlowSession,
-                      private val assetToSell: StateAndRef<OwnableState>,
-                      private val price: Amount<Currency>,
-                      private val myParty: PartyAndCertificate,
-                      override val progressTracker: ProgressTracker = TwoPartyTradeFlow.Seller.tracker()) : FlowLogic<SignedTransaction>() {
+    open class Seller(
+        private val otherSideSession: FlowSession,
+        private val assetToSell: StateAndRef<OwnableState>,
+        private val price: Amount<Currency>,
+        private val myParty: PartyAndCertificate,
+        override val progressTracker: ProgressTracker = TwoPartyTradeFlow.Seller.tracker()
+    ) : FlowLogic<SignedTransaction>() {
 
         companion object {
             fun tracker() = ProgressTracker()
@@ -49,11 +51,13 @@ object TwoPartyTradeFlow {
         }
     }
 
-    open class Buyer(private val sellerSession: FlowSession,
-                     private val notary: Party,
-                     private val acceptablePrice: Amount<Currency>,
-                     private val typeToBuy: Class<out OwnableState>,
-                     private val anonymous: Boolean) : FlowLogic<SignedTransaction>() {
+    open class Buyer(
+        private val sellerSession: FlowSession,
+        private val notary: Party,
+        private val acceptablePrice: Amount<Currency>,
+        private val typeToBuy: Class<out OwnableState>,
+        private val anonymous: Boolean
+    ) : FlowLogic<SignedTransaction>() {
 
         @Suspendable
         override fun call(): SignedTransaction {

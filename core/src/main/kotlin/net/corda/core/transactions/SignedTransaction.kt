@@ -34,8 +34,9 @@ import java.util.function.Predicate
  */
 // DOCSTART 1
 @CordaSerializable
-data class SignedTransaction(val txBits: SerializedBytes<CoreTransaction>,
-                             override val sigs: List<TransactionSignature>
+data class SignedTransaction(
+    val txBits: SerializedBytes<CoreTransaction>,
+    override val sigs: List<TransactionSignature>
 ) : TransactionWithSignatures {
     // DOCEND 1
     constructor(ctx: CoreTransaction, sigs: List<TransactionSignature>) : this(ctx.serialize(), sigs) {
@@ -204,7 +205,6 @@ data class SignedTransaction(val txBits: SerializedBytes<CoreTransaction>,
             else -> throw IllegalStateException("Unknown transaction type ${coreTransaction::class.qualifiedName}")
         }
     }
-
 
     /**
      * Resolves the underlying transaction with signatures and then returns it, handling any special case transactions

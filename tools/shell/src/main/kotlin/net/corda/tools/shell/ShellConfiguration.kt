@@ -6,15 +6,16 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 data class ShellConfiguration(
-        val commandsDirectory: Path,
-        val cordappsDirectory: Path? = null,
-        var user: String = "",
-        var password: String = "",
-        val hostAndPort: NetworkHostAndPort,
-        val ssl: ShellSslOptions? = null,
-        val sshdPort: Int? = null,
-        val sshHostKeyDirectory: Path? = null,
-        val noLocalShell: Boolean = false) {
+    val commandsDirectory: Path,
+    val cordappsDirectory: Path? = null,
+    var user: String = "",
+    var password: String = "",
+    val hostAndPort: NetworkHostAndPort,
+    val ssl: ShellSslOptions? = null,
+    val sshdPort: Int? = null,
+    val sshHostKeyDirectory: Path? = null,
+    val noLocalShell: Boolean = false
+) {
     companion object {
         const val SSH_PORT = 2222
         const val COMMANDS_DIR = "shell-commands"
@@ -23,6 +24,6 @@ data class ShellConfiguration(
     }
 }
 
-data class ShellSslOptions(override val sslKeystore: Path, override val keyStorePassword: String, override val trustStoreFile:Path, override val trustStorePassword: String) : SSLConfiguration {
+data class ShellSslOptions(override val sslKeystore: Path, override val keyStorePassword: String, override val trustStoreFile: Path, override val trustStorePassword: String) : SSLConfiguration {
     override val certificatesDirectory: Path get() = Paths.get("")
 }

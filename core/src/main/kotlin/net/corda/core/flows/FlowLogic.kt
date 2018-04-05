@@ -369,7 +369,7 @@ abstract class FlowLogic<out T> {
      *
      * @return Returns null if this flow has no progress tracker.
      */
-    fun trackStepsTree(): DataFeed<List<Pair<Int,String>>, List<Pair<Int,String>>>? {
+    fun trackStepsTree(): DataFeed<List<Pair<Int, String>>, List<Pair<Int, String>>>? {
         // TODO this is not threadsafe, needs an atomic get-step-and-subscribe
         return progressTracker?.let {
             DataFeed(it.allStepsLabels, it.stepsTreeChanges)
@@ -462,14 +462,15 @@ abstract class FlowLogic<out T> {
  */
 @CordaSerializable
 data class FlowInfo(
-        /**
-         * The integer flow version the other side is using.
-         * @see InitiatingFlow
-         */
-        val flowVersion: Int,
-        /**
-         * Name of the CorDapp jar hosting the flow, without the .jar extension. It will include a unique identifier
-         * to deduplicate it from other releases of the same CorDapp, typically a version string. See the
-         * [CorDapp JAR format](https://docs.corda.net/cordapp-build-systems.html#cordapp-jar-format) for more details.
-         */
-        val appName: String)
+    /**
+     * The integer flow version the other side is using.
+     * @see InitiatingFlow
+     */
+    val flowVersion: Int,
+    /**
+     * Name of the CorDapp jar hosting the flow, without the .jar extension. It will include a unique identifier
+     * to deduplicate it from other releases of the same CorDapp, typically a version string. See the
+     * [CorDapp JAR format](https://docs.corda.net/cordapp-build-systems.html#cordapp-jar-format) for more details.
+     */
+    val appName: String
+)

@@ -17,7 +17,6 @@ import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.util.ssl.SslContextFactory
-import org.eclipse.jetty.webapp.WebAppContext
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.glassfish.jersey.servlet.ServletContainer
@@ -28,7 +27,6 @@ import java.lang.reflect.InvocationTargetException
 import java.nio.file.NoSuchFileException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.core.MediaType
 
 class NodeWebServer(val config: WebServerConfig) {
     private companion object {

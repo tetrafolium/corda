@@ -21,9 +21,9 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class Network private constructor(
-        private val nodes: Map<String, Node>,
-        private val targetDirectory: File,
-        private val timeout: Duration = 2.minutes
+    private val nodes: Map<String, Node>,
+    private val targetDirectory: File,
+    private val timeout: Duration = 2.minutes
 ) : Closeable, Iterable<Node> {
 
     private val log = getLogger<Network>()
@@ -37,7 +37,7 @@ class Network private constructor(
     private var hasError = false
 
     class Builder internal constructor(
-            private val timeout: Duration
+        private val timeout: Duration
     ) {
 
         private val nodes = mutableMapOf<String, Node>()
@@ -50,11 +50,11 @@ class Network private constructor(
         private val directory = currentDirectory / "build/runs/$startTime"
 
         fun addNode(
-                name: String,
-                distribution: Distribution = Distribution.LATEST_MASTER,
-                databaseType: DatabaseType = DatabaseType.H2,
-                notaryType: NotaryType = NotaryType.NONE,
-                issuableCurrencies: List<String> = emptyList()
+            name: String,
+            distribution: Distribution = Distribution.LATEST_MASTER,
+            databaseType: DatabaseType = DatabaseType.H2,
+            notaryType: NotaryType = NotaryType.NONE,
+            issuableCurrencies: List<String> = emptyList()
         ): Builder {
             return addNode(Node.new()
                     .withName(name)
@@ -79,7 +79,6 @@ class Network private constructor(
             network.bootstrapNetwork()
             return network
         }
-
     }
 
     private fun copyDatabaseDrivers() {
@@ -176,7 +175,7 @@ class Network private constructor(
                     FileUtils.deleteQuietly(nodeFolder / "process-id")
 
                     for (nodeInfo in nodeFolder.listFiles({
-                        file ->  file.name.matches(Regex("nodeInfo-.*"))
+                        file -> file.name.matches(Regex("nodeInfo-.*"))
                     })) {
                         FileUtils.deleteQuietly(nodeInfo)
                     }
@@ -293,9 +292,7 @@ class Network private constructor(
         const val CLEANUP_ON_ERROR = false
 
         fun new(
-                timeout: Duration = 2.minutes
+            timeout: Duration = 2.minutes
         ): Builder = Builder(timeout)
-
     }
-
 }

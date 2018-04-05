@@ -54,11 +54,11 @@ interface FlowProgressHandle<A> : FlowHandle<A> {
     override fun close()
 }
 
-
 @CordaSerializable
 data class FlowHandleImpl<A>(
-        override val id: StateMachineRunId,
-        override val returnValue: CordaFuture<A>) : FlowHandle<A> {
+    override val id: StateMachineRunId,
+    override val returnValue: CordaFuture<A>
+) : FlowHandle<A> {
 
     // Remember to add @Throws to FlowHandle.close() if this throws an exception.
     override fun close() {
@@ -68,11 +68,12 @@ data class FlowHandleImpl<A>(
 
 @CordaSerializable
 data class FlowProgressHandleImpl<A> @JvmOverloads constructor(
-        override val id: StateMachineRunId,
-        override val returnValue: CordaFuture<A>,
-        override val progress: Observable<String>,
-        override val stepsTreeIndexFeed: DataFeed<Int, Int>? = null,
-        override val stepsTreeFeed: DataFeed<List<Pair<Int, String>>, List<Pair<Int, String>>>? = null) : FlowProgressHandle<A> {
+    override val id: StateMachineRunId,
+    override val returnValue: CordaFuture<A>,
+    override val progress: Observable<String>,
+    override val stepsTreeIndexFeed: DataFeed<Int, Int>? = null,
+    override val stepsTreeFeed: DataFeed<List<Pair<Int, String>>, List<Pair<Int, String>>>? = null
+) : FlowProgressHandle<A> {
 
     // For API compatibility
     fun copy(id: StateMachineRunId, returnValue: CordaFuture<A>, progress: Observable<String>): FlowProgressHandleImpl<A> {

@@ -29,7 +29,7 @@ class X509EdDSAEngine : Signature {
     override fun engineInitVerify(publicKey: PublicKey) {
         val parsedKey = try {
             publicKey as? EdDSAPublicKey ?: EdDSAPublicKey(X509EncodedKeySpec(publicKey.encoded))
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             throw (InvalidKeyException(e.message))
         }
         engine.initVerify(parsedKey)

@@ -108,7 +108,7 @@ class ProgressTrackerTest {
             stepsTreeNotification += it
         }
 
-        fun assertCurrentStepsTree(index:Int, step: ProgressTracker.Step) {
+        fun assertCurrentStepsTree(index: Int, step: ProgressTracker.Step) {
             assertEquals(index, pt.stepsTreeIndex)
             assertEquals(step, allSteps[pt.stepsTreeIndex].second)
         }
@@ -148,7 +148,7 @@ class ProgressTrackerTest {
             stepsTreeNotification += it
         }
 
-        fun assertCurrentStepsTree(index:Int, step: ProgressTracker.Step) {
+        fun assertCurrentStepsTree(index: Int, step: ProgressTracker.Step) {
             assertEquals(index, pt.stepsTreeIndex)
             assertEquals(step.label, stepsTreeNotification.last()[pt.stepsTreeIndex].second)
         }
@@ -158,7 +158,6 @@ class ProgressTrackerTest {
 
         pt.currentStep = SimpleSteps.FOUR
         assertCurrentStepsTree(6, SimpleSteps.FOUR)
-
 
         pt.setChildProgressTracker(SimpleSteps.THREE, pt3)
 
@@ -185,7 +184,7 @@ class ProgressTrackerTest {
             stepsTreeNotification += it
         }
 
-        fun assertCurrentStepsTree(index:Int, step: ProgressTracker.Step) {
+        fun assertCurrentStepsTree(index: Int, step: ProgressTracker.Step) {
             assertEquals(index, pt.stepsTreeIndex)
             assertEquals(step.label, stepsTreeNotification.last()[pt.stepsTreeIndex].second)
         }

@@ -140,8 +140,10 @@ class IRSSimulation(networkSendManuallyPumped: Boolean, runAsync: Boolean, laten
         node1.registerInitiatedFlow(FixingFlow.Fixer::class.java)
         node2.registerInitiatedFlow(FixingFlow.Fixer::class.java)
         @InitiatingFlow
-        class StartDealFlow(val otherParty: Party,
-                            val payload: AutoOffer) : FlowLogic<SignedTransaction>() {
+        class StartDealFlow(
+            val otherParty: Party,
+            val payload: AutoOffer
+        ) : FlowLogic<SignedTransaction>() {
             @Suspendable
             override fun call(): SignedTransaction {
                 val session = initiateFlow(otherParty)

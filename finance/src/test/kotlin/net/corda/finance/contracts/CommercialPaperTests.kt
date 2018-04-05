@@ -163,7 +163,6 @@ class CommercialPaperTestsGeneric {
                 }
                 outputs(1000.DOLLARS `issued by` megaCorpRef)
 
-
                 tweak {
                     timeWindow(TEST_TX_TIME + 2.days)
                     this `fails with` "must have matured"

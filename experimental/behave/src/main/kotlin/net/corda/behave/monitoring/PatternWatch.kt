@@ -1,8 +1,8 @@
 package net.corda.behave.monitoring
 
 class PatternWatch(
-        pattern: String,
-        ignoreCase: Boolean = false
+    pattern: String,
+    ignoreCase: Boolean = false
 ) : Watch() {
 
     private val regularExpression = if (ignoreCase) {
@@ -16,7 +16,5 @@ class PatternWatch(
     companion object {
 
         val EMPTY = PatternWatch("")
-
     }
-
 }

@@ -46,7 +46,6 @@ class ZeroCouponBond {
         assertEquals(Zero(), Zero())
     }
 
-
     @Test
     fun `issue - signature`() {
         transaction {
@@ -121,5 +120,4 @@ class ZeroCouponBond {
             this.verifies()
         }
     }
-
 }

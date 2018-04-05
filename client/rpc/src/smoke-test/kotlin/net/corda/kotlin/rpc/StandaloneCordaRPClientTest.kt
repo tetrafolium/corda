@@ -198,7 +198,7 @@ class StandaloneCordaRPClientTest {
         rpcProxy.startFlow(::CashPaymentFlow, 100.POUNDS, notaryNodeIdentity).returnValue.getOrThrow()
 
         val moreResults = rpcProxy.vaultQueryBy<Cash.State>(criteria, paging, sorting)
-        assertEquals(3, moreResults.totalStatesAvailable)   // 629 - 100 + 100
+        assertEquals(3, moreResults.totalStatesAvailable) // 629 - 100 + 100
 
         // Check that this cash exists in the vault
         val cashBalances = rpcProxy.getCashBalances()

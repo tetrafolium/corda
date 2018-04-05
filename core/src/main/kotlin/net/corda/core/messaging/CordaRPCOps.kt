@@ -33,25 +33,27 @@ import java.time.Instant
  */
 @CordaSerializable
 data class StateMachineInfo @JvmOverloads constructor(
-        /** A univerally unique ID ([java.util.UUID]) representing this particular instance of the named flow. */
-        val id: StateMachineRunId,
-        /** The JVM class name of the flow code. */
-        val flowLogicClassName: String,
-        /**
-         * An object representing information about the initiator of the flow. Note that this field is
-         * superceded by the [invocationContext] property, which has more detail.
-         */
-        @Deprecated("There is more info available using 'context'") val initiator: FlowInitiator,
-        /** A [DataFeed] of the current progress step as a human readable string, and updates to that string. */
-        val progressTrackerStepAndUpdates: DataFeed<String, String>?,
-        /** An [InvocationContext] describing why and by whom the flow was started. */
-        val invocationContext: InvocationContext = initiator.invocationContext
+    /** A univerally unique ID ([java.util.UUID]) representing this particular instance of the named flow. */
+    val id: StateMachineRunId,
+    /** The JVM class name of the flow code. */
+    val flowLogicClassName: String,
+    /**
+     * An object representing information about the initiator of the flow. Note that this field is
+     * superceded by the [invocationContext] property, which has more detail.
+     */
+    @Deprecated("There is more info available using 'context'") val initiator: FlowInitiator,
+    /** A [DataFeed] of the current progress step as a human readable string, and updates to that string. */
+    val progressTrackerStepAndUpdates: DataFeed<String, String>?,
+    /** An [InvocationContext] describing why and by whom the flow was started. */
+    val invocationContext: InvocationContext = initiator.invocationContext
 ) {
     @Suppress("DEPRECATION")
-    fun copy(id: StateMachineRunId = this.id,
-             flowLogicClassName: String = this.flowLogicClassName,
-             initiator: FlowInitiator = this.initiator,
-             progressTrackerStepAndUpdates: DataFeed<String, String>? = this.progressTrackerStepAndUpdates): StateMachineInfo {
+    fun copy(
+        id: StateMachineRunId = this.id,
+        flowLogicClassName: String = this.flowLogicClassName,
+        initiator: FlowInitiator = this.initiator,
+        progressTrackerStepAndUpdates: DataFeed<String, String>? = this.progressTrackerStepAndUpdates
+    ): StateMachineInfo {
         return copy(id = id, flowLogicClassName = flowLogicClassName, initiator = initiator, progressTrackerStepAndUpdates = progressTrackerStepAndUpdates, invocationContext = invocationContext)
     }
 
@@ -83,10 +85,10 @@ sealed class StateMachineUpdate {
  */
 @CordaSerializable
 data class ParametersUpdateInfo(
-        val hash: SecureHash,
-        val parameters: NetworkParameters,
-        val description: String,
-        val updateDeadline: Instant
+    val hash: SecureHash,
+    val parameters: NetworkParameters,
+    val description: String,
+    val updateDeadline: Instant
 )
 // DOCEND 1
 
@@ -134,10 +136,12 @@ interface CordaRPCOps : RPCOps {
      */
     // DOCSTART VaultQueryByAPI
     @RPCReturnsObservables
-    fun <T : ContractState> vaultQueryBy(criteria: QueryCriteria,
-                                         paging: PageSpecification,
-                                         sorting: Sort,
-                                         contractStateType: Class<out T>): Vault.Page<T>
+    fun <T : ContractState> vaultQueryBy(
+        criteria: QueryCriteria,
+        paging: PageSpecification,
+        sorting: Sort,
+        contractStateType: Class<out T>
+    ): Vault.Page<T>
     // DOCEND VaultQueryByAPI
 
     // Note: cannot apply @JvmOverloads to interfaces nor interface implementations
@@ -167,10 +171,12 @@ interface CordaRPCOps : RPCOps {
      */
     // DOCSTART VaultTrackByAPI
     @RPCReturnsObservables
-    fun <T : ContractState> vaultTrackBy(criteria: QueryCriteria,
-                                         paging: PageSpecification,
-                                         sorting: Sort,
-                                         contractStateType: Class<out T>): DataFeed<Vault.Page<T>, Vault.Update<T>>
+    fun <T : ContractState> vaultTrackBy(
+        criteria: QueryCriteria,
+        paging: PageSpecification,
+        sorting: Sort,
+        contractStateType: Class<out T>
+    ): DataFeed<Vault.Page<T>, Vault.Update<T>>
     // DOCEND VaultTrackByAPI
 
     // Note: cannot apply @JvmOverloads to interfaces nor interface implementations
@@ -406,15 +412,19 @@ fun CordaRPCOps.pendingFlowsCount(): DataFeed<Int, Pair<Int, Int>> {
     return DataFeed(pendingFlowsCount, updates)
 }
 
-inline fun <reified T : ContractState> CordaRPCOps.vaultQueryBy(criteria: QueryCriteria = QueryCriteria.VaultQueryCriteria(),
-                                                                paging: PageSpecification = PageSpecification(),
-                                                                sorting: Sort = Sort(emptySet())): Vault.Page<T> {
+inline fun <reified T : ContractState> CordaRPCOps.vaultQueryBy(
+    criteria: QueryCriteria = QueryCriteria.VaultQueryCriteria(),
+    paging: PageSpecification = PageSpecification(),
+    sorting: Sort = Sort(emptySet())
+): Vault.Page<T> {
     return vaultQueryBy(criteria, paging, sorting, T::class.java)
 }
 
-inline fun <reified T : ContractState> CordaRPCOps.vaultTrackBy(criteria: QueryCriteria = QueryCriteria.VaultQueryCriteria(),
-                                                                paging: PageSpecification = PageSpecification(),
-                                                                sorting: Sort = Sort(emptySet())): DataFeed<Vault.Page<T>, Vault.Update<T>> {
+inline fun <reified T : ContractState> CordaRPCOps.vaultTrackBy(
+    criteria: QueryCriteria = QueryCriteria.VaultQueryCriteria(),
+    paging: PageSpecification = PageSpecification(),
+    sorting: Sort = Sort(emptySet())
+): DataFeed<Vault.Page<T>, Vault.Update<T>> {
     return vaultTrackBy(criteria, paging, sorting, T::class.java)
 }
 
@@ -422,14 +432,14 @@ inline fun <reified T : ContractState> CordaRPCOps.vaultTrackBy(criteria: QueryC
 // the Class instance of the flow. This could be changed to use the constructor function directly.
 
 inline fun <T, reified R : FlowLogic<T>> CordaRPCOps.startFlow(
-        @Suppress("UNUSED_PARAMETER")
-        flowConstructor: () -> R
+    @Suppress("UNUSED_PARAMETER")
+    flowConstructor: () -> R
 ): FlowHandle<T> = startFlowDynamic(R::class.java)
 
 inline fun <T, A, reified R : FlowLogic<T>> CordaRPCOps.startFlow(
-        @Suppress("UNUSED_PARAMETER")
-        flowConstructor: (A) -> R,
-        arg0: A
+    @Suppress("UNUSED_PARAMETER")
+    flowConstructor: (A) -> R,
+    arg0: A
 ): FlowHandle<T> = startFlowDynamic(R::class.java, arg0)
 
 /**
@@ -439,48 +449,48 @@ inline fun <T, A, reified R : FlowLogic<T>> CordaRPCOps.startFlow(
  * rpc.startFlow(::ResolveTransactionsFlow, setOf<SecureHash>(), aliceIdentity)
  */
 inline fun <T, A, B, reified R : FlowLogic<T>> CordaRPCOps.startFlow(
-        @Suppress("UNUSED_PARAMETER")
-        flowConstructor: (A, B) -> R,
-        arg0: A,
-        arg1: B
+    @Suppress("UNUSED_PARAMETER")
+    flowConstructor: (A, B) -> R,
+    arg0: A,
+    arg1: B
 ): FlowHandle<T> = startFlowDynamic(R::class.java, arg0, arg1)
 
 inline fun <T, A, B, C, reified R : FlowLogic<T>> CordaRPCOps.startFlow(
-        @Suppress("UNUSED_PARAMETER")
-        flowConstructor: (A, B, C) -> R,
-        arg0: A,
-        arg1: B,
-        arg2: C
+    @Suppress("UNUSED_PARAMETER")
+    flowConstructor: (A, B, C) -> R,
+    arg0: A,
+    arg1: B,
+    arg2: C
 ): FlowHandle<T> = startFlowDynamic(R::class.java, arg0, arg1, arg2)
 
 inline fun <T, A, B, C, D, reified R : FlowLogic<T>> CordaRPCOps.startFlow(
-        @Suppress("UNUSED_PARAMETER")
-        flowConstructor: (A, B, C, D) -> R,
-        arg0: A,
-        arg1: B,
-        arg2: C,
-        arg3: D
+    @Suppress("UNUSED_PARAMETER")
+    flowConstructor: (A, B, C, D) -> R,
+    arg0: A,
+    arg1: B,
+    arg2: C,
+    arg3: D
 ): FlowHandle<T> = startFlowDynamic(R::class.java, arg0, arg1, arg2, arg3)
 
 inline fun <T, A, B, C, D, E, reified R : FlowLogic<T>> CordaRPCOps.startFlow(
-        @Suppress("UNUSED_PARAMETER")
-        flowConstructor: (A, B, C, D, E) -> R,
-        arg0: A,
-        arg1: B,
-        arg2: C,
-        arg3: D,
-        arg4: E
+    @Suppress("UNUSED_PARAMETER")
+    flowConstructor: (A, B, C, D, E) -> R,
+    arg0: A,
+    arg1: B,
+    arg2: C,
+    arg3: D,
+    arg4: E
 ): FlowHandle<T> = startFlowDynamic(R::class.java, arg0, arg1, arg2, arg3, arg4)
 
 inline fun <T, A, B, C, D, E, F, reified R : FlowLogic<T>> CordaRPCOps.startFlow(
-        @Suppress("UNUSED_PARAMETER")
-        flowConstructor: (A, B, C, D, E, F) -> R,
-        arg0: A,
-        arg1: B,
-        arg2: C,
-        arg3: D,
-        arg4: E,
-        arg5: F
+    @Suppress("UNUSED_PARAMETER")
+    flowConstructor: (A, B, C, D, E, F) -> R,
+    arg0: A,
+    arg1: B,
+    arg2: C,
+    arg3: D,
+    arg4: E,
+    arg5: F
 ): FlowHandle<T> = startFlowDynamic(R::class.java, arg0, arg1, arg2, arg3, arg4, arg5)
 
 /**
@@ -488,65 +498,65 @@ inline fun <T, A, B, C, D, E, F, reified R : FlowLogic<T>> CordaRPCOps.startFlow
  */
 @Suppress("unused")
 inline fun <T, reified R : FlowLogic<T>> CordaRPCOps.startTrackedFlow(
-        @Suppress("unused_parameter")
-        flowConstructor: () -> R
+    @Suppress("unused_parameter")
+    flowConstructor: () -> R
 ): FlowProgressHandle<T> = startTrackedFlowDynamic(R::class.java)
 
 @Suppress("unused")
 inline fun <T, A, reified R : FlowLogic<T>> CordaRPCOps.startTrackedFlow(
-        @Suppress("unused_parameter")
-        flowConstructor: (A) -> R,
-        arg0: A
+    @Suppress("unused_parameter")
+    flowConstructor: (A) -> R,
+    arg0: A
 ): FlowProgressHandle<T> = startTrackedFlowDynamic(R::class.java, arg0)
 
 @Suppress("unused")
 inline fun <T, A, B, reified R : FlowLogic<T>> CordaRPCOps.startTrackedFlow(
-        @Suppress("unused_parameter")
-        flowConstructor: (A, B) -> R,
-        arg0: A,
-        arg1: B
+    @Suppress("unused_parameter")
+    flowConstructor: (A, B) -> R,
+    arg0: A,
+    arg1: B
 ): FlowProgressHandle<T> = startTrackedFlowDynamic(R::class.java, arg0, arg1)
 
 @Suppress("unused")
 inline fun <T, A, B, C, reified R : FlowLogic<T>> CordaRPCOps.startTrackedFlow(
-        @Suppress("unused_parameter")
-        flowConstructor: (A, B, C) -> R,
-        arg0: A,
-        arg1: B,
-        arg2: C
+    @Suppress("unused_parameter")
+    flowConstructor: (A, B, C) -> R,
+    arg0: A,
+    arg1: B,
+    arg2: C
 ): FlowProgressHandle<T> = startTrackedFlowDynamic(R::class.java, arg0, arg1, arg2)
 
 @Suppress("unused")
 inline fun <T, A, B, C, D, reified R : FlowLogic<T>> CordaRPCOps.startTrackedFlow(
-        @Suppress("unused_parameter")
-        flowConstructor: (A, B, C, D) -> R,
-        arg0: A,
-        arg1: B,
-        arg2: C,
-        arg3: D
+    @Suppress("unused_parameter")
+    flowConstructor: (A, B, C, D) -> R,
+    arg0: A,
+    arg1: B,
+    arg2: C,
+    arg3: D
 ): FlowProgressHandle<T> = startTrackedFlowDynamic(R::class.java, arg0, arg1, arg2, arg3)
 
 @Suppress("unused")
 inline fun <T, A, B, C, D, E, reified R : FlowLogic<T>> CordaRPCOps.startTrackedFlow(
-        @Suppress("unused_parameter")
-        flowConstructor: (A, B, C, D, E) -> R,
-        arg0: A,
-        arg1: B,
-        arg2: C,
-        arg3: D,
-        arg4: E
+    @Suppress("unused_parameter")
+    flowConstructor: (A, B, C, D, E) -> R,
+    arg0: A,
+    arg1: B,
+    arg2: C,
+    arg3: D,
+    arg4: E
 ): FlowProgressHandle<T> = startTrackedFlowDynamic(R::class.java, arg0, arg1, arg2, arg3, arg4)
 
 @Suppress("unused")
 inline fun <T, A, B, C, D, E, F, reified R : FlowLogic<T>> CordaRPCOps.startTrackedFlow(
-        @Suppress("unused_parameter")
-        flowConstructor: (A, B, C, D, E, F) -> R,
-        arg0: A,
-        arg1: B,
-        arg2: C,
-        arg3: D,
-        arg4: E,
-        arg5: F
+    @Suppress("unused_parameter")
+    flowConstructor: (A, B, C, D, E, F) -> R,
+    arg0: A,
+    arg1: B,
+    arg2: C,
+    arg3: D,
+    arg4: E,
+    arg5: F
 ): FlowProgressHandle<T> = startTrackedFlowDynamic(R::class.java, arg0, arg1, arg2, arg3, arg4, arg5)
 
 /**

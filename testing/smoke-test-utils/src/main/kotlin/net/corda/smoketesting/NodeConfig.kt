@@ -9,12 +9,12 @@ import net.corda.core.identity.CordaX500Name
 import net.corda.nodeapi.internal.config.User
 
 class NodeConfig(
-        val legalName: CordaX500Name,
-        val p2pPort: Int,
-        val rpcPort: Int,
-        val rpcAdminPort: Int,
-        val isNotary: Boolean,
-        val users: List<User>
+    val legalName: CordaX500Name,
+    val p2pPort: Int,
+    val rpcPort: Int,
+    val rpcAdminPort: Int,
+    val isNotary: Boolean,
+    val users: List<User>
 ) {
     companion object {
         val renderOptions: ConfigRenderOptions = ConfigRenderOptions.defaults().setOriginComments(false)

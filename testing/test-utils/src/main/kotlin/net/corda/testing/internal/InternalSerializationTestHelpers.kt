@@ -74,4 +74,3 @@ interface GlobalSerializationEnvironment : SerializationEnvironment {
     /** Unset this environment. */
     fun unset()
 }
-

@@ -42,9 +42,10 @@ class TransactionSerializationTests {
         }
 
         data class State(
-                val deposit: PartyAndReference,
-                val amount: Amount<Currency>,
-                override val owner: AbstractParty) : OwnableState {
+            val deposit: PartyAndReference,
+            val amount: Amount<Currency>,
+            override val owner: AbstractParty
+        ) : OwnableState {
             override val participants: List<AbstractParty>
                 get() = listOf(owner)
 

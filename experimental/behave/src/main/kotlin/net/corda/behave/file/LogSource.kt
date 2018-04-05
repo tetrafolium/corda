@@ -3,16 +3,16 @@ package net.corda.behave.file
 import java.io.File
 
 class LogSource(
-        private val directory: File,
-        filePattern: String? = ".*\\.log",
-        private val filePatternUsedForExclusion: Boolean = false
+    private val directory: File,
+    filePattern: String? = ".*\\.log",
+    private val filePatternUsedForExclusion: Boolean = false
 ) {
 
     private val fileRegex = Regex(filePattern ?: ".*")
 
     data class MatchedLogContent(
-            val filename: File,
-            val contents: String
+        val filename: File,
+        val contents: String
     )
 
     fun find(pattern: String? = null): List<MatchedLogContent> {
@@ -38,5 +38,4 @@ class LogSource(
         }
         return result
     }
-
 }

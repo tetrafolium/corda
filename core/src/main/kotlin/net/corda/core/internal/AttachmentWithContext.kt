@@ -9,10 +9,10 @@ import net.corda.core.node.services.AttachmentId
  * Used only for passing to the Attachment constraint verification.
  */
 class AttachmentWithContext(
-        val contractAttachment: ContractAttachment,
-        val stateContract: ContractClassName,
-        /** Required for verifying [WhitelistedByZoneAttachmentConstraint] */
-        val whitelistedContractImplementations: Map<String, List<AttachmentId>>?
+    val contractAttachment: ContractAttachment,
+    val stateContract: ContractClassName,
+    /** Required for verifying [WhitelistedByZoneAttachmentConstraint] */
+    val whitelistedContractImplementations: Map<String, List<AttachmentId>>?
 ) : Attachment by contractAttachment {
     init {
         require(stateContract in contractAttachment.allContracts) {

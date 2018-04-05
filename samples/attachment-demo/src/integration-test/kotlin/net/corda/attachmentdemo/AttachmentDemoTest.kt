@@ -11,7 +11,6 @@ import net.corda.testing.driver.DriverParameters
 import net.corda.testing.node.User
 import net.corda.testing.driver.PortAllocation
 import net.corda.testing.driver.driver
-import net.corda.testing.driver.internal.NodeHandleInternal
 import org.junit.Test
 import java.util.concurrent.CompletableFuture.supplyAsync
 

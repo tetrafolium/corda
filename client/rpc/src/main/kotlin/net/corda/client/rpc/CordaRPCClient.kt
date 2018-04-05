@@ -94,28 +94,28 @@ interface CordaRPCClientConfiguration {
  * @param sslConfiguration An optional [SSLConfiguration] used to enable secure communication with the server.
  */
 class CordaRPCClient private constructor(
-        hostAndPort: NetworkHostAndPort,
-        configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
-        sslConfiguration: SSLConfiguration? = null,
-        classLoader: ClassLoader? = null
+    hostAndPort: NetworkHostAndPort,
+    configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
+    sslConfiguration: SSLConfiguration? = null,
+    classLoader: ClassLoader? = null
 ) {
     @JvmOverloads
     constructor(hostAndPort: NetworkHostAndPort, configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default()) : this(hostAndPort, configuration, null)
 
     companion object {
         internal fun createWithSsl(
-                hostAndPort: NetworkHostAndPort,
-                configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
-                sslConfiguration: SSLConfiguration? = null
+            hostAndPort: NetworkHostAndPort,
+            configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
+            sslConfiguration: SSLConfiguration? = null
         ): CordaRPCClient {
             return CordaRPCClient(hostAndPort, configuration, sslConfiguration)
         }
 
         internal fun createWithSslAndClassLoader(
-                hostAndPort: NetworkHostAndPort,
-                configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
-                sslConfiguration: SSLConfiguration? = null,
-                classLoader: ClassLoader? = null
+            hostAndPort: NetworkHostAndPort,
+            configuration: CordaRPCClientConfiguration = CordaRPCClientConfiguration.default(),
+            sslConfiguration: SSLConfiguration? = null,
+            classLoader: ClassLoader? = null
         ): CordaRPCClient {
             return CordaRPCClient(hostAndPort, configuration, sslConfiguration, classLoader)
         }

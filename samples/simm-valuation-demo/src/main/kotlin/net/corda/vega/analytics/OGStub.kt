@@ -32,11 +32,15 @@ class IsdaConfiguration {
  */
 @Suppress("UNUSED_PARAMETER")
 object BimmAnalysisUtils {
-    fun computeMargin(combinedRatesProvider: ImmutableRatesProvider?, normalizer: PortfolioNormalizer, calculatorTotal: RwamBimmNotProductClassesCalculator,
-                      first: CurrencyParameterSensitivities, second: MultiCurrencyAmount): Triple<Double, Double, Double> {
+    fun computeMargin(
+        combinedRatesProvider: ImmutableRatesProvider?,
+        normalizer: PortfolioNormalizer,
+        calculatorTotal: RwamBimmNotProductClassesCalculator,
+        first: CurrencyParameterSensitivities,
+        second: MultiCurrencyAmount
+    ): Triple<Double, Double, Double> {
 
         val amount = second.amounts.map { it.amount }.sum()
         return Triple<Double, Double, Double>(amount, 0.0, amount)
     }
 }
-

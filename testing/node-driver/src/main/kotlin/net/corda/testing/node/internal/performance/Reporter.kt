@@ -10,10 +10,10 @@ import kotlin.concurrent.thread
 
 fun startReporter(shutdownManager: ShutdownManager, metricRegistry: MetricRegistry = MetricRegistry()): MetricRegistry {
     val jmxReporter = thread {
-        JmxReporter.
-                forRegistry(metricRegistry).
-                inDomain("net.corda").
-                createsObjectNamesWith { _, domain, name ->
+        JmxReporter
+                .forRegistry(metricRegistry)
+                .inDomain("net.corda")
+                .createsObjectNamesWith { _, domain, name ->
                     // Make the JMX hierarchy a bit better organised.
                     val category = name.substringBefore('.')
                     val subName = name.substringAfter('.', "")
@@ -21,9 +21,9 @@ fun startReporter(shutdownManager: ShutdownManager, metricRegistry: MetricRegist
                         ObjectName("$domain:name=$category")
                     else
                         ObjectName("$domain:type=$category,name=$subName")
-                }.
-                build().
-                start()
+                }
+                .build()
+                .start()
     }
     shutdownManager.registerShutdown { jmxReporter.interrupt() }
     val consoleReporter = thread {

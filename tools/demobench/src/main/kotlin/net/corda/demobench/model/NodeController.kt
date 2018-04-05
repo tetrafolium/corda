@@ -214,5 +214,4 @@ class NodeController(check: atRuntime = ::checkExists) : Controller() {
 
     private fun baseDirFor(time: Long): Path = jvm.dataHome.resolve(localFor(time))
     private fun localFor(time: Long) = SimpleDateFormat("yyyyMMddHHmmss").format(Date(time))
-
 }

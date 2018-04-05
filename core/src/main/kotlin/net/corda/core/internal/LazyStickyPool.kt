@@ -12,8 +12,8 @@ import java.util.concurrent.LinkedBlockingQueue
  */
 // TODO This could be implemented more efficiently. Currently the "non-sticky" use case is not optimised, it just chooses a random instance to wait on.
 class LazyStickyPool<A : Any>(
-        size: Int,
-        private val newInstance: () -> A
+    size: Int,
+    private val newInstance: () -> A
 ) {
     private class InstanceBox<A> {
         var instance: LinkedBlockingQueue<A>? = null

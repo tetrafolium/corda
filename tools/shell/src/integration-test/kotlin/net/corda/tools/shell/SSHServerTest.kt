@@ -43,7 +43,7 @@ class SSHServerTest {
             try {
                 session.connect()
                 fail()
-            } catch (e:JSchException) {
+            } catch (e: JSchException) {
                 assertTrue(e.cause is ConnectException)
             }
         }

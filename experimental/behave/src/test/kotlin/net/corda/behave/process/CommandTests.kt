@@ -30,5 +30,4 @@ class CommandTests {
         }
         assertThat(exitCode).isEqualTo(0)
     }
-
 }

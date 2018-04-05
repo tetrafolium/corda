@@ -175,10 +175,12 @@ class EdDSATests {
     }
 
     /** A test vector object for digital signature schemes. */
-    private data class SignatureTestVector(val privateKeyHex: String,
-                                   val publicKeyHex: String,
-                                   val messageToSignHex: String,
-                                   val signatureOutputHex: String)
+    private data class SignatureTestVector(
+        val privateKeyHex: String,
+        val publicKeyHex: String,
+        val messageToSignHex: String,
+        val signatureOutputHex: String
+    )
 
     // Required to implement a custom doSign function, because Corda's Crypto.doSign does not allow empty messages (testVector1).
     private fun doSign(privateKey: PrivateKey, clearData: ByteArray): ByteArray {

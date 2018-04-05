@@ -9,7 +9,6 @@ import net.corda.core.serialization.CordaSerializable
 import net.corda.core.transactions.LedgerTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.finance.contracts.*
-import net.corda.irs.flows.FixingFlow
 import net.corda.irs.utilities.suggestInterestRateAnnouncementTimeWindow
 import org.apache.commons.jexl3.JexlBuilder
 import org.apache.commons.jexl3.MapContext
@@ -57,13 +56,15 @@ abstract class PaymentEvent(date: LocalDate) : Event(date) {
  * For the fixed leg, the rate is already known at creation and therefore the flows can be pre-determined.
  * For the floating leg, the rate refers to a reference rate which is to be "fixed" at a point in the future.
  */
-abstract class RatePaymentEvent(date: LocalDate,
-                                val accrualStartDate: LocalDate,
-                                val accrualEndDate: LocalDate,
-                                val dayCountBasisDay: DayCountBasisDay,
-                                val dayCountBasisYear: DayCountBasisYear,
-                                val notional: Amount<Currency>,
-                                val rate: Rate) : PaymentEvent(date) {
+abstract class RatePaymentEvent(
+    date: LocalDate,
+    val accrualStartDate: LocalDate,
+    val accrualEndDate: LocalDate,
+    val dayCountBasisDay: DayCountBasisDay,
+    val dayCountBasisYear: DayCountBasisYear,
+    val notional: Amount<Currency>,
+    val rate: Rate
+) : PaymentEvent(date) {
     companion object {
         val CSVHeader = "AccrualStartDate,AccrualEndDate,DayCountFactor,Days,Date,Ccy,Notional,Rate,Flow"
     }
@@ -104,13 +105,15 @@ abstract class RatePaymentEvent(date: LocalDate,
  */
 @CordaSerializable
 @JsonIgnoreProperties(ignoreUnknown = true)
-class FixedRatePaymentEvent(date: LocalDate,
-                            accrualStartDate: LocalDate,
-                            accrualEndDate: LocalDate,
-                            dayCountBasisDay: DayCountBasisDay,
-                            dayCountBasisYear: DayCountBasisYear,
-                            notional: Amount<Currency>,
-                            rate: Rate) :
+class FixedRatePaymentEvent(
+    date: LocalDate,
+    accrualStartDate: LocalDate,
+    accrualEndDate: LocalDate,
+    dayCountBasisDay: DayCountBasisDay,
+    dayCountBasisYear: DayCountBasisYear,
+    notional: Amount<Currency>,
+    rate: Rate
+) :
         RatePaymentEvent(date, accrualStartDate, accrualEndDate, dayCountBasisDay, dayCountBasisYear, notional, rate) {
     companion object {
         val CSVHeader = RatePaymentEvent.CSVHeader
@@ -128,14 +131,16 @@ class FixedRatePaymentEvent(date: LocalDate,
  */
 @CordaSerializable
 @JsonIgnoreProperties(ignoreUnknown = true)
-class FloatingRatePaymentEvent(date: LocalDate,
-                               accrualStartDate: LocalDate,
-                               accrualEndDate: LocalDate,
-                               dayCountBasisDay: DayCountBasisDay,
-                               dayCountBasisYear: DayCountBasisYear,
-                               val fixingDate: LocalDate,
-                               notional: Amount<Currency>,
-                               rate: Rate) : RatePaymentEvent(date, accrualStartDate, accrualEndDate, dayCountBasisDay, dayCountBasisYear, notional, rate) {
+class FloatingRatePaymentEvent(
+    date: LocalDate,
+    accrualStartDate: LocalDate,
+    accrualEndDate: LocalDate,
+    dayCountBasisDay: DayCountBasisDay,
+    dayCountBasisYear: DayCountBasisYear,
+    val fixingDate: LocalDate,
+    notional: Amount<Currency>,
+    rate: Rate
+) : RatePaymentEvent(date, accrualStartDate, accrualEndDate, dayCountBasisDay, dayCountBasisYear, notional, rate) {
 
     companion object {
         val CSVHeader = RatePaymentEvent.CSVHeader + ",FixingDate"
@@ -170,16 +175,17 @@ class FloatingRatePaymentEvent(date: LocalDate,
     override fun hashCode() = super.hashCode() + 31 * Objects.hash(fixingDate)
 
     // Can't autogenerate as not a data class :-(
-    fun copy(date: LocalDate = this.date,
-             accrualStartDate: LocalDate = this.accrualStartDate,
-             accrualEndDate: LocalDate = this.accrualEndDate,
-             dayCountBasisDay: DayCountBasisDay = this.dayCountBasisDay,
-             dayCountBasisYear: DayCountBasisYear = this.dayCountBasisYear,
-             fixingDate: LocalDate = this.fixingDate,
-             notional: Amount<Currency> = this.notional,
-             rate: Rate = this.rate) = FloatingRatePaymentEvent(date, accrualStartDate, accrualEndDate, dayCountBasisDay, dayCountBasisYear, fixingDate, notional, rate)
+    fun copy(
+        date: LocalDate = this.date,
+        accrualStartDate: LocalDate = this.accrualStartDate,
+        accrualEndDate: LocalDate = this.accrualEndDate,
+        dayCountBasisDay: DayCountBasisDay = this.dayCountBasisDay,
+        dayCountBasisYear: DayCountBasisYear = this.dayCountBasisYear,
+        fixingDate: LocalDate = this.fixingDate,
+        notional: Amount<Currency> = this.notional,
+        rate: Rate = this.rate
+    ) = FloatingRatePaymentEvent(date, accrualStartDate, accrualEndDate, dayCountBasisDay, dayCountBasisYear, fixingDate, notional, rate)
 }
-
 
 /**
  * The Interest Rate Swap class. For a quick overview of what an IRS is, see here - http://www.pimco.co.uk/EN/Education/Pages/InterestRateSwapsBasics1-08.aspx (no endorsement).
@@ -194,23 +200,23 @@ class InterestRateSwap : Contract {
      */
     @CordaSerializable
     data class Common(
-            val baseCurrency: Currency,
-            val eligibleCurrency: Currency,
-            val eligibleCreditSupport: String,
-            val independentAmounts: Amount<Currency>,
-            val threshold: Amount<Currency>,
-            val minimumTransferAmount: Amount<Currency>,
-            val rounding: Amount<Currency>,
-            val valuationDateDescription: String, // This describes (in english) how regularly the swap is to be valued, e.g. "every local working day"
-            val notificationTime: String,
-            val resolutionTime: String,
-            val interestRate: ReferenceRate,
-            val addressForTransfers: String,
-            val exposure: UnknownType,
-            val localBusinessDay: BusinessCalendar,
-            val dailyInterestAmount: Expression,
-            val tradeID: String,
-            val hashLegalDocs: String
+        val baseCurrency: Currency,
+        val eligibleCurrency: Currency,
+        val eligibleCreditSupport: String,
+        val independentAmounts: Amount<Currency>,
+        val threshold: Amount<Currency>,
+        val minimumTransferAmount: Amount<Currency>,
+        val rounding: Amount<Currency>,
+        val valuationDateDescription: String, // This describes (in english) how regularly the swap is to be valued, e.g. "every local working day"
+        val notificationTime: String,
+        val resolutionTime: String,
+        val interestRate: ReferenceRate,
+        val addressForTransfers: String,
+        val exposure: UnknownType,
+        val localBusinessDay: BusinessCalendar,
+        val dailyInterestAmount: Expression,
+        val tradeID: String,
+        val hashLegalDocs: String
     )
 
     /**
@@ -220,17 +226,17 @@ class InterestRateSwap : Contract {
      */
     @CordaSerializable
     data class Calculation(
-            val expression: Expression,
-            val floatingLegPaymentSchedule: Map<LocalDate, FloatingRatePaymentEvent>,
-            val fixedLegPaymentSchedule: Map<LocalDate, FixedRatePaymentEvent>
+        val expression: Expression,
+        val floatingLegPaymentSchedule: Map<LocalDate, FloatingRatePaymentEvent>,
+        val fixedLegPaymentSchedule: Map<LocalDate, FixedRatePaymentEvent>
     ) {
         /**
          * Gets the date of the next fixing.
          * @return LocalDate or null if no more fixings.
          */
         fun nextFixingDate(): LocalDate? {
-            return floatingLegPaymentSchedule.
-                    filter { it.value.rate is ReferenceRate }.// TODO - a better way to determine what fixings remain to be fixed
+            return floatingLegPaymentSchedule
+                    .filter { it.value.rate is ReferenceRate }.// TODO - a better way to determine what fixings remain to be fixed
                     minBy { it.value.fixingDate.toEpochDay() }?.value?.fixingDate
         }
 
@@ -253,19 +259,19 @@ class InterestRateSwap : Contract {
     }
 
     abstract class CommonLeg(
-            val notional: Amount<Currency>,
-            val paymentFrequency: Frequency,
-            val effectiveDate: LocalDate,
-            val effectiveDateAdjustment: DateRollConvention?,
-            val terminationDate: LocalDate,
-            val terminationDateAdjustment: DateRollConvention?,
-            val dayCountBasisDay: DayCountBasisDay,
-            val dayCountBasisYear: DayCountBasisYear,
-            val dayInMonth: Int,
-            val paymentRule: PaymentRule,
-            val paymentDelay: Int,
-            val paymentCalendar: BusinessCalendar,
-            val interestPeriodAdjustment: AccrualAdjustment
+        val notional: Amount<Currency>,
+        val paymentFrequency: Frequency,
+        val effectiveDate: LocalDate,
+        val effectiveDateAdjustment: DateRollConvention?,
+        val terminationDate: LocalDate,
+        val terminationDateAdjustment: DateRollConvention?,
+        val dayCountBasisDay: DayCountBasisDay,
+        val dayCountBasisYear: DayCountBasisYear,
+        val dayInMonth: Int,
+        val paymentRule: PaymentRule,
+        val paymentDelay: Int,
+        val paymentCalendar: BusinessCalendar,
+        val interestPeriodAdjustment: AccrualAdjustment
     ) {
         override fun toString(): String {
             return "Notional=$notional,PaymentFrequency=$paymentFrequency,EffectiveDate=$effectiveDate,EffectiveDateAdjustment:$effectiveDateAdjustment,TerminatationDate=$terminationDate," +
@@ -303,22 +309,22 @@ class InterestRateSwap : Contract {
 
     @CordaSerializable
     open class FixedLeg(
-            var fixedRatePayer: AbstractParty,
-            notional: Amount<Currency>,
-            paymentFrequency: Frequency,
-            effectiveDate: LocalDate,
-            effectiveDateAdjustment: DateRollConvention?,
-            terminationDate: LocalDate,
-            terminationDateAdjustment: DateRollConvention?,
-            dayCountBasisDay: DayCountBasisDay,
-            dayCountBasisYear: DayCountBasisYear,
-            dayInMonth: Int,
-            paymentRule: PaymentRule,
-            paymentDelay: Int,
-            paymentCalendar: BusinessCalendar,
-            interestPeriodAdjustment: AccrualAdjustment,
-            var fixedRate: FixedRate,
-            var rollConvention: DateRollConvention // TODO - best way of implementing - still awaiting some clarity
+        var fixedRatePayer: AbstractParty,
+        notional: Amount<Currency>,
+        paymentFrequency: Frequency,
+        effectiveDate: LocalDate,
+        effectiveDateAdjustment: DateRollConvention?,
+        terminationDate: LocalDate,
+        terminationDateAdjustment: DateRollConvention?,
+        dayCountBasisDay: DayCountBasisDay,
+        dayCountBasisYear: DayCountBasisYear,
+        dayInMonth: Int,
+        paymentRule: PaymentRule,
+        paymentDelay: Int,
+        paymentCalendar: BusinessCalendar,
+        interestPeriodAdjustment: AccrualAdjustment,
+        var fixedRate: FixedRate,
+        var rollConvention: DateRollConvention // TODO - best way of implementing - still awaiting some clarity
     ) : CommonLeg
     (notional, paymentFrequency, effectiveDate, effectiveDateAdjustment, terminationDate, terminationDateAdjustment,
             dayCountBasisDay, dayCountBasisYear, dayInMonth, paymentRule, paymentDelay, paymentCalendar, interestPeriodAdjustment) {
@@ -342,21 +348,23 @@ class InterestRateSwap : Contract {
         override fun hashCode() = super.hashCode() + 31 * Objects.hash(fixedRatePayer, fixedRate, rollConvention)
 
         // Can't autogenerate as not a data class :-(
-        fun copy(fixedRatePayer: AbstractParty = this.fixedRatePayer,
-                 notional: Amount<Currency> = this.notional,
-                 paymentFrequency: Frequency = this.paymentFrequency,
-                 effectiveDate: LocalDate = this.effectiveDate,
-                 effectiveDateAdjustment: DateRollConvention? = this.effectiveDateAdjustment,
-                 terminationDate: LocalDate = this.terminationDate,
-                 terminationDateAdjustment: DateRollConvention? = this.terminationDateAdjustment,
-                 dayCountBasisDay: DayCountBasisDay = this.dayCountBasisDay,
-                 dayCountBasisYear: DayCountBasisYear = this.dayCountBasisYear,
-                 dayInMonth: Int = this.dayInMonth,
-                 paymentRule: PaymentRule = this.paymentRule,
-                 paymentDelay: Int = this.paymentDelay,
-                 paymentCalendar: BusinessCalendar = this.paymentCalendar,
-                 interestPeriodAdjustment: AccrualAdjustment = this.interestPeriodAdjustment,
-                 fixedRate: FixedRate = this.fixedRate) = FixedLeg(
+        fun copy(
+            fixedRatePayer: AbstractParty = this.fixedRatePayer,
+            notional: Amount<Currency> = this.notional,
+            paymentFrequency: Frequency = this.paymentFrequency,
+            effectiveDate: LocalDate = this.effectiveDate,
+            effectiveDateAdjustment: DateRollConvention? = this.effectiveDateAdjustment,
+            terminationDate: LocalDate = this.terminationDate,
+            terminationDateAdjustment: DateRollConvention? = this.terminationDateAdjustment,
+            dayCountBasisDay: DayCountBasisDay = this.dayCountBasisDay,
+            dayCountBasisYear: DayCountBasisYear = this.dayCountBasisYear,
+            dayInMonth: Int = this.dayInMonth,
+            paymentRule: PaymentRule = this.paymentRule,
+            paymentDelay: Int = this.paymentDelay,
+            paymentCalendar: BusinessCalendar = this.paymentCalendar,
+            interestPeriodAdjustment: AccrualAdjustment = this.interestPeriodAdjustment,
+            fixedRate: FixedRate = this.fixedRate
+        ) = FixedLeg(
                 fixedRatePayer, notional, paymentFrequency, effectiveDate, effectiveDateAdjustment, terminationDate,
                 terminationDateAdjustment, dayCountBasisDay, dayCountBasisYear, dayInMonth, paymentRule, paymentDelay,
                 paymentCalendar, interestPeriodAdjustment, fixedRate, rollConvention)
@@ -364,30 +372,30 @@ class InterestRateSwap : Contract {
 
     @CordaSerializable
     open class FloatingLeg(
-            var floatingRatePayer: AbstractParty,
-            notional: Amount<Currency>,
-            paymentFrequency: Frequency,
-            effectiveDate: LocalDate,
-            effectiveDateAdjustment: DateRollConvention?,
-            terminationDate: LocalDate,
-            terminationDateAdjustment: DateRollConvention?,
-            dayCountBasisDay: DayCountBasisDay,
-            dayCountBasisYear: DayCountBasisYear,
-            dayInMonth: Int,
-            paymentRule: PaymentRule,
-            paymentDelay: Int,
-            paymentCalendar: BusinessCalendar,
-            interestPeriodAdjustment: AccrualAdjustment,
-            var rollConvention: DateRollConvention,
-            var fixingRollConvention: DateRollConvention,
-            var resetDayInMonth: Int,
-            var fixingPeriodOffset: Int,
-            var resetRule: PaymentRule,
-            var fixingsPerPayment: Frequency,
-            var fixingCalendar: BusinessCalendar,
-            var index: String,
-            var indexSource: String,
-            var indexTenor: Tenor
+        var floatingRatePayer: AbstractParty,
+        notional: Amount<Currency>,
+        paymentFrequency: Frequency,
+        effectiveDate: LocalDate,
+        effectiveDateAdjustment: DateRollConvention?,
+        terminationDate: LocalDate,
+        terminationDateAdjustment: DateRollConvention?,
+        dayCountBasisDay: DayCountBasisDay,
+        dayCountBasisYear: DayCountBasisYear,
+        dayInMonth: Int,
+        paymentRule: PaymentRule,
+        paymentDelay: Int,
+        paymentCalendar: BusinessCalendar,
+        interestPeriodAdjustment: AccrualAdjustment,
+        var rollConvention: DateRollConvention,
+        var fixingRollConvention: DateRollConvention,
+        var resetDayInMonth: Int,
+        var fixingPeriodOffset: Int,
+        var resetRule: PaymentRule,
+        var fixingsPerPayment: Frequency,
+        var fixingCalendar: BusinessCalendar,
+        var index: String,
+        var indexSource: String,
+        var indexTenor: Tenor
     ) : CommonLeg(notional, paymentFrequency, effectiveDate, effectiveDateAdjustment, terminationDate, terminationDateAdjustment,
             dayCountBasisDay, dayCountBasisYear, dayInMonth, paymentRule, paymentDelay, paymentCalendar, interestPeriodAdjustment) {
         override fun toString(): String = "FloatingLeg(Payer=$floatingRatePayer," + super.toString() +
@@ -421,31 +429,31 @@ class InterestRateSwap : Contract {
                 fixingRollConvention, resetDayInMonth, fixingPeriodOffset, resetRule, fixingsPerPayment, fixingCalendar,
                 index, indexSource, indexTenor)
 
-
-        fun copy(floatingRatePayer: AbstractParty = this.floatingRatePayer,
-                 notional: Amount<Currency> = this.notional,
-                 paymentFrequency: Frequency = this.paymentFrequency,
-                 effectiveDate: LocalDate = this.effectiveDate,
-                 effectiveDateAdjustment: DateRollConvention? = this.effectiveDateAdjustment,
-                 terminationDate: LocalDate = this.terminationDate,
-                 terminationDateAdjustment: DateRollConvention? = this.terminationDateAdjustment,
-                 dayCountBasisDay: DayCountBasisDay = this.dayCountBasisDay,
-                 dayCountBasisYear: DayCountBasisYear = this.dayCountBasisYear,
-                 dayInMonth: Int = this.dayInMonth,
-                 paymentRule: PaymentRule = this.paymentRule,
-                 paymentDelay: Int = this.paymentDelay,
-                 paymentCalendar: BusinessCalendar = this.paymentCalendar,
-                 interestPeriodAdjustment: AccrualAdjustment = this.interestPeriodAdjustment,
-                 rollConvention: DateRollConvention = this.rollConvention,
-                 fixingRollConvention: DateRollConvention = this.fixingRollConvention,
-                 resetDayInMonth: Int = this.resetDayInMonth,
-                 fixingPeriod: Int = this.fixingPeriodOffset,
-                 resetRule: PaymentRule = this.resetRule,
-                 fixingsPerPayment: Frequency = this.fixingsPerPayment,
-                 fixingCalendar: BusinessCalendar = this.fixingCalendar,
-                 index: String = this.index,
-                 indexSource: String = this.indexSource,
-                 indexTenor: Tenor = this.indexTenor
+        fun copy(
+            floatingRatePayer: AbstractParty = this.floatingRatePayer,
+            notional: Amount<Currency> = this.notional,
+            paymentFrequency: Frequency = this.paymentFrequency,
+            effectiveDate: LocalDate = this.effectiveDate,
+            effectiveDateAdjustment: DateRollConvention? = this.effectiveDateAdjustment,
+            terminationDate: LocalDate = this.terminationDate,
+            terminationDateAdjustment: DateRollConvention? = this.terminationDateAdjustment,
+            dayCountBasisDay: DayCountBasisDay = this.dayCountBasisDay,
+            dayCountBasisYear: DayCountBasisYear = this.dayCountBasisYear,
+            dayInMonth: Int = this.dayInMonth,
+            paymentRule: PaymentRule = this.paymentRule,
+            paymentDelay: Int = this.paymentDelay,
+            paymentCalendar: BusinessCalendar = this.paymentCalendar,
+            interestPeriodAdjustment: AccrualAdjustment = this.interestPeriodAdjustment,
+            rollConvention: DateRollConvention = this.rollConvention,
+            fixingRollConvention: DateRollConvention = this.fixingRollConvention,
+            resetDayInMonth: Int = this.resetDayInMonth,
+            fixingPeriod: Int = this.fixingPeriodOffset,
+            resetRule: PaymentRule = this.resetRule,
+            fixingsPerPayment: Frequency = this.fixingsPerPayment,
+            fixingCalendar: BusinessCalendar = this.fixingCalendar,
+            index: String = this.index,
+            indexSource: String = this.indexSource,
+            indexTenor: Tenor = this.indexTenor
         ) = FloatingLeg(floatingRatePayer, notional, paymentFrequency, effectiveDate, effectiveDateAdjustment,
                 terminationDate, terminationDateAdjustment, dayCountBasisDay, dayCountBasisYear, dayInMonth,
                 paymentRule, paymentDelay, paymentCalendar, interestPeriodAdjustment, rollConvention,
@@ -598,12 +606,12 @@ class InterestRateSwap : Contract {
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class State(
-            val fixedLeg: FixedLeg,
-            val floatingLeg: FloatingLeg,
-            val calculation: Calculation,
-            val common: Common,
-            override val oracle: Party,
-            override val linearId: UniqueIdentifier = UniqueIdentifier(common.tradeID)
+        val fixedLeg: FixedLeg,
+        val floatingLeg: FloatingLeg,
+        val calculation: Calculation,
+        val common: Common,
+        override val oracle: Party,
+        override val linearId: UniqueIdentifier = UniqueIdentifier(common.tradeID)
     ) : FixableDealState, SchedulableState {
         val ref: String get() = linearId.externalId ?: ""
 
@@ -665,8 +673,14 @@ class InterestRateSwap : Contract {
      *  This generates the agreement state and also the schedules from the initial data.
      *  Note: The day count, interest rate calculation etc are not finished yet, but they are demonstrable.
      */
-    fun generateAgreement(floatingLeg: FloatingLeg, fixedLeg: FixedLeg, calculation: Calculation,
-                          common: Common, oracle: Party, notary: Party): TransactionBuilder {
+    fun generateAgreement(
+        floatingLeg: FloatingLeg,
+        fixedLeg: FixedLeg,
+        calculation: Calculation,
+        common: Common,
+        oracle: Party,
+        notary: Party
+    ): TransactionBuilder {
         val fixedLegPaymentSchedule = LinkedHashMap<LocalDate, FixedRatePaymentEvent>()
         var dates = BusinessCalendar.createGenericSchedule(
                 fixedLeg.effectiveDate,

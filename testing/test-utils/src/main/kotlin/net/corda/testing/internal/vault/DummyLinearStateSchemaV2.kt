@@ -16,22 +16,22 @@ object DummyLinearStateSchemaV2 : MappedSchema(schemaFamily = DummyLinearStateSc
     @Table(name = "dummy_linear_states_v2")
     class PersistentDummyLinearState(
 
-            @ElementCollection
-            @Column(name = "participants")
-            @CollectionTable(name = "dummy_linear_states_v2_parts", joinColumns = arrayOf(
-                    JoinColumn(name = "output_index", referencedColumnName = "output_index"),
-                    JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")))
-            override var participants: MutableSet<AbstractParty>? = null,
+        @ElementCollection
+        @Column(name = "participants")
+        @CollectionTable(name = "dummy_linear_states_v2_parts", joinColumns = arrayOf(
+                JoinColumn(name = "output_index", referencedColumnName = "output_index"),
+                JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")))
+        override var participants: MutableSet<AbstractParty>? = null,
 
-            @Column(name = "linear_string") var linearString: String,
+        @Column(name = "linear_string") var linearString: String,
 
-            @Column(name = "linear_number") var linearNumber: Long,
+        @Column(name = "linear_number") var linearNumber: Long,
 
-            @Column(name = "linear_timestamp") var linearTimestamp: java.time.Instant,
+        @Column(name = "linear_timestamp") var linearTimestamp: java.time.Instant,
 
-            @Column(name = "linear_boolean") var linearBoolean: Boolean,
+        @Column(name = "linear_boolean") var linearBoolean: Boolean,
 
-            @Transient
-            val uid: UniqueIdentifier
+        @Transient
+        val uid: UniqueIdentifier
     ) : CommonSchemaV1.LinearState(uuid = uid.id, externalId = uid.externalId, participants = participants)
 }

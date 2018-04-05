@@ -113,7 +113,7 @@ class Main : App(MainView::class) {
 
     private fun loadFontsAndStyles() {
         JFXtrasFontRoboto.loadAll()
-        FontAwesomeIconFactory.get()   // Force initialisation.
+        FontAwesomeIconFactory.get() // Force initialisation.
     }
 }
 

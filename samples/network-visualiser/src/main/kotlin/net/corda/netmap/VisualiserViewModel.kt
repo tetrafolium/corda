@@ -25,9 +25,16 @@ class VisualiserViewModel {
         }
     }
 
-    inner class NodeWidget(val node: InternalMockNetwork.MockNode, val innerDot: Circle, val outerDot: Circle, val longPulseDot: Circle,
-                           val pulseAnim: Animation, val longPulseAnim: Animation,
-                           val nameLabel: Label, val statusLabel: Label) {
+    inner class NodeWidget(
+        val node: InternalMockNetwork.MockNode,
+        val innerDot: Circle,
+        val outerDot: Circle,
+        val longPulseDot: Circle,
+        val pulseAnim: Animation,
+        val longPulseAnim: Animation,
+        val nameLabel: Label,
+        val statusLabel: Label
+    ) {
         fun position(nodeCoords: (node: InternalMockNetwork.MockNode) -> ScreenCoordinate) {
             val (x, y) = nodeCoords(node)
             innerDot.centerX = x
@@ -43,7 +50,7 @@ class VisualiserViewModel {
 
     internal lateinit var view: VisualiserView
     var presentationMode: Boolean = false
-    var simulation = IRSSimulation(true, false, null)   // Manually pumped.
+    var simulation = IRSSimulation(true, false, null) // Manually pumped.
 
     val trackerBoxes = HashMap<ProgressTracker, TrackerWidget>()
     val doneTrackers = ArrayList<ProgressTracker>()
@@ -128,8 +135,13 @@ class VisualiserViewModel {
         }
     }
 
-    fun makeNodeWidget(forNode: InternalMockNetwork.MockNode, type: String, label: CordaX500Name = CordaX500Name(organisation = "Bank of Bologna", locality = "Bologna", country = "IT"),
-                       nodeType: NetworkMapVisualiser.NodeType, index: Int): NodeWidget {
+    fun makeNodeWidget(
+        forNode: InternalMockNetwork.MockNode,
+        type: String,
+        label: CordaX500Name = CordaX500Name(organisation = "Bank of Bologna", locality = "Bologna", country = "IT"),
+        nodeType: NetworkMapVisualiser.NodeType,
+        index: Int
+    ): NodeWidget {
         fun emitRadarPulse(initialRadius: Double, targetRadius: Double, duration: Double): Pair<Circle, Animation> {
             val pulse = Circle(initialRadius).apply {
                 styleClass += "node-$type"
@@ -221,5 +233,4 @@ class VisualiserViewModel {
         view.root.children.add(1, line)
         view.root.children.add(bullet)
     }
-
 }

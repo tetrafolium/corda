@@ -17,10 +17,10 @@ import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
 
 fun startTightLoopInjector(
-        parallelism: Int,
-        numberOfInjections: Int,
-        queueBound: Int,
-        work: () -> Unit
+    parallelism: Int,
+    numberOfInjections: Int,
+    queueBound: Int,
+    work: () -> Unit
 ) {
     ShutdownManager.run {
         val executor = Executors.newFixedThreadPool(parallelism)
@@ -56,13 +56,13 @@ fun startTightLoopInjector(
 }
 
 fun startPublishingFixedRateInjector(
-        metricRegistry: MetricRegistry,
-        parallelism: Int,
-        overallDuration: Duration,
-        injectionRate: Rate,
-        queueSizeMetricName: String = "QueueSize",
-        workDurationMetricName: String = "WorkDuration",
-        work: () -> Unit
+    metricRegistry: MetricRegistry,
+    parallelism: Int,
+    overallDuration: Duration,
+    injectionRate: Rate,
+    queueSizeMetricName: String = "QueueSize",
+    workDurationMetricName: String = "WorkDuration",
+    work: () -> Unit
 ) {
     val workSemaphore = Semaphore(0)
     metricRegistry.register(queueSizeMetricName, Gauge { workSemaphore.availablePermits() })
@@ -105,4 +105,3 @@ fun startPublishingFixedRateInjector(
         Thread.sleep(overallDuration.toMillis())
     }
 }
-

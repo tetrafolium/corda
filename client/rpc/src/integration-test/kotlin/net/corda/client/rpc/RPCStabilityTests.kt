@@ -306,7 +306,7 @@ class RPCStabilityTests {
             var terminateHandlerCalled = false
             var errorHandlerCalled = false
             val subscription = client.subscribe()
-                     .doOnTerminate{ terminateHandlerCalled = true }
+                     .doOnTerminate { terminateHandlerCalled = true }
                      .doOnError { errorHandlerCalled = true }
                      .subscribe()
 
@@ -334,9 +334,9 @@ class RPCStabilityTests {
             val trackSubscriberOpsImpl = object : TrackSubscriberOps {
                 override val protocolVersion = 0
                 val subscriberCount = AtomicInteger(0)
-                val trackSubscriberCountObservable = UnicastSubject.create<Unit>().share().
-                        doOnSubscribe { subscriberCount.incrementAndGet() }.
-                        doOnUnsubscribe { subscriberCount.decrementAndGet() }
+                val trackSubscriberCountObservable = UnicastSubject.create<Unit>().share()
+                        .doOnSubscribe { subscriberCount.incrementAndGet() }
+                        .doOnUnsubscribe { subscriberCount.decrementAndGet() }
 
                 override fun subscribe(): Observable<Unit> {
                     return trackSubscriberCountObservable

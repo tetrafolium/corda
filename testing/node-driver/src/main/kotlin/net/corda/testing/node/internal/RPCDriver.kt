@@ -57,34 +57,34 @@ import java.util.*
 import net.corda.nodeapi.internal.config.User as InternalUser
 
 inline fun <reified I : RPCOps> RPCDriverDSL.startInVmRpcClient(
-        username: String = rpcTestUser.username,
-        password: String = rpcTestUser.password,
-        configuration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default
+    username: String = rpcTestUser.username,
+    password: String = rpcTestUser.password,
+    configuration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default
 ) = startInVmRpcClient(I::class.java, username, password, configuration)
 
 inline fun <reified I : RPCOps> RPCDriverDSL.startRandomRpcClient(
-        hostAndPort: NetworkHostAndPort,
-        username: String = rpcTestUser.username,
-        password: String = rpcTestUser.password
+    hostAndPort: NetworkHostAndPort,
+    username: String = rpcTestUser.username,
+    password: String = rpcTestUser.password
 ) = startRandomRpcClient(I::class.java, hostAndPort, username, password)
 
 inline fun <reified I : RPCOps> RPCDriverDSL.startRpcClient(
-        rpcAddress: NetworkHostAndPort,
-        username: String = rpcTestUser.username,
-        password: String = rpcTestUser.password,
-        configuration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default
+    rpcAddress: NetworkHostAndPort,
+    username: String = rpcTestUser.username,
+    password: String = rpcTestUser.password,
+    configuration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default
 ) = startRpcClient(I::class.java, rpcAddress, username, password, configuration)
 
 data class RpcBrokerHandle(
-        val hostAndPort: NetworkHostAndPort?,
-        /** null if this is an InVM broker */
-        val clientTransportConfiguration: TransportConfiguration,
-        val serverControl: ActiveMQServerControl
+    val hostAndPort: NetworkHostAndPort?,
+    /** null if this is an InVM broker */
+    val clientTransportConfiguration: TransportConfiguration,
+    val serverControl: ActiveMQServerControl
 )
 
 data class RpcServerHandle(
-        val broker: RpcBrokerHandle,
-        val rpcServer: RPCServer
+    val broker: RpcBrokerHandle,
+    val rpcServer: RPCServer
 )
 
 val rpcTestUser = User("user1", "test", permissions = emptySet())
@@ -96,20 +96,20 @@ private val globalDebugPortAllocation = PortAllocation.Incremental(5005)
 private val globalMonitorPortAllocation = PortAllocation.Incremental(7005)
 
 fun <A> rpcDriver(
-        isDebug: Boolean = false,
-        driverDirectory: Path = Paths.get("build", getTimestampAsDirectoryName()),
-        portAllocation: PortAllocation = globalPortAllocation,
-        debugPortAllocation: PortAllocation = globalDebugPortAllocation,
-        systemProperties: Map<String, String> = emptyMap(),
-        useTestClock: Boolean = false,
-        startNodesInProcess: Boolean = false,
-        waitForNodesToFinish: Boolean = false,
-        extraCordappPackagesToScan: List<String> = emptyList(),
-        notarySpecs: List<NotarySpec> = emptyList(),
-        externalTrace: Trace? = null,
-        jmxPolicy: JmxPolicy = JmxPolicy(),
-        networkParameters: NetworkParameters = testNetworkParameters(),
-        dsl: RPCDriverDSL.() -> A
+    isDebug: Boolean = false,
+    driverDirectory: Path = Paths.get("build", getTimestampAsDirectoryName()),
+    portAllocation: PortAllocation = globalPortAllocation,
+    debugPortAllocation: PortAllocation = globalDebugPortAllocation,
+    systemProperties: Map<String, String> = emptyMap(),
+    useTestClock: Boolean = false,
+    startNodesInProcess: Boolean = false,
+    waitForNodesToFinish: Boolean = false,
+    extraCordappPackagesToScan: List<String> = emptyList(),
+    notarySpecs: List<NotarySpec> = emptyList(),
+    externalTrace: Trace? = null,
+    jmxPolicy: JmxPolicy = JmxPolicy(),
+    networkParameters: NetworkParameters = testNetworkParameters(),
+    dsl: RPCDriverDSL.() -> A
 ): A {
     return genericDriver(
             driverDsl = RPCDriverDSL(
@@ -156,7 +156,8 @@ private class SingleUserSecurityManager(val rpcUser: User) : ActiveMQSecurityMan
 }
 
 data class RPCDriverDSL(
-        private val driverDSL: DriverDSLImpl, private val externalTrace: Trace?
+    private val driverDSL: DriverDSLImpl,
+    private val externalTrace: Trace?
 ) : InternalDriverDSL by driverDSL {
     private companion object {
         const val notificationAddress = "notifications"
@@ -229,12 +230,12 @@ data class RPCDriverDSL(
      * @param ops The server-side implementation of the RPC interface.
      */
     fun <I : RPCOps> startInVmRpcServer(
-            rpcUser: User = rpcTestUser,
-            nodeLegalName: CordaX500Name = fakeNodeLegalName,
-            maxFileSize: Int = MAX_MESSAGE_SIZE,
-            maxBufferedBytesPerClient: Long = 10L * MAX_MESSAGE_SIZE,
-            configuration: RPCServerConfiguration = RPCServerConfiguration.default,
-            ops: I
+        rpcUser: User = rpcTestUser,
+        nodeLegalName: CordaX500Name = fakeNodeLegalName,
+        maxFileSize: Int = MAX_MESSAGE_SIZE,
+        maxBufferedBytesPerClient: Long = 10L * MAX_MESSAGE_SIZE,
+        configuration: RPCServerConfiguration = RPCServerConfiguration.default,
+        ops: I
     ): CordaFuture<RpcServerHandle> {
         return startInVmRpcBroker(rpcUser, maxFileSize, maxBufferedBytesPerClient).map { broker ->
             startRpcServerWithBrokerRunning(rpcUser, nodeLegalName, configuration, ops, broker)
@@ -250,10 +251,10 @@ data class RPCDriverDSL(
      * @param configuration The RPC client configuration.
      */
     fun <I : RPCOps> startInVmRpcClient(
-            rpcOpsClass: Class<I>,
-            username: String = rpcTestUser.username,
-            password: String = rpcTestUser.password,
-            configuration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default
+        rpcOpsClass: Class<I>,
+        username: String = rpcTestUser.username,
+        password: String = rpcTestUser.password,
+        configuration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default
     ): CordaFuture<I> {
         return driverDSL.executorService.fork {
             val client = RPCClient<I>(inVmClientTransportConfiguration, configuration)
@@ -272,8 +273,8 @@ data class RPCDriverDSL(
      * @param password The password to authenticate with.
      */
     fun startInVmArtemisSession(
-            username: String = rpcTestUser.username,
-            password: String = rpcTestUser.password
+        username: String = rpcTestUser.username,
+        password: String = rpcTestUser.password
     ): ClientSession {
         val locator = ActiveMQClient.createServerLocatorWithoutHA(inVmClientTransportConfiguration)
         val sessionFactory = locator.createSessionFactory()
@@ -296,14 +297,14 @@ data class RPCDriverDSL(
      * @param ops The server-side implementation of the RPC interface.
      */
     fun <I : RPCOps> startRpcServer(
-            serverName: String = "driver-rpc-server-${random63BitValue()}",
-            rpcUser: User = rpcTestUser,
-            nodeLegalName: CordaX500Name = fakeNodeLegalName,
-            maxFileSize: Int = MAX_MESSAGE_SIZE,
-            maxBufferedBytesPerClient: Long = 10L * MAX_MESSAGE_SIZE,
-            configuration: RPCServerConfiguration = RPCServerConfiguration.default,
-            customPort: NetworkHostAndPort? = null,
-            ops: I
+        serverName: String = "driver-rpc-server-${random63BitValue()}",
+        rpcUser: User = rpcTestUser,
+        nodeLegalName: CordaX500Name = fakeNodeLegalName,
+        maxFileSize: Int = MAX_MESSAGE_SIZE,
+        maxBufferedBytesPerClient: Long = 10L * MAX_MESSAGE_SIZE,
+        configuration: RPCServerConfiguration = RPCServerConfiguration.default,
+        customPort: NetworkHostAndPort? = null,
+        ops: I
     ): CordaFuture<RpcServerHandle> {
         return startRpcBroker(serverName, rpcUser, maxFileSize, maxBufferedBytesPerClient, customPort).map { broker ->
             startRpcServerWithBrokerRunning(rpcUser, nodeLegalName, configuration, ops, broker)
@@ -320,11 +321,11 @@ data class RPCDriverDSL(
      * @param configuration The RPC client configuration.
      */
     fun <I : RPCOps> startRpcClient(
-            rpcOpsClass: Class<I>,
-            rpcAddress: NetworkHostAndPort,
-            username: String = rpcTestUser.username,
-            password: String = rpcTestUser.password,
-            configuration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default
+        rpcOpsClass: Class<I>,
+        rpcAddress: NetworkHostAndPort,
+        username: String = rpcTestUser.username,
+        password: String = rpcTestUser.password,
+        configuration: CordaRPCClientConfigurationImpl = CordaRPCClientConfigurationImpl.default
     ): CordaFuture<I> {
         return driverDSL.executorService.fork {
             val client = RPCClient<I>(ArtemisTcpTransport.tcpTransport(ConnectionDirection.Outbound(), rpcAddress, null), configuration)
@@ -345,10 +346,10 @@ data class RPCDriverDSL(
      * @param password The password to authenticate with.
      */
     fun <I : RPCOps> startRandomRpcClient(
-            rpcOpsClass: Class<I>,
-            rpcAddress: NetworkHostAndPort,
-            username: String = rpcTestUser.username,
-            password: String = rpcTestUser.password
+        rpcOpsClass: Class<I>,
+        rpcAddress: NetworkHostAndPort,
+        username: String = rpcTestUser.username,
+        password: String = rpcTestUser.password
     ): CordaFuture<Process> {
         val process = ProcessUtilities.startJavaProcess<RandomRpcUser>(listOf(rpcOpsClass.name, rpcAddress.toString(), username, password))
         driverDSL.shutdownManager.registerProcessShutdown(process)
@@ -363,9 +364,9 @@ data class RPCDriverDSL(
      * @param password The password to authenticate with.
      */
     fun startArtemisSession(
-            rpcAddress: NetworkHostAndPort,
-            username: String = rpcTestUser.username,
-            password: String = rpcTestUser.password
+        rpcAddress: NetworkHostAndPort,
+        username: String = rpcTestUser.username,
+        password: String = rpcTestUser.password
     ): ClientSession {
         val locator = ActiveMQClient.createServerLocatorWithoutHA(createNettyClientTransportConfiguration(rpcAddress))
         val sessionFactory = locator.createSessionFactory()
@@ -380,11 +381,11 @@ data class RPCDriverDSL(
     }
 
     fun startRpcBroker(
-            serverName: String = "driver-rpc-server-${random63BitValue()}",
-            rpcUser: User = rpcTestUser,
-            maxFileSize: Int = MAX_MESSAGE_SIZE,
-            maxBufferedBytesPerClient: Long = 10L * MAX_MESSAGE_SIZE,
-            customPort: NetworkHostAndPort? = null
+        serverName: String = "driver-rpc-server-${random63BitValue()}",
+        rpcUser: User = rpcTestUser,
+        maxFileSize: Int = MAX_MESSAGE_SIZE,
+        maxBufferedBytesPerClient: Long = 10L * MAX_MESSAGE_SIZE,
+        customPort: NetworkHostAndPort? = null
     ): CordaFuture<RpcBrokerHandle> {
         val hostAndPort = customPort ?: driverDSL.portAllocation.nextHostAndPort()
         addressMustNotBeBound(driverDSL.executorService, hostAndPort)
@@ -405,9 +406,9 @@ data class RPCDriverDSL(
     }
 
     fun startInVmRpcBroker(
-            rpcUser: User = rpcTestUser,
-            maxFileSize: Int = MAX_MESSAGE_SIZE,
-            maxBufferedBytesPerClient: Long = 10L * MAX_MESSAGE_SIZE
+        rpcUser: User = rpcTestUser,
+        maxFileSize: Int = MAX_MESSAGE_SIZE,
+        maxBufferedBytesPerClient: Long = 10L * MAX_MESSAGE_SIZE
     ): CordaFuture<RpcBrokerHandle> {
         return driverDSL.executorService.fork {
             val artemisConfig = createInVmRpcServerArtemisConfig(maxFileSize, maxBufferedBytesPerClient)
@@ -428,11 +429,11 @@ data class RPCDriverDSL(
     }
 
     fun <I : RPCOps> startRpcServerWithBrokerRunning(
-            rpcUser: User = rpcTestUser,
-            nodeLegalName: CordaX500Name = fakeNodeLegalName,
-            configuration: RPCServerConfiguration = RPCServerConfiguration.default,
-            ops: I,
-            brokerHandle: RpcBrokerHandle
+        rpcUser: User = rpcTestUser,
+        nodeLegalName: CordaX500Name = fakeNodeLegalName,
+        configuration: RPCServerConfiguration = RPCServerConfiguration.default,
+        ops: I,
+        brokerHandle: RpcBrokerHandle
     ): RpcServerHandle {
         val locator = ActiveMQClient.createServerLocatorWithoutHA(brokerHandle.clientTransportConfiguration).apply {
             minLargeMessageSize = MAX_MESSAGE_SIZE

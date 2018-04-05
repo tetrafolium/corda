@@ -25,7 +25,7 @@ class FlattenedList<A>(val sourceList: ObservableList<out ObservableValue<out A>
      * ObservableValues and we need each to have a different hash.
      */
     class WrappedObservableValue<A>(
-            val observableValue: ObservableValue<A>
+        val observableValue: ObservableValue<A>
     )
 
     val indexMap = HashMap<WrappedObservableValue<out A>, Pair<Int, ChangeListener<A>>>()

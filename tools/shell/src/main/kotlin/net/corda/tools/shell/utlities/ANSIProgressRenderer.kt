@@ -23,7 +23,7 @@ abstract class ANSIProgressRenderer {
     protected var checkEmoji = false
 
     protected var treeIndex: Int = 0
-    protected var tree: List<Pair<Int,String>> = listOf()
+    protected var tree: List<Pair<Int, String>> = listOf()
 
     private var installedYet = false
 
@@ -45,9 +45,9 @@ abstract class ANSIProgressRenderer {
         _render(flowProgressHandle)
     }
 
-    protected abstract fun printLine(line:String)
+    protected abstract fun printLine(line: String)
 
-    protected abstract fun printAnsi(ansi:Ansi)
+    protected abstract fun printAnsi(ansi: Ansi)
 
     protected abstract fun setup()
 
@@ -66,7 +66,6 @@ abstract class ANSIProgressRenderer {
         prevLinesDrawn = 0
         draw(true)
 
-
         flowProgressHandle?.apply {
             stepsTreeIndexFeed?.apply {
                 treeIndex = snapshot
@@ -84,8 +83,6 @@ abstract class ANSIProgressRenderer {
             }
         }
     }
-
-
 
     @Synchronized protected fun draw(moveUp: Boolean, error: Throwable? = null) {
         if (!usingANSI) {
@@ -148,7 +145,7 @@ abstract class ANSIProgressRenderer {
                     treeIndex == tree.lastIndex -> "${Emoji.greenTick} "
                     index == treeIndex -> "${Emoji.rightArrow} "
                     error -> "${Emoji.noEntry} "
-                    else -> "    "   // Not reached yet.
+                    else -> "    " // Not reached yet.
                 }
                 a("    ".repeat(step.first))
                 a(marker)
@@ -165,11 +162,9 @@ abstract class ANSIProgressRenderer {
             return lines
         }
     }
-
-
 }
 
-class CRaSHANSIProgressRenderer(val renderPrintWriter:RenderPrintWriter) : ANSIProgressRenderer() {
+class CRaSHANSIProgressRenderer(val renderPrintWriter: RenderPrintWriter) : ANSIProgressRenderer() {
 
     override fun printLine(line: String) {
         renderPrintWriter.println(line)
@@ -184,8 +179,6 @@ class CRaSHANSIProgressRenderer(val renderPrintWriter:RenderPrintWriter) : ANSIP
         // We assume SSH always use ANSI.
         usingANSI = true
     }
-
-
 }
 
 /**
@@ -251,7 +244,7 @@ object StdoutANSIProgressRenderer : ANSIProgressRenderer() {
         }
     }
 
-    override fun printLine(line:String) {
+    override fun printLine(line: String) {
         System.out.println(line)
     }
 

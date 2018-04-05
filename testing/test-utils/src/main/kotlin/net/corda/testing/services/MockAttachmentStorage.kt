@@ -13,7 +13,6 @@ import net.corda.core.node.services.vault.AttachmentQueryCriteria
 import net.corda.core.node.services.vault.AttachmentSort
 import net.corda.core.serialization.SingletonSerializeAsToken
 import net.corda.nodeapi.internal.withContractsInJar
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.*
 import java.util.jar.JarInputStream
