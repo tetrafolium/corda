@@ -124,7 +124,7 @@ class FinanceTypesTest {
     }
 
     @Test
-    fun `calendar date preceeding`() {
+    fun `calendar date preceding`() {
         val ldn = BusinessCalendar.getInstance("London")
         val firstDay = LocalDate.of(2015, 12, 31)
         val expected = mapOf(0 to firstDay,

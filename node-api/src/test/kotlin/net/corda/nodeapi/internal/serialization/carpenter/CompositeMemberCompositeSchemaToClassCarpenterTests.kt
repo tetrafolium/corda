@@ -160,7 +160,7 @@ class CompositeMembers : AmqpCarpenterBase(AllWhitelist) {
         metaCarpenter.build()
 
         // one build iteration should have carpetned up A and worked out that B is now buildable
-        //  given it's depedencies have been satisfied
+        //  given it's dependencies have been satisfied
         assertTrue(mangleName(classTestName("A")) in metaCarpenter.objects)
         assertFalse(mangleName(classTestName("B")) in metaCarpenter.objects)
 

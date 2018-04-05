@@ -238,7 +238,7 @@ open class PersistentNetworkMapCache(
     }
 
     private fun updateInfoDB(nodeInfo: NodeInfo, session: Session) {
-        // TODO For now the main legal identity is left in NodeInfo, this should be set comparision/come up with index for NodeInfo?
+        // TODO For now the main legal identity is left in NodeInfo, this should be set comparison/come up with index for NodeInfo?
         val info = findByIdentityKey(session, nodeInfo.legalIdentitiesAndCerts.first().owningKey)
         val nodeInfoEntry = generateMappedObject(nodeInfo)
         if (info.isNotEmpty()) {

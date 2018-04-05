@@ -150,7 +150,7 @@ object DefaultKryoCustomizer {
 
         override fun <T> newInstantiatorOf(type: Class<T>): ObjectInstantiator<T> {
             // However this doesn't work for non-public classes in the java. namespace
-            val strat = if (type.name.startsWith("java.") && !isPublic(type.modifiers)) fallbackStrategy else defaultStrategy
+            val start = if (type.name.startsWith("java.") && !isPublic(type.modifiers)) fallbackStrategy else defaultStrategy
             return strat.newInstantiatorOf(type)
         }
     }

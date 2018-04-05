@@ -174,11 +174,11 @@ class GenericsTests {
         data class Container<T : Any>(val b: Inner)
         data class Wrapper<T : Any>(val c: Container<T>)
 
-        val factorys = listOf(
+        val factors = listOf(
                 SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader()),
                 SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader()))
 
-        val ser = SerializationOutput(factorys[0])
+        val ser = SerializationOutput(factors[0])
 
         ser.serialize(Wrapper<Int>(Container(Inner(1)))).apply {
             factorys.forEach {
@@ -394,7 +394,7 @@ class GenericsTests {
 
         val factory1 = testDefaultFactoryNoEvolution()
 
-        val state = LTransactionState(DState(1020304), EState(5060708, msg = "thigns"))
+        val state = LTransactionState(DState(1020304), EState(5060708, msg = "things"))
         val stateAndString = StateWrapper(state)
 
         val ser1 = TestSerializationOutput(VERBOSE, factory1).serializeAndReturnSchema(stateAndString)

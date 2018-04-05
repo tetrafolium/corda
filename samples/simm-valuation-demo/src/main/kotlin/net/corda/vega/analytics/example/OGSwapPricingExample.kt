@@ -152,7 +152,7 @@ class SwapPricingExample {
                 tradeInfo,
                 LocalDate.of(2014, 9, 12), // the start date
                 LocalDate.of(2021, 9, 12), // the end date
-                BuySell.BUY, // indicates wheter this trade is a buy or sell
+                BuySell.BUY, // indicates whether this trade is a buy or sell
                 100000000.0, // the notional amount
                 0.015) // the fixed interest rate
     }
@@ -243,7 +243,7 @@ class SwapPricingExample {
                 tradeInfo,
                 LocalDate.of(2013, 9, 12), // the start date
                 LocalDate.of(2020, 9, 12), // the end date
-                BuySell.BUY, // indicates wheter this trade is a buy or sell
+                BuySell.BUY, // indicates whether this trade is a buy or sell
                 100000000.0, // the notional amount
                 0.015) // the fixed interest rate
     }
@@ -258,7 +258,7 @@ class SwapPricingExample {
                 tradeInfo,
                 LocalDate.of(2014, 1, 17), // the start date
                 LocalDate.of(2014, 3, 17), // the end date
-                BuySell.BUY, // indicates wheter this trade is a buy or sell
+                BuySell.BUY, // indicates whether this trade is a buy or sell
                 100000000.0, // the notional amount
                 0.00123) // the fixed interest rate
     }

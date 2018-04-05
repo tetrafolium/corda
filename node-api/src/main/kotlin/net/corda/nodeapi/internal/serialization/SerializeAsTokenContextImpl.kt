@@ -34,7 +34,7 @@ class SerializeAsTokenContextImpl(override val serviceHub: ServiceHub, init: Ser
          * This results in the toToken() method getting called for any [SingletonSerializeAsToken] instances which
          * are encountered in the object graph as they are serialized and will therefore register the token to
          * object mapping for those instances.  We then immediately set the readOnly flag to stop further adhoc or
-         * accidental registrations from occuring as these could not be deserialized in a deserialization-first
+         * accidental registrations from occurring as these could not be deserialized in a deserialization-first
          * scenario if they are not part of this iniital context construction serialization.
          */
         init(this)

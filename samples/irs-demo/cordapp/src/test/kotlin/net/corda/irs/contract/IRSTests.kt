@@ -308,7 +308,7 @@ class IRSTests {
      */
     @Test
     fun `IRS Export test`() {
-        // No transactions etc required - we're just checking simple maths and export functionallity
+        // No transactions etc required - we're just checking simple maths and export functionality
         val irs = singleIRS(2)
 
         var newCalculation = irs.calculation

@@ -850,7 +850,7 @@ class ObligationTests {
      * Confirm that extraction of issuance definition works correctly.
      */
     @Test
-    fun `extraction of issuance defintion`() {
+    fun `extraction of issuance definition`() {
         val fiveKDollarsFromMegaToMega = Obligation.State(Lifecycle.NORMAL, MEGA_CORP, megaCorpDollarSettlement,
                 5000.DOLLARS.quantity, MEGA_CORP)
         val oneKDollarsFromMiniToMega = Obligation.State(Lifecycle.NORMAL, MINI_CORP, megaCorpDollarSettlement,

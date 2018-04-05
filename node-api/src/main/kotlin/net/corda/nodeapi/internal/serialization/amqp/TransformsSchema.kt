@@ -67,7 +67,7 @@ abstract class Transform : DescribedType {
 }
 
 /**
- * Transform type placeholder that allows for backward compatibility. Should a noce recieve
+ * Transform type placeholder that allows for backward compatibility. Should a noce receive
  * a transform type it doesn't recognise, we can will use this as a placeholder
  */
 class UnknownTransform : Transform() {

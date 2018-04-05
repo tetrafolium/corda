@@ -94,7 +94,7 @@ abstract class FlowLogic<out T> {
 
     /**
      * Provides access to big, heavy classes that may be reconstructed from time to time, e.g. across restarts. It is
-     * only available once the flow has started, which means it cannnot be accessed in the constructor. Either
+     * only available once the flow has started, which means it cannot be accessed in the constructor. Either
      * access this lazily or from inside [call].
      */
     val serviceHub: ServiceHub get() = stateMachine.serviceHub

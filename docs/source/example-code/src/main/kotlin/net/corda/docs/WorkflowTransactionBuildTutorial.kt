@@ -181,7 +181,7 @@ class SubmitCompletionFlow(private val ref: StateRef, private val verdict: Workf
             // Add their signature to our unmodified transaction. To check they signed the same tx.
             val agreedTx = selfSignedTx + it
             // Receive back their signature and confirm that it is for an unmodified transaction
-            // Also that the only missing signature is from teh Notary
+            // Also that the only missing signature is from the Notary
             agreedTx.verifySignaturesExcept(notary.owningKey)
             // Recheck the data of the transaction. Note we run toLedgerTransaction on the WireTransaction
             // as we do not have all the signature.

@@ -165,7 +165,7 @@ public final class Utils {
     /**
      * Determines whether a classname in qualified form is a candidate for transitive
      * loading. This should not attempt to load a classname that starts with java. as
-     * the only permissable classes have already been transformed into sandboxed
+     * the only permissible classes have already been transformed into sandboxed
      * methods
      *
      * @param qualifiedClassName

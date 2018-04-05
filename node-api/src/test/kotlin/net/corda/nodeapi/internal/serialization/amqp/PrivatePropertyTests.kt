@@ -140,7 +140,7 @@ class PrivatePropertyTests {
             // a was public so should have a synthesised getter
             assertTrue(propertySerializers[0].propertyReader is PublicPropertyReader)
 
-            // b is private and thus won't have teh getter so we'll have reverted
+            // b is private and thus won't have the getter so we'll have reverted
             // to using reflection to remove the inaccessible property
             assertTrue(propertySerializers[1].propertyReader is PrivatePropertyReader)
         }

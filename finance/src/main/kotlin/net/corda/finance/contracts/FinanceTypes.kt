@@ -130,7 +130,7 @@ enum class DateRollConvention(val direction: () -> DateRollDirection, val isModi
     /** Following is the next business date from this one. */
     Following({ DateRollDirection.FORWARD }, false),
     /**
-     * "Modified following" is the next business date, unless it's in the next month, in which case use the preceeding
+     * "Modified following" is the next business date, unless it's in the next month, in which case use the preceding
      * business date.
      */
     ModifiedFollowing({ DateRollDirection.FORWARD }, true),

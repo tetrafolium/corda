@@ -301,7 +301,7 @@ interface CordaRPCOps : RPCOps {
     fun currentNodeTime(): Instant
 
     /**
-     * Returns a [CordaFuture] which completes when the node has registered wih the network map service. It can also
+     * Returns a [CordaFuture] which completes when the node has registered with the network map service. It can also
      * complete with an exception if it is unable to.
      */
     @RPCReturnsObservables

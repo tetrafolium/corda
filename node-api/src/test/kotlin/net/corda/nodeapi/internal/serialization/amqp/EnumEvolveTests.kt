@@ -209,7 +209,7 @@ class EnumEvolveTests {
         assertEquals(DeserializeWithRename.C, obj3_C.e)
     }
 
-    // The origional version of the enum, what we'll be eventually deserialising into
+    // The original version of the enum, what we'll be eventually deserialising into
     // enum class MultiOperations { A, B, C }
     //
     // First alteration, add D
@@ -260,7 +260,7 @@ class EnumEvolveTests {
     // )
     // enum class MultiOperations { APPLE, B, CAT, D, BBB, FLUMP, G}
     //
-    // Finally, the original version of teh class that we're going to be testing with
+    // Finally, the original version of the class that we're going to be testing with
     enum class MultiOperations { A, B, C }
 
     @Test
