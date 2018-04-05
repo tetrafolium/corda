@@ -98,9 +98,8 @@ class NodeSchemaServiceTest {
             val mappedSchemas = result.returnValue.getOrThrow()
             // check against NodeCore schemas
             assertTrue(mappedSchemas.contains(NodeCoreV1.name))
-            assertFalse(mappedSchemas.contains(NodeNotaryV1.name))  // still gets loaded due TODO restriction
+            assertFalse(mappedSchemas.contains(NodeNotaryV1.name)) // still gets loaded due TODO restriction
         }
-
     }
 
     @Test
@@ -112,7 +111,6 @@ class NodeSchemaServiceTest {
             assertTrue(mappedSchemas.contains(NodeCoreV1.name))
             assertTrue(mappedSchemas.contains(NodeNotaryV1.name))
         }
-
     }
 
     @StartableByRPC

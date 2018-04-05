@@ -1,6 +1,5 @@
 package net.corda.node.utilities
 
-
 import co.paralleluniverse.fibers.FiberExecutorScheduler
 import co.paralleluniverse.fibers.Suspendable
 import co.paralleluniverse.strands.Strand
@@ -63,7 +62,6 @@ class ClockUtilsTest {
         val future = SettableFuture.create<Boolean>()
         assertFalse(NodeSchedulerService.awaitWithDeadline(stoppedClock, stoppedClock.instant().minus(1.hours), future), "Should have reached deadline")
     }
-
 
     @Test
     fun `test waiting for a deadline with future completed before wait`() {

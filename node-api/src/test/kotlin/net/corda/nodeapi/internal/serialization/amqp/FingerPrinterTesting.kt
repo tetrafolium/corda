@@ -5,7 +5,7 @@ import java.lang.reflect.Type
 import kotlin.test.assertEquals
 import net.corda.nodeapi.internal.serialization.AllWhitelist
 
-class FingerPrinterTesting  : FingerPrinter {
+class FingerPrinterTesting : FingerPrinter {
     private var index = 0
     private val cache = mutableMapOf<Type, String>()
 
@@ -51,5 +51,4 @@ class FingerPrinterTestingTests {
         assertEquals (1, blob.schema.types.size)
         assertEquals ("<descriptor name=\"net.corda:0\"/>", blob.schema.types[0].descriptor.toString())
     }
-
 }

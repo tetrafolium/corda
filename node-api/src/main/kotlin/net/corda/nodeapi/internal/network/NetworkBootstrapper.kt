@@ -4,7 +4,6 @@ import com.google.common.hash.Hashing
 import com.google.common.hash.HashingInputStream
 import com.typesafe.config.ConfigFactory
 import net.corda.cordform.CordformNode
-import net.corda.core.contracts.ContractClassName
 import net.corda.core.crypto.SecureHash
 import net.corda.core.crypto.SecureHash.Companion.parse
 import net.corda.core.identity.Party
@@ -191,7 +190,7 @@ class NetworkBootstrapper {
     private fun generateWhitelist(whitelistFile: Path, excludeWhitelistFile: Path, cordapps: List<String>?): Map<String, List<AttachmentId>> {
         val existingWhitelist = if (whitelistFile.exists()) readContractWhitelist(whitelistFile) else emptyMap()
 
-        println(if (existingWhitelist.isEmpty()) "No existing whitelist file found." else "Found existing whitelist: ${whitelistFile}")
+        println(if (existingWhitelist.isEmpty()) "No existing whitelist file found." else "Found existing whitelist: $whitelistFile")
 
         val excludeContracts = if (excludeWhitelistFile.exists()) readExcludeWhitelist(excludeWhitelistFile) else emptyList()
         if (excludeContracts.isNotEmpty()) {
@@ -213,14 +212,14 @@ class NetworkBootstrapper {
             contractClassName to (if (newHash == null || newHash in existing) existing else existing + newHash)
         }.toMap()
 
-        println("CorDapp whitelist " + (if (existingWhitelist.isEmpty()) "generated" else "updated") + " in ${whitelistFile}")
+        println("CorDapp whitelist " + (if (existingWhitelist.isEmpty()) "generated" else "updated") + " in $whitelistFile")
         return merged
     }
 
     private fun overwriteWhitelist(whitelistFile: Path, mergedWhiteList: Map<String, List<AttachmentId>>) {
         PrintStream(whitelistFile.toFile().outputStream()).use { out ->
             mergedWhiteList.forEach { (contract, attachments) ->
-                out.println("${contract}:${attachments.joinToString(",")}")
+                out.println("$contract:${attachments.joinToString(",")}")
             }
         }
     }

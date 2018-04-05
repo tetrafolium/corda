@@ -9,7 +9,6 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.jvm.javaType
 
-
 /**
  * Serializer for deserializing objects whose definition has changed since they
  * were serialised.
@@ -22,10 +21,11 @@ import kotlin.reflect.jvm.javaType
  * pre populated array as properties not present on the old constructor must be initialised in the factory
  */
 abstract class EvolutionSerializer(
-        clazz: Type,
-        factory: SerializerFactory,
-        protected val oldReaders: Map<String, OldParam>,
-        override val kotlinConstructor: KFunction<Any>?) : ObjectSerializer(clazz, factory) {
+    clazz: Type,
+    factory: SerializerFactory,
+    protected val oldReaders: Map<String, OldParam>,
+    override val kotlinConstructor: KFunction<Any>?
+) : ObjectSerializer(clazz, factory) {
 
     // explicitly set as empty to indicate it's unused by this type of serializer
     override val propertySerializers = PropertySerializersEvolution()
@@ -41,7 +41,7 @@ abstract class EvolutionSerializer(
     data class OldParam(var resultsIndex: Int, val property: PropertySerializer) {
         fun readProperty(obj: Any?, schemas: SerializationSchemas, input: DeserializationInput, new: Array<Any?>) =
                 property.readProperty(obj, schemas, input).apply {
-                    if(resultsIndex >= 0) {
+                    if (resultsIndex >= 0) {
                         new[resultsIndex] = this
                     }
                 }
@@ -82,10 +82,11 @@ abstract class EvolutionSerializer(
         }
 
         private fun makeWithConstructor(
-                new: ObjectSerializer,
-                factory: SerializerFactory,
-                constructor: KFunction<Any>,
-                readersAsSerialized: Map<String, OldParam>): AMQPSerializer<Any> {
+            new: ObjectSerializer,
+            factory: SerializerFactory,
+            constructor: KFunction<Any>,
+            readersAsSerialized: Map<String, OldParam>
+        ): AMQPSerializer<Any> {
             val constructorArgs = arrayOfNulls<Any?>(constructor.parameters.size)
 
             constructor.parameters.withIndex().forEach {
@@ -100,11 +101,12 @@ abstract class EvolutionSerializer(
         }
 
         private fun makeWithSetters(
-                new: ObjectSerializer,
-                factory: SerializerFactory,
-                constructor: KFunction<Any>,
-                readersAsSerialized: Map<String, OldParam>,
-                classProperties: Map<String, PropertyDescriptor>): AMQPSerializer<Any> {
+            new: ObjectSerializer,
+            factory: SerializerFactory,
+            constructor: KFunction<Any>,
+            readersAsSerialized: Map<String, OldParam>,
+            classProperties: Map<String, PropertyDescriptor>
+        ): AMQPSerializer<Any> {
             val setters = propertiesForSerializationFromSetters(classProperties,
                     new.type,
                     factory).associateBy({ it.getter.name }, { it })
@@ -122,8 +124,11 @@ abstract class EvolutionSerializer(
          * @param factory the [SerializerFactory] associated with the serialization
          * context this serializer is being built for
          */
-        fun make(old: CompositeType, new: ObjectSerializer,
-                 factory: SerializerFactory): AMQPSerializer<Any> {
+        fun make(
+            old: CompositeType,
+            new: ObjectSerializer,
+            factory: SerializerFactory
+        ): AMQPSerializer<Any> {
             // The order in which the properties were serialised is important and must be preserved
             val readersAsSerialized = LinkedHashMap<String, OldParam>()
             old.fields.forEach {
@@ -143,8 +148,7 @@ abstract class EvolutionSerializer(
 
             return if (classProperties.isNotEmpty() && constructor.parameters.isEmpty()) {
                 makeWithSetters(new, factory, constructor, readersAsSerialized, classProperties)
-            }
-            else {
+            } else {
                 makeWithConstructor(new, factory, constructor, readersAsSerialized)
             }
         }
@@ -156,11 +160,12 @@ abstract class EvolutionSerializer(
 }
 
 class EvolutionSerializerViaConstructor(
-        clazz: Type,
-        factory: SerializerFactory,
-        oldReaders: Map<String, EvolutionSerializer.OldParam>,
-        kotlinConstructor: KFunction<Any>?,
-        private val constructorArgs: Array<Any?>) : EvolutionSerializer (clazz, factory, oldReaders, kotlinConstructor) {
+    clazz: Type,
+    factory: SerializerFactory,
+    oldReaders: Map<String, EvolutionSerializer.OldParam>,
+    kotlinConstructor: KFunction<Any>?,
+    private val constructorArgs: Array<Any?>
+) : EvolutionSerializer (clazz, factory, oldReaders, kotlinConstructor) {
     /**
      * Unlike a normal [readObject] call where we simply apply the parameter deserialisers
      * to the object list of values we need to map that list, which is ordered per the
@@ -176,8 +181,8 @@ class EvolutionSerializerViaConstructor(
         // *must* read all the parameters in the order they were serialized
         oldReaders.values.zip(obj).map { it.first.readProperty(it.second, schemas, input, constructorArgs) }
 
-        return javaConstructor?.newInstance(*(constructorArgs)) ?:
-                throw NotSerializableException(
+        return javaConstructor?.newInstance(*(constructorArgs))
+                ?: throw NotSerializableException(
                         "Attempt to deserialize an interface: $clazz. Serialized form is invalid.")
     }
 }
@@ -187,16 +192,17 @@ class EvolutionSerializerViaConstructor(
  * named setter functions on the instantiated object.
  */
 class EvolutionSerializerViaSetters(
-        clazz: Type,
-        factory: SerializerFactory,
-        oldReaders: Map<String, EvolutionSerializer.OldParam>,
-        kotlinConstructor: KFunction<Any>?,
-        private val setters: Map<String, PropertyAccessor>) : EvolutionSerializer (clazz, factory, oldReaders, kotlinConstructor) {
+    clazz: Type,
+    factory: SerializerFactory,
+    oldReaders: Map<String, EvolutionSerializer.OldParam>,
+    kotlinConstructor: KFunction<Any>?,
+    private val setters: Map<String, PropertyAccessor>
+) : EvolutionSerializer (clazz, factory, oldReaders, kotlinConstructor) {
 
     override fun readObject(obj: Any, schemas: SerializationSchemas, input: DeserializationInput): Any {
         if (obj !is List<*>) throw NotSerializableException("Body of described type is unexpected $obj")
 
-        val instance : Any = javaConstructor?.newInstance() ?: throw NotSerializableException (
+        val instance: Any = javaConstructor?.newInstance() ?: throw NotSerializableException (
                 "Failed to instantiate instance of object $clazz")
 
         // *must* read all the parameters in the order they were serialized
@@ -218,10 +224,11 @@ class EvolutionSerializerViaSetters(
  */
 abstract class EvolutionSerializerGetterBase {
     abstract fun getEvolutionSerializer(
-            factory: SerializerFactory,
-            typeNotation: TypeNotation,
-            newSerializer: AMQPSerializer<Any>,
-            schemas: SerializationSchemas): AMQPSerializer<Any>
+        factory: SerializerFactory,
+        typeNotation: TypeNotation,
+        newSerializer: AMQPSerializer<Any>,
+        schemas: SerializationSchemas
+    ): AMQPSerializer<Any>
 }
 
 /**
@@ -229,10 +236,12 @@ abstract class EvolutionSerializerGetterBase {
  * between the received schema and the class as it exists now on the class path,
  */
 class EvolutionSerializerGetter : EvolutionSerializerGetterBase() {
-    override fun getEvolutionSerializer(factory: SerializerFactory,
-                                        typeNotation: TypeNotation,
-                                        newSerializer: AMQPSerializer<Any>,
-                                        schemas: SerializationSchemas): AMQPSerializer<Any> {
+    override fun getEvolutionSerializer(
+        factory: SerializerFactory,
+        typeNotation: TypeNotation,
+        newSerializer: AMQPSerializer<Any>,
+        schemas: SerializationSchemas
+    ): AMQPSerializer<Any> {
         return factory.getSerializersByDescriptor().computeIfAbsent(typeNotation.descriptor.name!!) {
             when (typeNotation) {
                 is CompositeType -> EvolutionSerializer.make(typeNotation, newSerializer as ObjectSerializer, factory)
@@ -252,4 +261,3 @@ class EvolutionSerializerGetter : EvolutionSerializerGetterBase() {
         }
     }
 }
-

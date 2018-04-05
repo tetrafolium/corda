@@ -312,8 +312,10 @@ class FlowFrameworkTests {
     }
 
     @InitiatingFlow
-    private class WaitForOtherSideEndBeforeSendAndReceive(val otherParty: Party,
-                                                          @Transient val receivedOtherFlowEnd: Semaphore) : FlowLogic<Unit>() {
+    private class WaitForOtherSideEndBeforeSendAndReceive(
+        val otherParty: Party,
+        @Transient val receivedOtherFlowEnd: Semaphore
+    ) : FlowLogic<Unit>() {
         @Suspendable
         override fun call() {
             // Kick off the flow on the other side ...
@@ -373,7 +375,7 @@ class FlowFrameworkTests {
         assertThatExceptionOfType(MyFlowException::class.java)
                 .isThrownBy { receivingFiber.resultFuture.getOrThrow() }
                 .withMessage("Nothing useful")
-                .withStackTraceContaining(ReceiveFlow::class.java.name)  // Make sure the stack trace is that of the receiving flow
+                .withStackTraceContaining(ReceiveFlow::class.java.name) // Make sure the stack trace is that of the receiving flow
         bobNode.database.transaction {
             assertThat(bobNode.checkpointStorage.checkpoints()).isEmpty()
         }
@@ -671,9 +673,10 @@ class FlowFrameworkTests {
     }
 
     private inline fun <reified P : FlowLogic<*>> StartedNode<*>.registerFlowFactory(
-            initiatingFlowClass: KClass<out FlowLogic<*>>,
-            initiatedFlowVersion: Int = 1,
-            noinline flowFactory: (FlowSession) -> P): CordaFuture<P> {
+        initiatingFlowClass: KClass<out FlowLogic<*>>,
+        initiatedFlowVersion: Int = 1,
+        noinline flowFactory: (FlowSession) -> P
+    ): CordaFuture<P> {
         val observable = internalRegisterFlowFactory(
                 initiatingFlowClass.java,
                 InitiatedFlowFactory.CorDapp(initiatedFlowVersion, "", flowFactory),

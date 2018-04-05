@@ -25,13 +25,15 @@ import java.security.cert.X509Certificate
  * Helper for managing the node registration process, which checks for any existing certificates and requests them if
  * needed.
  */
-class NetworkRegistrationHelper(private val config: SSLConfiguration,
-                                private val myLegalName: CordaX500Name,
-                                private val emailAddress: String,
-                                private val certService: NetworkRegistrationService,
-                                private val networkRootTrustStorePath: Path,
-                                networkRootTrustStorePassword: String,
-                                private val certRole: CertRole) {
+class NetworkRegistrationHelper(
+    private val config: SSLConfiguration,
+    private val myLegalName: CordaX500Name,
+    private val emailAddress: String,
+    private val certService: NetworkRegistrationService,
+    private val networkRootTrustStorePath: Path,
+    networkRootTrustStorePassword: String,
+    private val certRole: CertRole
+) {
 
     // Constructor for corda node, cert role is restricted to [CertRole.NODE_CA].
     constructor(config: NodeConfiguration, certService: NetworkRegistrationService, regConfig: NodeRegistrationOption) :

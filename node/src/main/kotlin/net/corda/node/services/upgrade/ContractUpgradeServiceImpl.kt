@@ -16,13 +16,13 @@ class ContractUpgradeServiceImpl : ContractUpgradeService, SingletonSerializeAsT
     @Entity
     @Table(name = "${NODE_DATABASE_PREFIX}contract_upgrades")
     class DBContractUpgrade(
-            @Id
-            @Column(name = "state_ref", length = 96)
-            var stateRef: String = "",
+        @Id
+        @Column(name = "state_ref", length = 96)
+        var stateRef: String = "",
 
-            /** refers to the UpgradedContract class name*/
-            @Column(name = "contract_class_name")
-            var upgradedContractClassName: String = ""
+        /** refers to the UpgradedContract class name*/
+        @Column(name = "contract_class_name")
+        var upgradedContractClassName: String = ""
     )
 
     private companion object {

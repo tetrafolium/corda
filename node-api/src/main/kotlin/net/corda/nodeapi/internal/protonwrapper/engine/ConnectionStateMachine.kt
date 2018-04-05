@@ -35,12 +35,14 @@ import java.util.*
  * but this threading lock is managed by the EventProcessor class that calls this.
  * It ultimately posts application packets to/from from the netty transport pipeline.
  */
-internal class ConnectionStateMachine(serverMode: Boolean,
-                                      collector: Collector,
-                                      private val localLegalName: String,
-                                      private val remoteLegalName: String,
-                                      userName: String?,
-                                      password: String?) : BaseHandler() {
+internal class ConnectionStateMachine(
+    serverMode: Boolean,
+    collector: Collector,
+    private val localLegalName: String,
+    private val remoteLegalName: String,
+    userName: String?,
+    password: String?
+) : BaseHandler() {
     companion object {
         private const val IDLE_TIMEOUT = 10000
     }

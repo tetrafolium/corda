@@ -108,13 +108,13 @@ object RPCApi {
          * @param serialisedArguments Serialised arguments to pass to the method, if any.
          */
         data class RpcRequest(
-                val clientAddress: SimpleString,
-                val methodName: String,
-                val serialisedArguments: OpaqueBytes,
-                val replyId: InvocationId,
-                val sessionId: SessionId,
-                val externalTrace: Trace? = null,
-                val impersonatedActor: Actor? = null
+            val clientAddress: SimpleString,
+            val methodName: String,
+            val serialisedArguments: OpaqueBytes,
+            val replyId: InvocationId,
+            val sessionId: SessionId,
+            val externalTrace: Trace? = null,
+            val impersonatedActor: Actor? = null
         ) : ClientToServer() {
             override fun writeToClientMessage(message: ClientMessage) {
                 MessageUtil.setJMSReplyTo(message, clientAddress)
@@ -187,9 +187,9 @@ object RPCApi {
          * Reply in response to an [ClientToServer.RpcRequest].
          */
         data class RpcReply(
-                val id: InvocationId,
-                val result: Try<Any?>,
-                override val deduplicationIdentity: String
+            val id: InvocationId,
+            val result: Try<Any?>,
+            override val deduplicationIdentity: String
         ) : ServerToClient() {
             override fun writeToClientMessage(context: SerializationContext, message: ClientMessage) {
                 message.putIntProperty(TAG_FIELD_NAME, Tag.RPC_REPLY.ordinal)
@@ -200,9 +200,9 @@ object RPCApi {
         }
 
         data class Observation(
-                val id: InvocationId,
-                val content: Notification<*>,
-                override val deduplicationIdentity: String
+            val id: InvocationId,
+            val content: Notification<*>,
+            override val deduplicationIdentity: String
         ) : ServerToClient() {
             override fun writeToClientMessage(context: SerializationContext, message: ClientMessage) {
                 message.putIntProperty(TAG_FIELD_NAME, Tag.OBSERVATION.ordinal)
@@ -310,7 +310,7 @@ private fun ActiveMQBuffer.writeInvocationId(invocationId: InvocationId) {
     this.writeLong(invocationId.timestamp.toEpochMilli())
 }
 
-private fun ActiveMQBuffer.readInvocationId() : InvocationId {
+private fun ActiveMQBuffer.readInvocationId(): InvocationId {
 
     val value = this.readString()
     val timestamp = this.readLong()

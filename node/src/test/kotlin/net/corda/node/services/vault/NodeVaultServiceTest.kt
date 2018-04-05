@@ -113,11 +113,13 @@ class NodeVaultServiceTest {
     }
 
     @Suspendable
-    private fun VaultService.unconsumedCashStatesForSpending(amount: Amount<Currency>,
-                                                             onlyFromIssuerParties: Set<AbstractParty>? = null,
-                                                             notary: Party? = null,
-                                                             lockId: UUID = UUID.randomUUID(),
-                                                             withIssuerRefs: Set<OpaqueBytes>? = null): List<StateAndRef<Cash.State>> {
+    private fun VaultService.unconsumedCashStatesForSpending(
+        amount: Amount<Currency>,
+        onlyFromIssuerParties: Set<AbstractParty>? = null,
+        notary: Party? = null,
+        lockId: UUID = UUID.randomUUID(),
+        withIssuerRefs: Set<OpaqueBytes>? = null
+    ): List<StateAndRef<Cash.State>> {
 
         val notaries = if (notary != null) listOf(notary) else null
         var baseCriteria: QueryCriteria = QueryCriteria.VaultQueryCriteria(notary = notaries)
@@ -129,7 +131,6 @@ class NodeVaultServiceTest {
 
         return tryLockFungibleStatesForSpending(lockId, baseCriteria, amount, Cash.State::class.java)
     }
-
 
     @Test
     fun `states not local to instance`() {
@@ -249,7 +250,7 @@ class NodeVaultServiceTest {
         // 2nd tx attempts to lock same states
         backgroundExecutor.submit {
             try {
-                Thread.sleep(100)   // let 1st thread soft lock them 1st
+                Thread.sleep(100) // let 1st thread soft lock them 1st
                 database.transaction {
                     vaultService.softLockReserve(softLockId2, stateRefsToSoftLock)
                     assertThat(vaultService.queryBy<Cash.State>(criteriaByLockId2).states).hasSize(3)

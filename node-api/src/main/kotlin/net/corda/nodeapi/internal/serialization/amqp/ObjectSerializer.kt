@@ -1,7 +1,6 @@
 package net.corda.nodeapi.internal.serialization.amqp
 
 import net.corda.core.utilities.contextLogger
-import net.corda.core.utilities.debug
 import net.corda.core.utilities.trace
 import net.corda.nodeapi.internal.serialization.amqp.SerializerFactory.Companion.nameForType
 import org.apache.qpid.proton.amqp.Symbol
@@ -23,7 +22,7 @@ open class ObjectSerializer(val clazz: Type, factory: SerializerFactory) : AMQPS
         private val logger = contextLogger()
     }
 
-    open internal val propertySerializers: PropertySerializers by lazy {
+    internal open val propertySerializers: PropertySerializers by lazy {
         propertiesForSerialization(kotlinConstructor, clazz, factory)
     }
 
@@ -37,7 +36,7 @@ open class ObjectSerializer(val clazz: Type, factory: SerializerFactory) : AMQPS
     // We restrict to only those annotated or whitelisted
     private val interfaces = interfacesForSerialization(clazz, factory)
 
-    open internal val typeNotation: TypeNotation by lazy {
+    internal open val typeNotation: TypeNotation by lazy {
         CompositeType(typeName, null, generateProvides(), Descriptor(typeDescriptor), generateFields())
     }
 
@@ -54,26 +53,28 @@ open class ObjectSerializer(val clazz: Type, factory: SerializerFactory) : AMQPS
     }
 
     override fun writeObject(
-            obj: Any,
-            data: Data,
-            type: Type,
-            output: SerializationOutput,
-            debugIndent: Int) = ifThrowsAppend({ clazz.typeName }) {
+        obj: Any,
+        data: Data,
+        type: Type,
+        output: SerializationOutput,
+        debugIndent: Int
+    ) = ifThrowsAppend({ clazz.typeName }) {
         // Write described
         data.withDescribed(typeNotation.descriptor) {
             // Write list
             withList {
                 propertySerializers.serializationOrder.forEach { property ->
-                    property.getter.writeProperty(obj, this, output, debugIndent+1)
+                    property.getter.writeProperty(obj, this, output, debugIndent + 1)
                 }
             }
         }
     }
 
     override fun readObject(
-            obj: Any,
-            schemas: SerializationSchemas,
-            input: DeserializationInput): Any = ifThrowsAppend({ clazz.typeName }) {
+        obj: Any,
+        schemas: SerializationSchemas,
+        input: DeserializationInput
+    ): Any = ifThrowsAppend({ clazz.typeName }) {
         if (obj is List<*>) {
             if (obj.size > propertySerializers.size) {
                 throw NotSerializableException("Too many properties in described type $typeName")
@@ -90,25 +91,27 @@ open class ObjectSerializer(val clazz: Type, factory: SerializerFactory) : AMQPS
     }
 
     private fun readObjectBuildViaConstructor(
-            obj: List<*>,
-            schemas: SerializationSchemas,
-            input: DeserializationInput) : Any = ifThrowsAppend({ clazz.typeName }){
+        obj: List<*>,
+        schemas: SerializationSchemas,
+        input: DeserializationInput
+    ): Any = ifThrowsAppend({ clazz.typeName }) {
         logger.trace { "Calling construction based construction for ${clazz.typeName}" }
 
         return construct (propertySerializers.serializationOrder
                 .zip(obj)
                 .map { Pair(it.first.initialPosition, it.first.getter.readProperty(it.second, schemas, input)) }
-                .sortedWith(compareBy({it.first}))
+                .sortedWith(compareBy({ it.first }))
                 .map { it.second })
     }
 
     private fun readObjectBuildViaSetters(
-            obj: List<*>,
-            schemas: SerializationSchemas,
-            input: DeserializationInput) : Any = ifThrowsAppend({ clazz.typeName }){
+        obj: List<*>,
+        schemas: SerializationSchemas,
+        input: DeserializationInput
+    ): Any = ifThrowsAppend({ clazz.typeName }) {
         logger.trace { "Calling setter based construction for ${clazz.typeName}" }
 
-        val instance : Any = javaConstructor?.newInstance() ?: throw NotSerializableException (
+        val instance: Any = javaConstructor?.newInstance() ?: throw NotSerializableException (
                 "Failed to instantiate instance of object $clazz")
 
         // read the properties out of the serialised form, since we're invoking the setters the order we
@@ -136,7 +139,7 @@ open class ObjectSerializer(val clazz: Type, factory: SerializerFactory) : AMQPS
     fun construct(properties: List<Any?>): Any {
         logger.trace { "Calling constructor: '$javaConstructor' with properties '$properties'" }
 
-        return javaConstructor?.newInstance(*properties.toTypedArray()) ?:
-                throw NotSerializableException("Attempt to deserialize an interface: $clazz. Serialized form is invalid.")
+        return javaConstructor?.newInstance(*properties.toTypedArray())
+                ?: throw NotSerializableException("Attempt to deserialize an interface: $clazz. Serialized form is invalid.")
     }
 }

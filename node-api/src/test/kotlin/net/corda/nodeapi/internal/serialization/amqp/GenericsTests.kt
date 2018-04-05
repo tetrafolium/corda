@@ -7,18 +7,14 @@ import net.corda.testing.common.internal.ProjectStructure.projectRootDir
 import org.junit.Test
 import net.corda.core.identity.AbstractParty
 import net.corda.core.identity.CordaX500Name
-import net.corda.core.identity.Party
-import net.corda.core.transactions.WireTransaction
 import net.corda.testing.core.TestIdentity
-import org.hibernate.Transaction
 import java.io.File
-import java.net.URI
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.test.assertEquals
 
 data class TestContractState(
-        override val participants: List<AbstractParty>
+    override val participants: List<AbstractParty>
 ) : ContractState
 
 class TestAttachmentConstraint : AttachmentConstraint {
@@ -200,8 +196,9 @@ class GenericsTests {
     data class ForceWildcard<out T>(val t: T)
 
     private fun forceWildcardSerialize(
-            a: ForceWildcard<*>,
-            factory: SerializerFactory = SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader())): SerializedBytes<*> {
+        a: ForceWildcard<*>,
+        factory: SerializerFactory = SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader())
+    ): SerializedBytes<*> {
         val bytes = SerializationOutput(factory).serializeAndReturnSchema(a)
         factory.getSerializersByDescriptor().printKeyToType()
         bytes.printSchema()
@@ -210,22 +207,25 @@ class GenericsTests {
 
     @Suppress("UNCHECKED_CAST")
     private fun forceWildcardDeserializeString(
-            bytes: SerializedBytes<*>,
-            factory: SerializerFactory = SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader())) {
+        bytes: SerializedBytes<*>,
+        factory: SerializerFactory = SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader())
+    ) {
         DeserializationInput(factory).deserialize(bytes as SerializedBytes<ForceWildcard<String>>)
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun forceWildcardDeserializeDouble(
-            bytes: SerializedBytes<*>,
-            factory: SerializerFactory = SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader())) {
+        bytes: SerializedBytes<*>,
+        factory: SerializerFactory = SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader())
+    ) {
         DeserializationInput(factory).deserialize(bytes as SerializedBytes<ForceWildcard<Double>>)
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun forceWildcardDeserialize(
-            bytes: SerializedBytes<*>,
-            factory: SerializerFactory = SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader())) {
+        bytes: SerializedBytes<*>,
+        factory: SerializerFactory = SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader())
+    ) {
         DeserializationInput(factory).deserialize(bytes as SerializedBytes<ForceWildcard<*>>)
     }
 
@@ -271,7 +271,7 @@ class GenericsTests {
     }
 
     data class StateAndString(val state: TransactionState<*>, val ref: String)
-    data class GenericStateAndString<out T: ContractState>(val state: TransactionState<T>, val ref: String)
+    data class GenericStateAndString<out T : ContractState>(val state: TransactionState<T>, val ref: String)
 
     //
     // If this doesn't blow up all is fine
@@ -301,7 +301,6 @@ class GenericsTests {
         val factory4 = SerializerFactory(AllWhitelist, cl())
         factory4.register(net.corda.nodeapi.internal.serialization.amqp.custom.PublicKeySerializer)
         val des2 = DeserializationInput(factory4).deserializeAndReturnEnvelope(ser2.obj)
-
     }
 
     @Test
@@ -329,7 +328,6 @@ class GenericsTests {
 
         fingerprintingDiffersStrip(Collections.singletonList(sas))
     }
-
 
     //
     // Force object to be serialised as Example<T> and deserialized as Example<?>
@@ -366,7 +364,7 @@ class GenericsTests {
 
     @Test
     fun nestedGenericsWithBound() {
-        open class BaseState(val a : Int)
+        open class BaseState(val a: Int)
         class DState(a: Int) : BaseState(a)
         data class LTransactionState<out T : BaseState> constructor(val data: T)
         data class StateWrapper<out T : BaseState>(val state: LTransactionState<T>)
@@ -387,12 +385,12 @@ class GenericsTests {
 
     @Test
     fun nestedMultiGenericsWithBound() {
-        open class BaseState(val a : Int)
+        open class BaseState(val a: Int)
         class DState(a: Int) : BaseState(a)
         class EState(a: Int, val msg: String) : BaseState(a)
 
-        data class LTransactionState<out T1 : BaseState, out T2: BaseState> (val data: T1, val context: T2)
-        data class StateWrapper<out T1 : BaseState, out T2: BaseState>(val state: LTransactionState<T1, T2>)
+        data class LTransactionState<out T1 : BaseState, out T2 : BaseState> (val data: T1, val context: T2)
+        data class StateWrapper<out T1 : BaseState, out T2 : BaseState>(val state: LTransactionState<T1, T2>)
 
         val factory1 = testDefaultFactoryNoEvolution()
 
@@ -406,12 +404,12 @@ class GenericsTests {
         val des1 = DeserializationInput(factory2).deserializeAndReturnEnvelope(ser1.obj)
 
         assertEquals(state.data.a, des1.obj.state.data.a)
-        assertEquals(state.context.a,  des1.obj.state.context.a)
+        assertEquals(state.context.a, des1.obj.state.context.a)
     }
 
     @Test
     fun nestedMultiGenericsNoBound() {
-        open class BaseState(val a : Int)
+        open class BaseState(val a: Int)
         class DState(a: Int) : BaseState(a)
         class EState(a: Int, val msg: String) : BaseState(a)
 
@@ -439,7 +437,7 @@ class GenericsTests {
         val factory1 = testDefaultFactoryNoEvolution()
         val factory2 = testDefaultFactory()
 
-        open class BaseState<T1, T2>(open val a : T1, open val b: T2)
+        open class BaseState<T1, T2>(open val a: T1, open val b: T2)
         class DState<T1, T2>(a: T1, b: T2) : BaseState<T1, T2>(a, b)
 
         val state = DState(100, "hello")
@@ -468,7 +466,7 @@ class GenericsTests {
         open class Bound(val a: Int)
 
         open class BaseState<out T1 : Bound>(open val a: T1)
-        class DState<out T1: Bound>(a: T1) : BaseState<T1>(a)
+        class DState<out T1 : Bound>(a: T1) : BaseState<T1>(a)
 
         val state = DState(Bound(100))
         val ser1 = TestSerializationOutput(VERBOSE, factory1).serializeAndReturnSchema(state)
@@ -479,12 +477,12 @@ class GenericsTests {
 
     @Test
     fun nestedMultiGenericsAtBottomWithBound() {
-        open class BaseState<T1, T2>(val a : T1, val b: T2)
+        open class BaseState<T1, T2>(val a: T1, val b: T2)
         class DState<T1, T2>(a: T1, b: T2) : BaseState<T1, T2>(a, b)
         class EState<T1, T2>(a: T1, b: T2, val c: Long) : BaseState<T1, T2>(a, b)
 
-        data class LTransactionState<T1, T2, T3 : BaseState<T1, T2>, out T4: BaseState<T1, T2>> (val data: T3, val context: T4)
-        data class StateWrapper<T1, T2, T3 : BaseState<T1, T2>, out T4: BaseState<T1, T2>>(val state: LTransactionState<T1, T2, T3, T4>)
+        data class LTransactionState<T1, T2, T3 : BaseState<T1, T2>, out T4 : BaseState<T1, T2>> (val data: T3, val context: T4)
+        data class StateWrapper<T1, T2, T3 : BaseState<T1, T2>, out T4 : BaseState<T1, T2>>(val state: LTransactionState<T1, T2, T3, T4>)
 
         val factory1 = testDefaultFactoryNoEvolution()
 
@@ -498,7 +496,7 @@ class GenericsTests {
         val des1 = DeserializationInput(factory2).deserializeAndReturnEnvelope(ser1.obj)
 
         assertEquals(state.data.a, des1.obj.state.data.a)
-        assertEquals(state.context.a,  des1.obj.state.context.a)
+        assertEquals(state.context.a, des1.obj.state.context.a)
     }
 
     fun implemntsGeneric() {

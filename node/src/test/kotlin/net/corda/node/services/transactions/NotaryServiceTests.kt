@@ -219,7 +219,6 @@ class NotaryServiceTests {
                     val alteredMessageData = messageData.copy(firstPayload = alteredPayload.serialize())
                     val alteredMessage = InMemoryMessage(message.topic, OpaqueBytes(alteredMessageData.serialize().bytes), message.uniqueMessageId)
                     messagingService.send(alteredMessage, target, retryId)
-
                 } else {
                     messagingService.send(message, target, retryId)
                 }

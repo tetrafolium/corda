@@ -17,11 +17,12 @@ enum class SchemaFlags {
  *   - [EnumSchema]
  */
 abstract class Schema(
-        val name: String,
-        var fields: Map<String, Field>,
-        val superclass: Schema? = null,
-        val interfaces: List<Class<*>> = emptyList(),
-        updater: (String, Field) -> Unit) {
+    val name: String,
+    var fields: Map<String, Field>,
+    val superclass: Schema? = null,
+    val interfaces: List<Class<*>> = emptyList(),
+    updater: (String, Field) -> Unit
+) {
     private fun Map<String, Field>.descriptors() = LinkedHashMap(this.mapValues { it.value.descriptor })
 
     var flags: EnumMap<SchemaFlags, Boolean> = EnumMap(SchemaFlags::class.java)
@@ -65,10 +66,10 @@ fun EnumMap<SchemaFlags, Boolean>.simpleFieldAccess(): Boolean {
  * Represents a concrete object.
  */
 class ClassSchema(
-        name: String,
-        fields: Map<String, Field>,
-        superclass: Schema? = null,
-        interfaces: List<Class<*>> = emptyList()
+    name: String,
+    fields: Map<String, Field>,
+    superclass: Schema? = null,
+    interfaces: List<Class<*>> = emptyList()
 ) : Schema(name, fields, superclass, interfaces, { newName, field -> field.name = newName }) {
     override fun generateFields(cw: ClassWriter) {
         cw.apply { fields.forEach { it.value.generateField(this) } }
@@ -80,10 +81,10 @@ class ClassSchema(
  * if that class should be implementing that interface.
  */
 class InterfaceSchema(
-        name: String,
-        fields: Map<String, Field>,
-        superclass: Schema? = null,
-        interfaces: List<Class<*>> = emptyList()
+    name: String,
+    fields: Map<String, Field>,
+    superclass: Schema? = null,
+    interfaces: List<Class<*>> = emptyList()
 ) : Schema(name, fields, superclass, interfaces, { newName, field -> field.name = newName }) {
     override fun generateFields(cw: ClassWriter) {
         cw.apply { fields.forEach { it.value.generateField(this) } }
@@ -94,8 +95,8 @@ class InterfaceSchema(
  * Represents an enumerated type.
  */
 class EnumSchema(
-        name: String,
-        fields: Map<String, Field>
+    name: String,
+    fields: Map<String, Field>
 ) : Schema(name, fields, null, emptyList(), { fieldName, field ->
     (field as EnumField).name = fieldName
     field.descriptor = "L${name.replace(".", "/")};"
@@ -116,13 +117,12 @@ class EnumSchema(
  */
 object CarpenterSchemaFactory {
     fun newInstance(
-            name: String,
-            fields: Map<String, Field>,
-            superclass: Schema? = null,
-            interfaces: List<Class<*>> = emptyList(),
-            isInterface: Boolean = false
+        name: String,
+        fields: Map<String, Field>,
+        superclass: Schema? = null,
+        interfaces: List<Class<*>> = emptyList(),
+        isInterface: Boolean = false
     ): Schema =
             if (isInterface) InterfaceSchema(name, fields, superclass, interfaces)
             else ClassSchema(name, fields, superclass, interfaces)
 }
-

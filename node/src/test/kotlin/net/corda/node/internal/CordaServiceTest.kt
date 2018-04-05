@@ -42,7 +42,7 @@ class DummyServiceFlow : FlowLogic<InvocationContext>() {
 }
 
 @CordaService
-class TestCordaService(val appServiceHub: AppServiceHub): SingletonSerializeAsToken() {
+class TestCordaService(val appServiceHub: AppServiceHub) : SingletonSerializeAsToken() {
     fun startServiceFlow() {
         val handle = appServiceHub.startFlow(DummyServiceFlow())
         val context = handle.returnValue.get()
@@ -59,16 +59,14 @@ class TestCordaService(val appServiceHub: AppServiceHub): SingletonSerializeAsTo
         assertTrue(count.get() > 1)
         subscriber.unsubscribe()
     }
-
 }
 
 @CordaService
-class TestCordaService2(val appServiceHub: AppServiceHub): SingletonSerializeAsToken() {
+class TestCordaService2(val appServiceHub: AppServiceHub) : SingletonSerializeAsToken() {
     fun startInvalidRPCFlow() {
         val handle = appServiceHub.startFlow(DummyRPCFlow())
         handle.returnValue.get()
     }
-
 }
 
 @CordaService
@@ -80,7 +78,7 @@ class CordaServiceTest {
 
     @Before
     fun start() {
-        mockNet = MockNetwork(threadPerNode = true, cordappPackages = listOf("net.corda.node.internal","net.corda.finance"))
+        mockNet = MockNetwork(threadPerNode = true, cordappPackages = listOf("net.corda.node.internal", "net.corda.finance"))
         nodeA = mockNet.createNode()
         mockNet.startNodes()
     }
@@ -113,11 +111,9 @@ class CordaServiceTest {
         assertFailsWith<IllegalArgumentException> { service.startInvalidRPCFlow() }
     }
 
-
     @Test
     fun `Test flow with progress tracking`() {
         val service = nodeA.services.cordaService(TestCordaService::class.java)
         service.startServiceFlowAndTrack()
     }
-
 }

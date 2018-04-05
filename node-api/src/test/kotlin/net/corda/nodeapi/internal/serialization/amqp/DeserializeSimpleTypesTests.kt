@@ -490,7 +490,5 @@ class DeserializeSimpleTypesTests {
         assertEquals(3, da2.a?.a?.b)
         assertEquals(2, da2.a?.a?.a?.b)
         assertEquals(1, da2.a?.a?.a?.a?.b)
-
     }
 }
-

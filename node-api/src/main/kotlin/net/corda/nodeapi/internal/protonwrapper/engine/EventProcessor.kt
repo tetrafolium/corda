@@ -29,12 +29,14 @@ import kotlin.concurrent.withLock
  * and simple sliding window flow control, so that these events don't have to live inside ConnectionStateMachine.
  * Everything here is single threaded, because the proton-j library has to be run that way.
  */
-internal class EventProcessor(channel: Channel,
-                              serverMode: Boolean,
-                              localLegalName: String,
-                              remoteLegalName: String,
-                              userName: String?,
-                              password: String?) : BaseHandler() {
+internal class EventProcessor(
+    channel: Channel,
+    serverMode: Boolean,
+    localLegalName: String,
+    remoteLegalName: String,
+    userName: String?,
+    password: String?
+) : BaseHandler() {
     companion object {
         private const val FLOW_WINDOW_SIZE = 10
     }

@@ -8,8 +8,9 @@ sealed class InitiatedFlowFactory<out F : FlowLogic<*>> {
     fun createFlow(initiatingFlowSession: FlowSession): F = factory(initiatingFlowSession)
 
     data class Core<out F : FlowLogic<*>>(override val factory: (FlowSession) -> F) : InitiatedFlowFactory<F>()
-    data class CorDapp<out F : FlowLogic<*>>(val flowVersion: Int,
-                                             val appName: String,
-                                             override val factory: (FlowSession) -> F) : InitiatedFlowFactory<F>()
+    data class CorDapp<out F : FlowLogic<*>>(
+        val flowVersion: Int,
+        val appName: String,
+        override val factory: (FlowSession) -> F
+    ) : InitiatedFlowFactory<F>()
 }
-

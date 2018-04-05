@@ -84,7 +84,6 @@ class EnumEvolveTests {
         assertEquals(DeserializeNewerSetToUnknown2.C, obj3.e)
     }
 
-
     // Version of the class as it was serialised, evolve rule purposfuly not included to
     // test failure conditions
     //

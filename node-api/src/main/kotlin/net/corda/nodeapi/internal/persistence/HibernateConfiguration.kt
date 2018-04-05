@@ -26,10 +26,10 @@ import javax.management.ObjectName
 import javax.persistence.AttributeConverter
 
 class HibernateConfiguration(
-        schemas: Set<MappedSchema>,
-        private val databaseConfig: DatabaseConfig,
-        private val attributeConverters: Collection<AttributeConverter<*, *>>,
-        val cordappClassLoader: ClassLoader? = null
+    schemas: Set<MappedSchema>,
+    private val databaseConfig: DatabaseConfig,
+    private val attributeConverters: Collection<AttributeConverter<*, *>>,
+    val cordappClassLoader: ClassLoader? = null
 ) {
     companion object {
         private val logger = contextLogger()
@@ -84,8 +84,7 @@ class HibernateConfiguration(
 
         try {
             mbeanServer.registerMBean(statisticsMBean, statsName)
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             logger.warn(e.message)
         }
     }

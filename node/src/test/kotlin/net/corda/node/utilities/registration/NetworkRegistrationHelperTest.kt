@@ -175,8 +175,10 @@ class NetworkRegistrationHelperTest {
         }
     }
 
-    private fun createNodeCaCertPath(type: CertificateType = CertificateType.NODE_CA,
-                                     legalName: CordaX500Name = nodeLegalName): List<X509Certificate> {
+    private fun createNodeCaCertPath(
+        type: CertificateType = CertificateType.NODE_CA,
+        legalName: CordaX500Name = nodeLegalName
+    ): List<X509Certificate> {
         val (rootCa, intermediateCa) = createDevIntermediateCaCertPath()
         val keyPair = Crypto.generateKeyPair(X509Utilities.DEFAULT_TLS_SIGNATURE_SCHEME)
         val nameConstraints = NameConstraints(arrayOf(GeneralSubtree(GeneralName(GeneralName.directoryName, legalName.x500Name))), arrayOf())
@@ -190,8 +192,10 @@ class NetworkRegistrationHelperTest {
         return listOf(nodeCaCert, intermediateCa.certificate, rootCa.certificate)
     }
 
-    private fun createServiceIdentityCertPath(type: CertificateType = CertificateType.SERVICE_IDENTITY,
-                                              legalName: CordaX500Name = nodeLegalName): List<X509Certificate> {
+    private fun createServiceIdentityCertPath(
+        type: CertificateType = CertificateType.SERVICE_IDENTITY,
+        legalName: CordaX500Name = nodeLegalName
+    ): List<X509Certificate> {
         val (rootCa, intermediateCa) = createDevIntermediateCaCertPath()
         val keyPair = Crypto.generateKeyPair()
         val serviceIdentityCert = X509Utilities.createCertificate(

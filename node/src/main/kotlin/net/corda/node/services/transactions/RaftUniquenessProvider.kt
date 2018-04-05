@@ -51,11 +51,11 @@ import javax.persistence.Table
  */
 @ThreadSafe
 class RaftUniquenessProvider(
-        private val transportConfiguration: NodeSSLConfiguration,
-        private val db: CordaPersistence,
-        private val clock: Clock,
-        private val metrics: MetricRegistry,
-        private val raftConfig: RaftConfig
+    private val transportConfiguration: NodeSSLConfiguration,
+    private val db: CordaPersistence,
+    private val clock: Clock,
+    private val metrics: MetricRegistry,
+    private val raftConfig: RaftConfig
 ) : UniquenessProvider, SingletonSerializeAsToken() {
     companion object {
         private val log = contextLogger()
@@ -69,14 +69,12 @@ class RaftUniquenessProvider(
                             Pair(
                                     StateRef(txhash = SecureHash.parse(txId), index = index),
                                     Pair(it.index, SecureHash.parse(it.value) as SecureHash))
-
                         },
                         toPersistentEntity = { k: StateRef, v: Pair<Long, SecureHash> ->
                             CommittedState(
                                     PersistentStateRef(k),
                                     v.second.toString(),
                                     v.first)
-
                         },
                         persistentEntityClass = CommittedState::class.java
                 )
@@ -88,12 +86,12 @@ class RaftUniquenessProvider(
     @Entity
     @Table(name = "${NODE_DATABASE_PREFIX}raft_committed_states")
     class CommittedState(
-            @EmbeddedId
-            val id: PersistentStateRef,
-            @Column(name = "consuming_transaction_id")
-            var value: String = "",
-            @Column(name = "raft_log_index")
-            var index: Long = 0
+        @EmbeddedId
+        val id: PersistentStateRef,
+        @Column(name = "consuming_transaction_id")
+        var value: String = "",
+        @Column(name = "raft_log_index")
+        var index: Long = 0
     )
 
     /** Directory storing the Raft log and state machine snapshots */
@@ -186,7 +184,6 @@ class RaftUniquenessProvider(
         })
     }
 
-
     override fun commit(states: List<StateRef>, txId: SecureHash, callerIdentity: Party, requestSignature: NotarisationRequestSignature) {
         log.debug("Attempting to commit input states: ${states.joinToString()}")
         val commitCommand = RaftTransactionCommitLog.Commands.CommitTransaction(
@@ -204,5 +201,4 @@ class RaftUniquenessProvider(
         log.debug("All input states of transaction $txId have been committed")
     }
 }
-
 

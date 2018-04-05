@@ -15,7 +15,7 @@ inline fun <reified E : Throwable, R> eventually(duration: Duration, f: () -> R)
         } catch (e: Throwable) {
             when (e) {
                 is E -> {
-                }// ignore and continue
+                } // ignore and continue
                 else -> throw e // unexpected exception type - rethrow
             }
         }

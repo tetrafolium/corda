@@ -223,7 +223,7 @@ class NetworkMapUpdaterTest {
         Thread.sleep(2L * cacheExpiryMs)
         val newHash = newParameters.serialize().hash
         val keyPair = Crypto.generateKeyPair()
-        updater.acceptNewNetworkParameters(newHash, { hash -> hash.serialize().sign(keyPair)})
+        updater.acceptNewNetworkParameters(newHash, { hash -> hash.serialize().sign(keyPair) })
         verify(networkMapClient).ackNetworkParametersUpdate(any())
         val updateFile = baseDir / NETWORK_PARAMS_UPDATE_FILE_NAME
         val signedNetworkParams = updateFile.readObject<SignedNetworkParameters>()

@@ -210,7 +210,6 @@ object InputStreamSerializer : Serializer<InputStream>() {
         }
         return ByteArrayInputStream(flattened)
     }
-
 }
 
 inline fun <T> Kryo.useClassLoader(cl: ClassLoader, body: () -> T): T {
@@ -255,7 +254,7 @@ object NotaryChangeWireTransactionSerializer : Serializer<NotaryChangeWireTransa
     }
 
     override fun read(kryo: Kryo, input: Input, type: Class<NotaryChangeWireTransaction>): NotaryChangeWireTransaction {
-        val components : List<OpaqueBytes> = uncheckedCast(kryo.readClassAndObject(input))
+        val components: List<OpaqueBytes> = uncheckedCast(kryo.readClassAndObject(input))
         return NotaryChangeWireTransaction(components)
     }
 }
@@ -431,9 +430,10 @@ class RPCKryo(observableSerializer: Serializer<Observable<*>>, serializationCont
 }
 
 inline fun <T : Any> Kryo.register(
-        type: KClass<T>,
-        crossinline read: (Kryo, Input) -> T,
-        crossinline write: (Kryo, Output, T) -> Unit): Registration {
+    type: KClass<T>,
+    crossinline read: (Kryo, Input) -> T,
+    crossinline write: (Kryo, Output, T) -> Unit
+): Registration {
     return register(
             type.java,
             object : Serializer<T>() {

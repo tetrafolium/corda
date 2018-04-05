@@ -20,7 +20,6 @@ import java.nio.file.Path
 import java.time.Duration
 import java.util.*
 
-
 val Int.MB: Long get() = this * 1024L * 1024L
 
 interface NodeConfiguration : NodeSSLConfiguration {
@@ -80,10 +79,11 @@ fun NodeConfiguration.shouldStartSSHDaemon() = this.sshd != null
 fun NodeConfiguration.shouldStartLocalShell() = !this.noLocalShell && System.console() != null && this.devMode
 fun NodeConfiguration.shouldInitCrashShell() = shouldStartLocalShell() || shouldStartSSHDaemon()
 
-data class NotaryConfig(val validating: Boolean,
-                        val raft: RaftConfig? = null,
-                        val bftSMaRt: BFTSMaRtConfiguration? = null,
-                        val custom: Boolean = false
+data class NotaryConfig(
+    val validating: Boolean,
+    val raft: RaftConfig? = null,
+    val bftSMaRt: BFTSMaRtConfiguration? = null,
+    val custom: Boolean = false
 ) {
     init {
         require(raft == null || bftSMaRt == null || !custom) {
@@ -97,66 +97,68 @@ data class RaftConfig(val nodeAddress: NetworkHostAndPort, val clusterAddresses:
 
 /** @param exposeRaces for testing only, so its default is not in reference.conf but here. */
 data class BFTSMaRtConfiguration(
-        val replicaId: Int,
-        val clusterAddresses: List<NetworkHostAndPort>,
-        val debug: Boolean = false,
-        val exposeRaces: Boolean = false
+    val replicaId: Int,
+    val clusterAddresses: List<NetworkHostAndPort>,
+    val debug: Boolean = false,
+    val exposeRaces: Boolean = false
 ) {
     init {
         require(replicaId >= 0) { "replicaId cannot be negative" }
     }
 }
 
-data class BridgeConfiguration(val retryIntervalMs: Long,
-                               val maxRetryIntervalMin: Long,
-                               val retryIntervalMultiplier: Double)
+data class BridgeConfiguration(
+    val retryIntervalMs: Long,
+    val maxRetryIntervalMin: Long,
+    val retryIntervalMultiplier: Double
+)
 
 data class ActiveMqServerConfiguration(val bridge: BridgeConfiguration)
 
 fun Config.parseAsNodeConfiguration(): NodeConfiguration = parseAs<NodeConfigurationImpl>()
 
 data class NodeConfigurationImpl(
-        /** This is not retrieved from the config file but rather from a command line argument. */
-        override val baseDirectory: Path,
-        override val myLegalName: CordaX500Name,
-        override val jmxMonitoringHttpPort: Int? = null,
-        override val emailAddress: String,
-        override val keyStorePassword: String,
-        override val trustStorePassword: String,
-        override val dataSourceProperties: Properties,
-        override val compatibilityZoneURL: URL? = null,
-        override val rpcUsers: List<User>,
-        override val security : SecurityConfiguration? = null,
-        override val verifierType: VerifierType,
+    /** This is not retrieved from the config file but rather from a command line argument. */
+    override val baseDirectory: Path,
+    override val myLegalName: CordaX500Name,
+    override val jmxMonitoringHttpPort: Int? = null,
+    override val emailAddress: String,
+    override val keyStorePassword: String,
+    override val trustStorePassword: String,
+    override val dataSourceProperties: Properties,
+    override val compatibilityZoneURL: URL? = null,
+    override val rpcUsers: List<User>,
+    override val security: SecurityConfiguration? = null,
+    override val verifierType: VerifierType,
         // TODO typesafe config supports the notion of durations. Make use of that by mapping it to java.time.Duration.
         // Then rename this to messageRedeliveryDelay and make it of type Duration
-        override val messageRedeliveryDelaySeconds: Int = 30,
-        override val p2pAddress: NetworkHostAndPort,
-        private val rpcAddress: NetworkHostAndPort? = null,
-        private val rpcSettings: NodeRpcSettings,
+    override val messageRedeliveryDelaySeconds: Int = 30,
+    override val p2pAddress: NetworkHostAndPort,
+    private val rpcAddress: NetworkHostAndPort? = null,
+    private val rpcSettings: NodeRpcSettings,
         // TODO This field is slightly redundant as p2pAddress is sufficient to hold the address of the node's MQ broker.
         // Instead this should be a Boolean indicating whether that broker is an internal one started by the node or an external one
-        override val messagingServerAddress: NetworkHostAndPort?,
-        override val notary: NotaryConfig?,
-        override val certificateChainCheckPolicies: List<CertChainPolicyConfig>,
-        override val devMode: Boolean = false,
-        override val noLocalShell: Boolean = false,
-        override val devModeOptions: DevModeOptions? = null,
-        override val useTestClock: Boolean = false,
-        override val detectPublicIp: Boolean = true,
-        override val activeMQServer: ActiveMqServerConfiguration,
+    override val messagingServerAddress: NetworkHostAndPort?,
+    override val notary: NotaryConfig?,
+    override val certificateChainCheckPolicies: List<CertChainPolicyConfig>,
+    override val devMode: Boolean = false,
+    override val noLocalShell: Boolean = false,
+    override val devModeOptions: DevModeOptions? = null,
+    override val useTestClock: Boolean = false,
+    override val detectPublicIp: Boolean = true,
+    override val activeMQServer: ActiveMqServerConfiguration,
         // TODO See TODO above. Rename this to nodeInfoPollingFrequency and make it of type Duration
-        override val additionalNodeInfoPollingFrequencyMsec: Long = 5.seconds.toMillis(),
-        override val sshd: SSHDConfiguration? = null,
-        override val database: DatabaseConfig = DatabaseConfig(initialiseSchema = devMode, exportHibernateJMXStatistics = devMode),
-        private val transactionCacheSizeMegaBytes: Int? = null,
-        private val attachmentContentCacheSizeMegaBytes: Int? = null,
-        override val attachmentCacheBound: Long = NodeConfiguration.defaultAttachmentCacheBound,
+    override val additionalNodeInfoPollingFrequencyMsec: Long = 5.seconds.toMillis(),
+    override val sshd: SSHDConfiguration? = null,
+    override val database: DatabaseConfig = DatabaseConfig(initialiseSchema = devMode, exportHibernateJMXStatistics = devMode),
+    private val transactionCacheSizeMegaBytes: Int? = null,
+    private val attachmentContentCacheSizeMegaBytes: Int? = null,
+    override val attachmentCacheBound: Long = NodeConfiguration.defaultAttachmentCacheBound,
         // do not use or remove (breaks DemoBench together with rejection of unknown configuration keys during parsing)
-        private val h2port: Int  = 0,
+    private val h2port: Int = 0,
         // do not use or remove (used by Capsule)
-        private val jarDirs: List<String> = emptyList()
-    ) : NodeConfiguration {
+    private val jarDirs: List<String> = emptyList()
+) : NodeConfiguration {
     companion object {
         private val logger = loggerFor<NodeConfigurationImpl>()
     }
@@ -195,7 +197,6 @@ data class NodeConfigurationImpl(
     override val attachmentContentCacheSizeBytes: Long
         get() = attachmentContentCacheSizeMegaBytes?.MB ?: super.attachmentContentCacheSizeBytes
 
-
     init {
         // This is a sanity feature do not remove.
         require(!useTestClock || devMode) { "Cannot use test clock outside of dev mode" }
@@ -207,11 +208,11 @@ data class NodeConfigurationImpl(
 }
 
 data class NodeRpcSettings(
-        val address: NetworkHostAndPort?,
-        val adminAddress: NetworkHostAndPort?,
-        val standAloneBroker: Boolean = false,
-        val useSsl: Boolean = false,
-        val ssl: SslOptions?
+    val address: NetworkHostAndPort?,
+    val adminAddress: NetworkHostAndPort?,
+    val standAloneBroker: Boolean = false,
+    val useSsl: Boolean = false,
+    val ssl: SslOptions?
 ) {
     fun asOptions(fallbackSslOptions: SSLConfiguration): NodeRpcOptions {
         return object : NodeRpcOptions {
@@ -278,9 +279,11 @@ enum class PasswordEncryption {
 data class SecurityConfiguration(val authService: SecurityConfiguration.AuthService) {
 
     // Configure RPC/Shell users authentication/authorization service
-    data class AuthService(val dataSource: AuthService.DataSource,
-                           val id: AuthServiceId = defaultAuthServiceId(dataSource.type),
-                           val options: AuthService.Options? = null) {
+    data class AuthService(
+        val dataSource: AuthService.DataSource,
+        val id: AuthServiceId = defaultAuthServiceId(dataSource.type),
+        val options: AuthService.Options? = null
+    ) {
 
         init {
             require(!(dataSource.type == AuthDataSourceType.INMEMORY &&
@@ -308,10 +311,12 @@ data class SecurityConfiguration(val authService: SecurityConfiguration.AuthServ
         }
 
         // Provider of users credentials and permissions data
-        data class DataSource(val type: AuthDataSourceType,
-                              val passwordEncryption: PasswordEncryption = PasswordEncryption.NONE,
-                              val connection: Properties? = null,
-                              val users: List<User>? = null) {
+        data class DataSource(
+            val type: AuthDataSourceType,
+            val passwordEncryption: PasswordEncryption = PasswordEncryption.NONE,
+            val connection: Properties? = null,
+            val users: List<User>? = null
+        ) {
             init {
                 when (type) {
                     AuthDataSourceType.INMEMORY -> require(users != null && connection == null)
@@ -319,8 +324,8 @@ data class SecurityConfiguration(val authService: SecurityConfiguration.AuthServ
                 }
             }
 
-            fun copyWithAdditionalUser(user: User) : DataSource{
-                val extendedList = this.users?.toMutableList()?: mutableListOf()
+            fun copyWithAdditionalUser(user: User): DataSource {
+                val extendedList = this.users?.toMutableList() ?: mutableListOf()
                 extendedList.add(user)
                 return DataSource(this.type, this.passwordEncryption, this.connection, listOf(*extendedList.toTypedArray()))
             }

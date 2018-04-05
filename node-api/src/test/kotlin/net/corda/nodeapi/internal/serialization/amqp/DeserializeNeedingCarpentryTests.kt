@@ -61,7 +61,6 @@ class DeserializeNeedingCarpentryTests : AmqpCarpenterBase(AllWhitelist) {
         assertNotEquals(deserializedObj2::class.java, deserializedObj4::class.java)
         assertEquals(deserializedObj3::class.java, deserializedObj4::class.java)
         assertEquals(testVal, deserializedObj4::class.java.getMethod("getA").invoke(deserializedObj4))
-
     }
 
     @Test

@@ -23,7 +23,6 @@ import net.corda.node.services.Permissions.Companion.startFlow
 import net.corda.testing.node.User
 import net.corda.testing.core.singleIdentity
 import net.corda.testing.driver.DriverParameters
-import net.corda.testing.driver.PortAllocation
 import net.corda.testing.driver.driver
 import net.corda.testing.driver.internal.RandomFree
 import org.junit.Assume.assumeFalse
@@ -138,11 +137,11 @@ object MessageSchemaV1 : MappedSchema(
     @Entity
     @Table(name = "messages")
     class PersistentMessage(
-            @Column(name = "by")
-            var by: String,
+        @Column(name = "by")
+        var by: String,
 
-            @Column(name = "value")
-            var value: String
+        @Column(name = "value")
+        var value: String
     ) : PersistentState()
 }
 

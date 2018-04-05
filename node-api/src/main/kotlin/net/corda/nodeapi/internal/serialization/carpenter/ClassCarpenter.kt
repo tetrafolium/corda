@@ -79,8 +79,10 @@ private val jlClass get() = Type.getInternalName(Class::class.java)
  *
  * Equals/hashCode methods are not yet supported.
  */
-class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader,
-                     val whitelist: ClassWhitelist) {
+class ClassCarpenter(
+    cl: ClassLoader = Thread.currentThread().contextClassLoader,
+    val whitelist: ClassWhitelist
+) {
     // TODO: Generics.
     // TODO: Sandbox the generated code when a security manager is in use.
     // TODO: Generate equals/hashCode.
@@ -167,9 +169,9 @@ class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader
             val superName = schema.superclass?.jvmName ?: jlObject
             val interfaces = schema.interfaces.map { it.name.jvm }.toMutableList()
 
-            if (SimpleFieldAccess::class.java !in schema.interfaces
-                    && schema.flags.cordaSerializable()
-                    && schema.flags.simpleFieldAccess()) {
+            if (SimpleFieldAccess::class.java !in schema.interfaces &&
+                    schema.flags.cordaSerializable() &&
+                    schema.flags.simpleFieldAccess()) {
                 interfaces.add(SimpleFieldAccess::class.java.name.jvm)
             }
 
@@ -184,7 +186,7 @@ class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader
                 generateClassConstructor(schema)
                 generateGetters(schema)
                 if (schema.superclass == null) {
-                    generateGetMethod()   // From SimplePropertyAccess
+                    generateGetMethod() // From SimplePropertyAccess
                 }
                 generateToString(schema)
             }.visitEnd()
@@ -217,7 +219,7 @@ class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader
             // Call the add() methods.
             for ((name, field) in schema.fieldsIncludingSuperclasses().entries) {
                 visitLdcInsn(name)
-                visitVarInsn(ALOAD, 0)  // this
+                visitVarInsn(ALOAD, 0) // this
                 visitFieldInsn(GETFIELD, schema.jvmName, name, schema.descriptorsIncludingSuperclasses()[name])
                 visitMethodInsn(INVOKEVIRTUAL, toStringHelper, "add", "(L$jlString;${field.type})L$toStringHelper;", false)
             }
@@ -250,7 +252,7 @@ class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader
             visitMethod(ACC_PUBLIC, "get" + name.capitalize(), "()" + type.descriptor, null, null).apply {
                 (type as ClassField).addNullabilityAnnotation(this)
                 visitCode()
-                visitVarInsn(ALOAD, 0)  // Load 'this'
+                visitVarInsn(ALOAD, 0) // Load 'this'
                 visitFieldInsn(GETFIELD, schema.jvmName, name, type.descriptor)
                 when (type.field) {
                     java.lang.Boolean.TYPE, Integer.TYPE, java.lang.Short.TYPE, java.lang.Byte.TYPE,
@@ -322,7 +324,6 @@ class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader
             visitInsn(ARETURN)
             visitMaxs(0, 0)
         }.visitEnd()
-
     }
 
     private fun ClassWriter.generateEnumConstructor() {
@@ -373,8 +374,8 @@ class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader
             for ((name, field) in schema.fields) {
                 (field as ClassField).nullTest(this, slot)
 
-                visitVarInsn(ALOAD, 0)  // Load 'this' onto the stack
-                slot += load(slot, field)  // Load the contents of the parameter onto the stack.
+                visitVarInsn(ALOAD, 0) // Load 'this' onto the stack
+                slot += load(slot, field) // Load the contents of the parameter onto the stack.
                 visitFieldInsn(PUTFIELD, schema.jvmName, name, field.descriptor)
             }
             visitInsn(RETURN)
@@ -421,8 +422,8 @@ class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader
                 val fieldNameFromItf = when {
                     it.name.startsWith("get") -> it.name.substring(3).decapitalize()
                     else -> throw InterfaceMismatchException(
-                            "Requested interfaces must consist only of methods that start "
-                                    + "with 'get': ${itf.name}.${it.name}")
+                            "Requested interfaces must consist only of methods that start " +
+                                    "with 'get': ${itf.name}.${it.name}")
                 }
 
                 // If we're trying to carpent a class that prior to serialisation / deserialisation
@@ -432,8 +433,8 @@ class ClassCarpenter(cl: ClassLoader = Thread.currentThread().contextClassLoader
 
                 if ((schema is ClassSchema) and (fieldNameFromItf !in allFields))
                     throw InterfaceMismatchException(
-                            "Interface ${itf.name} requires a field named $fieldNameFromItf but that "
-                                    + "isn't found in the schema or any superclass schemas")
+                            "Interface ${itf.name} requires a field named $fieldNameFromItf but that " +
+                                    "isn't found in the schema or any superclass schemas")
             }
         }
     }

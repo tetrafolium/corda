@@ -103,24 +103,27 @@ import net.corda.core.crypto.generateKeyPair as cryptoGenerateKeyPair
 
 // In theory the NodeInfo for the node should be passed in, instead, however currently this is constructed by the
 // AbstractNode. It should be possible to generate the NodeInfo outside of AbstractNode, so it can be passed in.
-abstract class AbstractNode(val configuration: NodeConfiguration,
-                            val platformClock: CordaClock,
-                            protected val versionInfo: VersionInfo,
-                            protected val cordappLoader: CordappLoader,
-                            private val busyNodeLatch: ReusableLatch = ReusableLatch()) : SingletonSerializeAsToken() {
+abstract class AbstractNode(
+    val configuration: NodeConfiguration,
+    val platformClock: CordaClock,
+    protected val versionInfo: VersionInfo,
+    protected val cordappLoader: CordappLoader,
+    private val busyNodeLatch: ReusableLatch = ReusableLatch()
+) : SingletonSerializeAsToken() {
 
     private class StartedNodeImpl<out N : AbstractNode>(
-            override val internals: N,
-            services: ServiceHubInternalImpl,
-            override val info: NodeInfo,
-            override val checkpointStorage: CheckpointStorage,
-            override val smm: StateMachineManager,
-            override val attachments: NodeAttachmentService,
-            override val network: MessagingService,
-            override val database: CordaPersistence,
-            override val rpcOps: CordaRPCOps,
-            flowStarter: FlowStarter,
-            override val notaryService: NotaryService?) : StartedNode<N> {
+        override val internals: N,
+        services: ServiceHubInternalImpl,
+        override val info: NodeInfo,
+        override val checkpointStorage: CheckpointStorage,
+        override val smm: StateMachineManager,
+        override val attachments: NodeAttachmentService,
+        override val network: MessagingService,
+        override val database: CordaPersistence,
+        override val rpcOps: CordaRPCOps,
+        flowStarter: FlowStarter,
+        override val notaryService: NotaryService?
+    ) : StartedNode<N> {
         override val services: StartedNodeServices = object : StartedNodeServices, ServiceHubInternal by services, FlowStarter by flowStarter {}
     }
 
@@ -310,9 +313,11 @@ abstract class AbstractNode(val configuration: NodeConfiguration,
         }
     }
 
-    private fun initNodeInfo(networkMapCache: NetworkMapCacheBaseInternal,
-                             identity: PartyAndCertificate,
-                             identityKeyPair: KeyPair): Pair<Set<KeyPair>, NodeInfo> {
+    private fun initNodeInfo(
+        networkMapCache: NetworkMapCacheBaseInternal,
+        identity: PartyAndCertificate,
+        identityKeyPair: KeyPair
+    ): Pair<Set<KeyPair>, NodeInfo> {
         val keyPairs = mutableSetOf(identityKeyPair)
 
         myNotaryIdentity = configuration.notary?.let {
@@ -426,9 +431,9 @@ abstract class AbstractNode(val configuration: NodeConfiguration,
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other !is AppServiceHubImpl<*>) return false
-            return serviceHub == other.serviceHub
-                    && flowStarter == other.flowStarter
-                    && serviceInstance == other.serviceInstance
+            return serviceHub == other.serviceHub &&
+                    flowStarter == other.flowStarter &&
+                    serviceInstance == other.serviceInstance
         }
 
         override fun hashCode() = Objects.hash(serviceHub, flowStarter, serviceInstance)
@@ -521,11 +526,13 @@ abstract class AbstractNode(val configuration: NodeConfiguration,
         return observable
     }
 
-    internal fun <F : FlowLogic<*>> internalRegisterFlowFactory(smm: StateMachineManager,
-                                                                initiatingFlowClass: Class<out FlowLogic<*>>,
-                                                                flowFactory: InitiatedFlowFactory<F>,
-                                                                initiatedFlowClass: Class<F>,
-                                                                track: Boolean): Observable<F> {
+    internal fun <F : FlowLogic<*>> internalRegisterFlowFactory(
+        smm: StateMachineManager,
+        initiatingFlowClass: Class<out FlowLogic<*>>,
+        flowFactory: InitiatedFlowFactory<F>,
+        initiatedFlowClass: Class<F>,
+        track: Boolean
+    ): Observable<F> {
         val observable = if (track) {
             smm.changes.filter { it is StateMachineManager.Change.Add }.map { it.logic }.ofType(initiatedFlowClass)
         } else {
@@ -549,7 +556,6 @@ abstract class AbstractNode(val configuration: NodeConfiguration,
         log.debug { "Installed core flow ${clientFlowClass.java.name}" }
     }
 
-
     private fun installCoreFlows() {
         installCoreFlow(FinalityFlow::class, ::FinalityHandler)
         installCoreFlow(NotaryChangeFlow::class, ::NotaryChangeHandler)
@@ -561,18 +567,20 @@ abstract class AbstractNode(val configuration: NodeConfiguration,
      * Builds node internal, advertised, and plugin services.
      * Returns a list of tokenizable services to be added to the serialisation context.
      */
-    private fun makeServices(keyPairs: Set<KeyPair>,
-                             schemaService: SchemaService,
-                             transactionStorage: WritableTransactionStorage,
-                             metrics: MetricRegistry,
-                             servicesForResolution: ServicesForResolution,
-                             database: CordaPersistence,
-                             nodeInfo: NodeInfo,
-                             identityService: IdentityServiceInternal,
-                             networkMapCache: NetworkMapCacheInternal,
-                             nodeProperties: NodePropertiesStore,
-                             cordappProvider: CordappProviderInternal,
-                             networkParameters: NetworkParameters): MutableList<Any> {
+    private fun makeServices(
+        keyPairs: Set<KeyPair>,
+        schemaService: SchemaService,
+        transactionStorage: WritableTransactionStorage,
+        metrics: MetricRegistry,
+        servicesForResolution: ServicesForResolution,
+        database: CordaPersistence,
+        nodeInfo: NodeInfo,
+        identityService: IdentityServiceInternal,
+        networkMapCache: NetworkMapCacheInternal,
+        nodeProperties: NodePropertiesStore,
+        cordappProvider: CordappProviderInternal,
+        networkParameters: NetworkParameters
+    ): MutableList<Any> {
         checkpointStorage = DBCheckpointStorage()
 
         val keyManagementService = makeKeyManagementService(identityService, keyPairs)
@@ -662,7 +670,7 @@ abstract class AbstractNode(val configuration: NodeConfiguration,
         }
     }
 
-    open protected fun checkNetworkMapIsInitialized() {
+    protected open fun checkNetworkMapIsInitialized() {
         if (!services.networkMapCache.loadDBSuccess) {
             // TODO: There should be a consistent approach to configuration error exceptions.
             throw NetworkMapCacheEmptyException()
@@ -788,29 +796,29 @@ abstract class AbstractNode(val configuration: NodeConfiguration,
             log.info("Starting Jolokia agent on HTTP port: $port")
             val libDir = Paths.get(configuration.baseDirectory.toString(), "drivers")
             val jarFilePath = JVMAgentRegistry.resolveAgentJar(
-                    "jolokia-jvm-${NodeBuildProperties.JOLOKIA_AGENT_VERSION}-agent.jar", libDir) ?:
-                    throw Error("Unable to locate agent jar file")
+                    "jolokia-jvm-${NodeBuildProperties.JOLOKIA_AGENT_VERSION}-agent.jar", libDir)
+                    ?: throw Error("Unable to locate agent jar file")
             log.info("Agent jar file: $jarFilePath")
             JVMAgentRegistry.attach("jolokia", "port=$port", jarFilePath)
         }
     }
 
     private inner class ServiceHubInternalImpl(
-            override val identityService: IdentityService,
+        override val identityService: IdentityService,
             // Place the long term identity key in the KMS. Eventually, this is likely going to be separated again because
             // the KMS is meant for derived temporary keys used in transactions, and we're not supposed to sign things with
             // the identity key. But the infrastructure to make that easy isn't here yet.
-            override val keyManagementService: KeyManagementService,
-            override val schemaService: SchemaService,
-            override val validatedTransactions: WritableTransactionStorage,
-            override val monitoringService: MonitoringService,
-            override val cordappProvider: CordappProviderInternal,
-            override val database: CordaPersistence,
-            override val myInfo: NodeInfo,
-            override val networkMapCache: NetworkMapCacheInternal,
-            override val nodeProperties: NodePropertiesStore,
-            override val networkParameters: NetworkParameters,
-            private val servicesForResolution: ServicesForResolution
+        override val keyManagementService: KeyManagementService,
+        override val schemaService: SchemaService,
+        override val validatedTransactions: WritableTransactionStorage,
+        override val monitoringService: MonitoringService,
+        override val cordappProvider: CordappProviderInternal,
+        override val database: CordaPersistence,
+        override val myInfo: NodeInfo,
+        override val networkMapCache: NetworkMapCacheInternal,
+        override val nodeProperties: NodePropertiesStore,
+        override val networkParameters: NetworkParameters,
+        private val servicesForResolution: ServicesForResolution
     ) : SingletonSerializeAsToken(), ServiceHubInternal, ServicesForResolution by servicesForResolution {
         override val rpcFlows = ArrayList<Class<out FlowLogic<*>>>()
         override val stateMachineRecordedTransactionMapping = DBTransactionMappingStorage()
@@ -860,9 +868,10 @@ internal class FlowStarterImpl(private val serverThread: AffinityExecutor, priva
     }
 
     override fun <T> invokeFlowAsync(
-            logicType: Class<out FlowLogic<T>>,
-            context: InvocationContext,
-            vararg args: Any?): CordaFuture<FlowStateMachine<T>> {
+        logicType: Class<out FlowLogic<T>>,
+        context: InvocationContext,
+        vararg args: Any?
+    ): CordaFuture<FlowStateMachine<T>> {
         val logicRef = flowLogicRefFactory.createForRPC(logicType, *args)
         val logic: FlowLogic<T> = uncheckedCast(flowLogicRefFactory.toFlowLogic(logicRef))
         return startFlow(logic, context)
@@ -876,10 +885,12 @@ class ConfigurationException(message: String) : CordaException(message)
  */
 internal class NetworkMapCacheEmptyException : Exception()
 
-fun configureDatabase(hikariProperties: Properties,
-                      databaseConfig: DatabaseConfig,
-                      identityService: IdentityService,
-                      schemaService: SchemaService = NodeSchemaService()): CordaPersistence {
+fun configureDatabase(
+    hikariProperties: Properties,
+    databaseConfig: DatabaseConfig,
+    identityService: IdentityService,
+    schemaService: SchemaService = NodeSchemaService()
+): CordaPersistence {
     // Register the AbstractPartyDescriptor so Hibernate doesn't warn when encountering AbstractParty. Unfortunately
     // Hibernate warns about not being able to find a descriptor if we don't provide one, but won't use it by default
     // so we end up providing both descriptor and converter. We should re-examine this in later versions to see if

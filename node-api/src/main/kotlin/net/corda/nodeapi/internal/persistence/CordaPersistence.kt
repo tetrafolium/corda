@@ -22,10 +22,10 @@ const val NODE_DATABASE_PREFIX = "node_"
 
 // This class forms part of the node config and so any changes to it must be handled with care
 data class DatabaseConfig(
-        val initialiseSchema: Boolean = true,
-        val serverNameTablePrefix: String = "",
-        val transactionIsolationLevel: TransactionIsolationLevel = TransactionIsolationLevel.REPEATABLE_READ,
-        val exportHibernateJMXStatistics: Boolean = false
+    val initialiseSchema: Boolean = true,
+    val serverNameTablePrefix: String = "",
+    val transactionIsolationLevel: TransactionIsolationLevel = TransactionIsolationLevel.REPEATABLE_READ,
+    val exportHibernateJMXStatistics: Boolean = false
 )
 
 // This class forms part of the node config and so any changes to it must be handled with care
@@ -49,10 +49,10 @@ var contextDatabase: CordaPersistence
 val contextDatabaseOrNull: CordaPersistence? get() = _contextDatabase.get()
 
 class CordaPersistence(
-        val dataSource: DataSource,
-        databaseConfig: DatabaseConfig,
-        schemas: Set<MappedSchema>,
-        attributeConverters: Collection<AttributeConverter<*, *>> = emptySet()
+    val dataSource: DataSource,
+    databaseConfig: DatabaseConfig,
+    schemas: Set<MappedSchema>,
+    attributeConverters: Collection<AttributeConverter<*, *>> = emptySet()
 ) : Closeable {
     companion object {
         private val log = contextLogger()

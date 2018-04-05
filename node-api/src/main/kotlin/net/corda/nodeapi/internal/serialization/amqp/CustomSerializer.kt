@@ -27,7 +27,6 @@ abstract class CustomSerializer<T : Any> : AMQPSerializer<T>, SerializerFor {
      */
     open val additionalSerializers: Iterable<CustomSerializer<out Any>> = emptyList()
 
-
     protected abstract val descriptor: Descriptor
     /**
      * This exists purely for documentation and cross-platform purposes. It is not used by our serialization / deserialization
@@ -115,10 +114,12 @@ abstract class CustomSerializer<T : Any> : AMQPSerializer<T>, SerializerFor {
      * The proxy class must use only types which are either native AMQP or other types for which there are pre-registered
      * custom serializers.
      */
-    abstract class Proxy<T : Any, P : Any>(clazz: Class<T>,
-                                           protected val proxyClass: Class<P>,
-                                           protected val factory: SerializerFactory,
-                                           withInheritance: Boolean = true) : CustomSerializerImp<T>(clazz, withInheritance) {
+    abstract class Proxy<T : Any, P : Any>(
+        clazz: Class<T>,
+        protected val proxyClass: Class<P>,
+        protected val factory: SerializerFactory,
+        withInheritance: Boolean = true
+    ) : CustomSerializerImp<T>(clazz, withInheritance) {
         override fun isSerializerFor(clazz: Class<*>): Boolean = if (withInheritance) this.clazz.isAssignableFrom(clazz) else this.clazz == clazz
 
         private val proxySerializer: ObjectSerializer by lazy { ObjectSerializer(proxyClass, factory) }
@@ -164,11 +165,14 @@ abstract class CustomSerializer<T : Any> : AMQPSerializer<T>, SerializerFor {
      * @param maker A lambda for constructing an instance, that defaults to calling a constructor that expects a string.
      * @param unmaker A lambda that extracts the string value for an instance, that defaults to the [toString] method.
      */
-    abstract class ToString<T : Any>(clazz: Class<T>, withInheritance: Boolean = false,
-                                     private val maker: (String) -> T = clazz.getConstructor(String::class.java).let { `constructor` ->
-                                         { string -> `constructor`.newInstance(string) }
-                                     },
-                                     private val unmaker: (T) -> String = { obj -> obj.toString() })
+    abstract class ToString<T : Any>(
+        clazz: Class<T>,
+        withInheritance: Boolean = false,
+        private val maker: (String) -> T = clazz.getConstructor(String::class.java).let { `constructor` ->
+            { string -> `constructor`.newInstance(string) }
+        },
+        private val unmaker: (T) -> String = { obj -> obj.toString() }
+    )
         : CustomSerializerImp<T>(clazz, withInheritance) {
 
         override val schemaForDocumentation = Schema(

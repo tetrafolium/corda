@@ -59,8 +59,8 @@ class SerializerFingerPrinter : FingerPrinter {
     }
 
     private fun isCollectionOrMap(type: Class<*>) =
-            (Collection::class.java.isAssignableFrom(type) || Map::class.java.isAssignableFrom(type))
-                    && !EnumSet::class.java.isAssignableFrom(type)
+            (Collection::class.java.isAssignableFrom(type) || Map::class.java.isAssignableFrom(type)) &&
+                    !EnumSet::class.java.isAssignableFrom(type)
 
     internal fun fingerprintForDescriptors(vararg typeDescriptors: String): String {
         val hasher = Hashing.murmur3_128().newHasher()
@@ -71,10 +71,11 @@ class SerializerFingerPrinter : FingerPrinter {
     }
 
     private fun Hasher.fingerprintWithCustomSerializerOrElse(
-            factory: SerializerFactory,
-            clazz: Class<*>,
-            declaredType: Type,
-            block: () -> Hasher): Hasher {
+        factory: SerializerFactory,
+        clazz: Class<*>,
+        declaredType: Type,
+        block: () -> Hasher
+    ): Hasher {
         // Need to check if a custom serializer is applicable
         val customSerializer = factory.findCustomSerializer(clazz, declaredType)
         return if (customSerializer != null) {
@@ -86,17 +87,22 @@ class SerializerFingerPrinter : FingerPrinter {
 
     // This method concatenates various elements of the types recursively as unencoded strings into the hasher,
     // effectively creating a unique string for a type which we then hash in the calling function above.
-    private fun fingerprintForType(type: Type, contextType: Type?, alreadySeen: MutableSet<Type>,
-                                   hasher: Hasher, debugIndent: Int = 1): Hasher {
+    private fun fingerprintForType(
+        type: Type,
+        contextType: Type?,
+        alreadySeen: MutableSet<Type>,
+        hasher: Hasher,
+        debugIndent: Int = 1
+    ): Hasher {
         // We don't include Example<?> and Example<T> where type is ? or T in this otherwise we
         // generate different fingerprints for class Outer<T>(val a: Inner<T>) when serialising
         // and deserializing (assuming deserialization is occurring in a factory that didn't
         // serialise the object in the  first place (and thus the cache lookup fails). This is also
         // true of Any, where we need  Example<A, B> and Example<?, ?> to have the same fingerprint
-        return if ((type in alreadySeen)
-                && (type !is SerializerFactory.AnyType)
-                && (type !is TypeVariable<*>)
-                && (type !is WildcardType)) {
+        return if ((type in alreadySeen) &&
+                (type !is SerializerFactory.AnyType) &&
+                (type !is TypeVariable<*>) &&
+                (type !is WildcardType)) {
             hasher.putUnencodedChars(ALREADY_SEEN_HASH)
         } else {
             alreadySeen += type
@@ -179,12 +185,13 @@ class SerializerFingerPrinter : FingerPrinter {
     }
 
     private fun fingerprintForObject(
-            type: Type,
-            contextType: Type?,
-            alreadySeen: MutableSet<Type>,
-            hasher: Hasher,
-            factory: SerializerFactory,
-            debugIndent: Int = 0): Hasher {
+        type: Type,
+        contextType: Type?,
+        alreadySeen: MutableSet<Type>,
+        hasher: Hasher,
+        factory: SerializerFactory,
+        debugIndent: Int = 0
+    ): Hasher {
         // Hash the class + properties + interfaces
         val name = type.asClass()?.name
                 ?: throw NotSerializableException("Expected only Class or ParameterizedType but found $type")

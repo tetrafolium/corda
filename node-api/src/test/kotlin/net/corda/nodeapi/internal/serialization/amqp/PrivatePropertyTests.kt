@@ -13,7 +13,7 @@ class PrivatePropertyTests {
     private val factory = testDefaultFactoryNoEvolution()
 
     companion object {
-        val fields : Map<String, java.lang.reflect.Field> = mapOf (
+        val fields: Map<String, java.lang.reflect.Field> = mapOf (
                 "serializersByDesc" to SerializerFactory::class.java.getDeclaredField("serializersByDescriptor")).apply {
             this.values.forEach {
                 it.isAccessible = true
@@ -222,5 +222,4 @@ class PrivatePropertyTests {
             assertTrue(propertySerializers[0].propertyReader is PublicPropertyReader)
         }
     }
-
 }

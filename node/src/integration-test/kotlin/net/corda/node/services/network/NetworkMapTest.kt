@@ -17,7 +17,6 @@ import net.corda.testing.core.ALICE_NAME
 import net.corda.testing.core.BOB_NAME
 import net.corda.testing.core.SerializationEnvironmentRule
 import net.corda.testing.driver.NodeHandle
-import net.corda.testing.driver.PortAllocation
 import net.corda.testing.driver.internal.RandomFree
 import net.corda.testing.node.internal.CompatibilityZoneParams
 import net.corda.testing.node.internal.internalDriver

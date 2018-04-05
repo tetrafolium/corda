@@ -58,10 +58,11 @@ import kotlin.system.exitProcess
  *
  * @param configuration This is typically loaded from a TypeSafe HOCON configuration file.
  */
-open class Node(configuration: NodeConfiguration,
-                versionInfo: VersionInfo,
-                private val initialiseSerialization: Boolean = true,
-                cordappLoader: CordappLoader = makeCordappLoader(configuration)
+open class Node(
+    configuration: NodeConfiguration,
+    versionInfo: VersionInfo,
+    private val initialiseSerialization: Boolean = true,
+    cordappLoader: CordappLoader = makeCordappLoader(configuration)
 ) : AbstractNode(configuration, createClock(configuration), versionInfo, cordappLoader) {
     companion object {
         private val staticLog = contextLogger()
@@ -150,14 +151,16 @@ open class Node(configuration: NodeConfiguration,
 
     private var shutdownHook: ShutdownHook? = null
 
-    override fun makeMessagingService(database: CordaPersistence,
-                                      info: NodeInfo,
-                                      nodeProperties: NodePropertiesStore,
-                                      networkParameters: NetworkParameters): MessagingService {
+    override fun makeMessagingService(
+        database: CordaPersistence,
+        info: NodeInfo,
+        nodeProperties: NodePropertiesStore,
+        networkParameters: NetworkParameters
+    ): MessagingService {
         // Construct security manager reading users data either from the 'security' config section
         // if present or from rpcUsers list if the former is missing from config.
-        val securityManagerConfig = configuration.security?.authService ?:
-        SecurityConfiguration.AuthService.fromUsers(configuration.rpcUsers)
+        val securityManagerConfig = configuration.security?.authService
+        ?: SecurityConfiguration.AuthService.fromUsers(configuration.rpcUsers)
 
         securityManager = RPCSecurityManagerImpl(if (configuration.shouldInitCrashShell()) securityManagerConfig.copyWithAdditionalUser(configuration.shellUser()) else securityManagerConfig)
 
@@ -177,7 +180,7 @@ open class Node(configuration: NodeConfiguration,
             printBasicNodeInfo("RPC admin connection address", it.admin.toString())
         }
         verifierMessagingClient = when (configuration.verifierType) {
-            VerifierType.OutOfProcess ->  throw IllegalArgumentException("OutOfProcess verifier not supported") //VerifierMessagingClient(configuration, serverAddress, services.monitoringService.metrics, /*networkParameters.maxMessageSize*/MAX_FILE_SIZE)
+            VerifierType.OutOfProcess -> throw IllegalArgumentException("OutOfProcess verifier not supported") //VerifierMessagingClient(configuration, serverAddress, services.monitoringService.metrics, /*networkParameters.maxMessageSize*/MAX_FILE_SIZE)
             VerifierType.InMemory -> null
         }
         require(info.legalIdentities.size in 1..2) { "Currently nodes must have a primary address and optionally one serviced address" }
@@ -340,10 +343,10 @@ open class Node(configuration: NodeConfiguration,
                 // Begin exporting our own metrics via JMX. These can be monitored using any agent, e.g. Jolokia:
                 //
                 // https://jolokia.org/agent/jvm.html
-                JmxReporter.
-                        forRegistry(started.services.monitoringService.metrics).
-                        inDomain("net.corda").
-                        createsObjectNamesWith { _, domain, name ->
+                JmxReporter
+                        .forRegistry(started.services.monitoringService.metrics)
+                        .inDomain("net.corda")
+                        .createsObjectNamesWith { _, domain, name ->
                             // Make the JMX hierarchy a bit better organised.
                             val category = name.substringBefore('.')
                             val subName = name.substringAfter('.', "")
@@ -351,9 +354,9 @@ open class Node(configuration: NodeConfiguration,
                                 ObjectName("$domain:name=$category")
                             else
                                 ObjectName("$domain:type=$category,name=$subName")
-                        }.
-                        build().
-                        start()
+                        }
+                        .build()
+                        .start()
 
                 _startupComplete.set(Unit)
             }

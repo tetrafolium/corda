@@ -19,13 +19,13 @@ class DBCheckpointStorage : CheckpointStorage {
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}checkpoints")
     class DBCheckpoint(
-            @Id
-            @Column(name = "checkpoint_id", length = 64)
-            var checkpointId: String = "",
+        @Id
+        @Column(name = "checkpoint_id", length = 64)
+        var checkpointId: String = "",
 
-            @Lob
-            @Column(name = "checkpoint_value")
-            var checkpoint: ByteArray = EMPTY_BYTE_ARRAY
+        @Lob
+        @Column(name = "checkpoint_value")
+        var checkpoint: ByteArray = EMPTY_BYTE_ARRAY
     )
 
     override fun addCheckpoint(checkpoint: Checkpoint) {

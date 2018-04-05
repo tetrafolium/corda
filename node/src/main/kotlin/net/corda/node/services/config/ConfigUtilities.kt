@@ -21,10 +21,12 @@ operator fun Config.plus(overrides: Map<String, Any?>): Config = ConfigFactory.p
 
 object ConfigHelper {
     private val log = LoggerFactory.getLogger(javaClass)
-    fun loadConfig(baseDirectory: Path,
-                   configFile: Path = baseDirectory / "node.conf",
-                   allowMissingConfig: Boolean = false,
-                   configOverrides: Config = ConfigFactory.empty()): Config {
+    fun loadConfig(
+        baseDirectory: Path,
+        configFile: Path = baseDirectory / "node.conf",
+        allowMissingConfig: Boolean = false,
+        configOverrides: Config = ConfigFactory.empty()
+    ): Config {
         val parseOptions = ConfigParseOptions.defaults()
         val defaultConfig = ConfigFactory.parseResources("reference.conf", parseOptions.setAllowMissing(false))
         val appConfig = ConfigFactory.parseFile(configFile.toFile(), parseOptions.setAllowMissing(allowMissingConfig))

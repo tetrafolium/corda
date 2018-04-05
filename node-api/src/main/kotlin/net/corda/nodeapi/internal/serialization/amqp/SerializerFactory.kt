@@ -38,10 +38,11 @@ data class FactorySchemaAndDescriptor(val schemas: SerializationSchemas, val typ
 // TODO: need to support super classes as well as interfaces with our current code base... what's involved?  If we continue to ban, what is the impact?
 @ThreadSafe
 open class SerializerFactory(
-        val whitelist: ClassWhitelist,
-        cl: ClassLoader,
-        private val evolutionSerializerGetter: EvolutionSerializerGetterBase = EvolutionSerializerGetter(),
-        val fingerPrinter: FingerPrinter = SerializerFingerPrinter()) {
+    val whitelist: ClassWhitelist,
+    cl: ClassLoader,
+    private val evolutionSerializerGetter: EvolutionSerializerGetterBase = EvolutionSerializerGetter(),
+    val fingerPrinter: FingerPrinter = SerializerFingerPrinter()
+) {
 
     init {
         fingerPrinter.setOwner(this)
@@ -57,9 +58,12 @@ open class SerializerFactory(
     val classloader: ClassLoader
         get() = classCarpenter.classloader
 
-    private fun getEvolutionSerializer(typeNotation: TypeNotation, newSerializer: AMQPSerializer<Any>,
-                                       schemas: SerializationSchemas)
-            = evolutionSerializerGetter.getEvolutionSerializer(this, typeNotation, newSerializer, schemas)
+    private fun getEvolutionSerializer(
+        typeNotation: TypeNotation,
+        newSerializer: AMQPSerializer<Any>,
+        schemas: SerializationSchemas
+    ) =
+            evolutionSerializerGetter.getEvolutionSerializer(this, typeNotation, newSerializer, schemas)
 
     fun getSerializersByDescriptor() = serializersByDescriptor
 
@@ -117,8 +121,11 @@ open class SerializerFactory(
      * based on the declared type.
      */
     // TODO: test GenericArrayType
-    private fun inferTypeVariables(actualClass: Class<*>?, declaredClass: Class<*>,
-                                   declaredType: Type): Type? = when (declaredType) {
+    private fun inferTypeVariables(
+        actualClass: Class<*>?,
+        declaredClass: Class<*>,
+        declaredType: Type
+    ): Type? = when (declaredType) {
         is ParameterizedType -> inferTypeVariables(actualClass, declaredClass, declaredType)
     // Nothing to infer, otherwise we'd have ParameterizedType
         is Class<*> -> actualClass
@@ -288,9 +295,9 @@ open class SerializerFactory(
         for (customSerializer in customSerializers) {
             if (customSerializer.isSerializerFor(clazz)) {
                 val declaredSuperClass = declaredType.asClass()?.superclass
-                return if (declaredSuperClass == null
-                        || !customSerializer.isSerializerFor(declaredSuperClass)
-                        || !customSerializer.revealSubclassesInSchema) {
+                return if (declaredSuperClass == null ||
+                        !customSerializer.isSerializerFor(declaredSuperClass) ||
+                        !customSerializer.revealSubclassesInSchema) {
                     customSerializer as? AMQPSerializer<Any>
                 } else {
                     // Make a subclass serializer for the subclass and return that...
@@ -397,4 +404,3 @@ open class SerializerFactory(
         override fun toString(): String = "?"
     }
 }
-

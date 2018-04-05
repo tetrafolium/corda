@@ -52,10 +52,8 @@ class CollectionSerializer(val declaredType: ParameterizedType, factory: Seriali
         private fun deriveParametrizedType(declaredType: Type, collectionClass: Class<out Collection<*>>): ParameterizedType =
                 (declaredType as? ParameterizedType) ?: DeserializedParameterizedType(collectionClass, arrayOf(SerializerFactory.AnyType))
 
-
         private fun findMostSuitableCollectionType(actualClass: Class<*>): Class<out Collection<*>> =
                 supportedTypes.keys.findLast { it.isAssignableFrom(actualClass) }!!
-
     }
 
     private val concreteBuilder: (List<*>) -> Collection<*> = findConcreteType(declaredType.rawType as Class<*>)
@@ -69,11 +67,12 @@ class CollectionSerializer(val declaredType: ParameterizedType, factory: Seriali
     }
 
     override fun writeObject(
-            obj: Any,
-            data: Data,
-            type: Type,
-            output: SerializationOutput,
-            debugIndent: Int) = ifThrowsAppend({ declaredType.typeName }) {
+        obj: Any,
+        data: Data,
+        type: Type,
+        output: SerializationOutput,
+        debugIndent: Int
+    ) = ifThrowsAppend({ declaredType.typeName }) {
         // Write described
         data.withDescribed(typeNotation.descriptor) {
             withList {
@@ -85,9 +84,10 @@ class CollectionSerializer(val declaredType: ParameterizedType, factory: Seriali
     }
 
     override fun readObject(
-            obj: Any,
-            schemas: SerializationSchemas,
-            input: DeserializationInput): Any = ifThrowsAppend({ declaredType.typeName }) {
+        obj: Any,
+        schemas: SerializationSchemas,
+        input: DeserializationInput
+    ): Any = ifThrowsAppend({ declaredType.typeName }) {
         // TODO: Can we verify the entries in the list?
         concreteBuilder((obj as List<*>).map { input.readObjectOrNull(it, schemas, declaredType.actualTypeArguments[0]) })
     }

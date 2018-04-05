@@ -237,9 +237,10 @@ data class TransformsSchema(val types: Map<String, EnumMap<TransformTypes, Mutab
         }
 
         private fun getAndAdd(
-                type: String,
-                sf: SerializerFactory,
-                map: MutableMap<String, EnumMap<TransformTypes, MutableList<Transform>>>) {
+            type: String,
+            sf: SerializerFactory,
+            map: MutableMap<String, EnumMap<TransformTypes, MutableList<Transform>>>
+        ) {
             get(type, sf).apply {
                 if (isNotEmpty()) {
                     map[type] = this
@@ -274,12 +275,12 @@ data class TransformsSchema(val types: Map<String, EnumMap<TransformTypes, Mutab
                 throw NotSerializableException("Unexpected descriptor ${describedType.descriptor}.")
             }
 
-            val map = describedType.described as? Map<*, *> ?:
-                    throw NotSerializableException("Transform schema must be encoded as a map")
+            val map = describedType.described as? Map<*, *>
+                    ?: throw NotSerializableException("Transform schema must be encoded as a map")
 
             map.forEach { type ->
-                val fingerprint = type.key as? String ?:
-                        throw NotSerializableException("Fingerprint must be encoded as a string")
+                val fingerprint = type.key as? String
+                        ?: throw NotSerializableException("Fingerprint must be encoded as a string")
 
                 rtn[fingerprint] = EnumMap<TransformTypes, MutableList<Transform>>(TransformTypes::class.java)
 
@@ -288,9 +289,9 @@ data class TransformsSchema(val types: Map<String, EnumMap<TransformTypes, Mutab
 
                     rtn[fingerprint]!![transform] = mutableListOf()
                     (transforms as List<*>).forEach {
-                        rtn[fingerprint]!![TransformTypes.newInstance(transformType)]?.add(Transform.newInstance(it)) ?:
-                                throw NotSerializableException("De-serialization error with transform for class "
-                                        + "${type.key} ${transform.name}")
+                        rtn[fingerprint]!![TransformTypes.newInstance(transformType)]?.add(Transform.newInstance(it))
+                                ?: throw NotSerializableException("De-serialization error with transform for class " +
+                                        "${type.key} ${transform.name}")
                     }
                 }
             }

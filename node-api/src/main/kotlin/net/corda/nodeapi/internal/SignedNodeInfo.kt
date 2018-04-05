@@ -33,7 +33,7 @@ class SignedNodeInfo(val raw: SerializedBytes<NodeInfo>, val signatures: List<Di
             throw SignatureException("Missing signatures. Found ${signatures.size} expected ${identities.size}")
         }
 
-        val rawBytes = raw.bytes  // To avoid cloning the byte array multiple times
+        val rawBytes = raw.bytes // To avoid cloning the byte array multiple times
         identities.zip(signatures).forEach { (identity, signature) ->
             try {
                 identity.owningKey.verify(rawBytes, signature)

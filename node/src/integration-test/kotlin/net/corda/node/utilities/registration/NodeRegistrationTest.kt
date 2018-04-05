@@ -154,9 +154,11 @@ class RegistrationHandler(private val rootCertAndKeyPair: CertificateAndKeyPair)
                 .header("Content-Disposition", "attachment; filename=\"certificates.zip\"").build()
     }
 
-    private fun createSignedClientCertificate(certificationRequest: PKCS10CertificationRequest,
-                                              caKeyPair: KeyPair,
-                                              caCertPath: List<X509Certificate>): Pair<CertPath, CordaX500Name> {
+    private fun createSignedClientCertificate(
+        certificationRequest: PKCS10CertificationRequest,
+        caKeyPair: KeyPair,
+        caCertPath: List<X509Certificate>
+    ): Pair<CertPath, CordaX500Name> {
         val request = JcaPKCS10CertificationRequest(certificationRequest)
         val name = CordaX500Name.parse(request.subject.toString())
         val nodeCaCert = X509Utilities.createCertificate(

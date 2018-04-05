@@ -92,9 +92,9 @@ fun minCorrectReplicas(clusterSize: Int) = (2 * clusterSize + 3) / 3
 fun minClusterSize(maxFaultyReplicas: Int) = maxFaultyReplicas * 3 + 1
 
 fun bftSMaRtSerialFilter(clazz: Class<*>): Boolean = clazz.name.let {
-    it.startsWith("bftsmart.")
-            || it.startsWith("java.security.")
-            || it.startsWith("java.util.")
-            || it.startsWith("java.lang.")
-            || it.startsWith("java.net.")
+    it.startsWith("bftsmart.") ||
+            it.startsWith("java.security.") ||
+            it.startsWith("java.util.") ||
+            it.startsWith("java.lang.") ||
+            it.startsWith("java.net.")
 }

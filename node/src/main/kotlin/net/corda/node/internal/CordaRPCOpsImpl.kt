@@ -42,11 +42,11 @@ import java.time.Instant
  * thread (i.e. serially). Arguments are serialised and deserialised automatically.
  */
 internal class CordaRPCOpsImpl(
-        private val services: ServiceHubInternal,
-        private val smm: StateMachineManager,
-        private val database: CordaPersistence,
-        private val flowStarter: FlowStarter,
-        private val shutdownNode: () -> Unit
+    private val services: ServiceHubInternal,
+    private val smm: StateMachineManager,
+    private val database: CordaPersistence,
+    private val flowStarter: FlowStarter,
+    private val shutdownNode: () -> Unit
 ) : CordaRPCOps {
     override fun networkMapSnapshot(): List<NodeInfo> {
         val (snapshot, updates) = networkMapFeed()
@@ -72,20 +72,24 @@ internal class CordaRPCOpsImpl(
         }
     }
 
-    override fun <T : ContractState> vaultQueryBy(criteria: QueryCriteria,
-                                                  paging: PageSpecification,
-                                                  sorting: Sort,
-                                                  contractStateType: Class<out T>): Vault.Page<T> {
+    override fun <T : ContractState> vaultQueryBy(
+        criteria: QueryCriteria,
+        paging: PageSpecification,
+        sorting: Sort,
+        contractStateType: Class<out T>
+    ): Vault.Page<T> {
         return database.transaction {
             services.vaultService._queryBy(criteria, paging, sorting, contractStateType)
         }
     }
 
     @RPCReturnsObservables
-    override fun <T : ContractState> vaultTrackBy(criteria: QueryCriteria,
-                                                  paging: PageSpecification,
-                                                  sorting: Sort,
-                                                  contractStateType: Class<out T>): DataFeed<Vault.Page<T>, Vault.Update<T>> {
+    override fun <T : ContractState> vaultTrackBy(
+        criteria: QueryCriteria,
+        paging: PageSpecification,
+        sorting: Sort,
+        contractStateType: Class<out T>
+    ): DataFeed<Vault.Page<T>, Vault.Update<T>> {
         return database.transaction {
             services.vaultService._trackBy(criteria, paging, sorting, contractStateType)
         }
@@ -196,7 +200,7 @@ internal class CordaRPCOpsImpl(
         }
     }
 
-    override fun uploadAttachmentWithMetadata(jar: InputStream, uploader:String, filename:String): SecureHash {
+    override fun uploadAttachmentWithMetadata(jar: InputStream, uploader: String, filename: String): SecureHash {
         // TODO: this operation should not require an explicit transaction
         return database.transaction {
             services.attachments.importAttachment(jar, uploader, filename)

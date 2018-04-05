@@ -61,14 +61,16 @@ class AMQPBridgeManager(config: NodeSSLConfiguration, val artemisMessageClientFa
      * If the delivery fails the session is rolled back to prevent loss of the message. This may cause duplicate delivery,
      * however Artemis and the remote Corda instanced will deduplicate these messages.
      */
-    private class AMQPBridge(private val queueName: String,
-                             private val target: NetworkHostAndPort,
-                             private val legalNames: Set<CordaX500Name>,
-                             keyStore: KeyStore,
-                             keyStorePrivateKeyPassword: String,
-                             trustStore: KeyStore,
-                             sharedEventGroup: EventLoopGroup,
-                             private val artemis: ArtemisSessionProvider) {
+    private class AMQPBridge(
+        private val queueName: String,
+        private val target: NetworkHostAndPort,
+        private val legalNames: Set<CordaX500Name>,
+        keyStore: KeyStore,
+        keyStorePrivateKeyPassword: String,
+        trustStore: KeyStore,
+        sharedEventGroup: EventLoopGroup,
+        private val artemis: ArtemisSessionProvider
+    ) {
         companion object {
             fun getBridgeName(queueName: String, hostAndPort: NetworkHostAndPort): String = "$queueName -> $hostAndPort"
         }

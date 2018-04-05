@@ -43,8 +43,9 @@ const val PROXY_TYPE = 1
  * for
  */
 class CorDappCustomSerializer(
-        private val serializer: SerializationCustomSerializer<*, *>,
-        factory: SerializerFactory) : AMQPSerializer<Any>, SerializerFor {
+    private val serializer: SerializationCustomSerializer<*, *>,
+    factory: SerializerFactory
+) : AMQPSerializer<Any>, SerializerFor {
     override val revealSubclassesInSchema: Boolean get() = false
     private val types = serializer::class.supertypes.filter { it.jvmErasure == SerializationCustomSerializer::class }
             .flatMap { it.arguments }
@@ -70,7 +71,7 @@ class CorDappCustomSerializer(
 
         data.withDescribed(descriptor) {
             data.withList {
-                proxySerializer.propertySerializers.serializationOrder.forEach  {
+                proxySerializer.propertySerializers.serializationOrder.forEach {
                     it.getter.writeProperty(proxy, this, output)
                 }
             }
@@ -83,4 +84,3 @@ class CorDappCustomSerializer(
 
     override fun isSerializerFor(clazz: Class<*>) = clazz == type
 }
-

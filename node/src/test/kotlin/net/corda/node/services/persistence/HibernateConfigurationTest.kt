@@ -402,11 +402,11 @@ class HibernateConfigurationTest {
     @Test
     fun `calculate cash balances`() {
         database.transaction {
-            vaultFiller.fillWithSomeTestCash(100.DOLLARS, issuerServices, 10, issuer.ref(1))        // +$100 = $200
+            vaultFiller.fillWithSomeTestCash(100.DOLLARS, issuerServices, 10, issuer.ref(1)) // +$100 = $200
             vaultFiller.fillWithSomeTestCash(50.POUNDS, issuerServices, 5, issuer.ref(1))            // £50 = £50
             vaultFiller.fillWithSomeTestCash(25.POUNDS, issuerServices, 5, issuer.ref(1))            // +£25 = £175
-            vaultFiller.fillWithSomeTestCash(500.SWISS_FRANCS, issuerServices, 10, issuer.ref(1))   // CHF500 = CHF500
-            vaultFiller.fillWithSomeTestCash(250.SWISS_FRANCS, issuerServices, 5, issuer.ref(1))     // +CHF250 = CHF750
+            vaultFiller.fillWithSomeTestCash(500.SWISS_FRANCS, issuerServices, 10, issuer.ref(1)) // CHF500 = CHF500
+            vaultFiller.fillWithSomeTestCash(250.SWISS_FRANCS, issuerServices, 5, issuer.ref(1)) // +CHF250 = CHF750
         }
 
         // structure query

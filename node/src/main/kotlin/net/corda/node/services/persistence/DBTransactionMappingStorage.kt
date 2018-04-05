@@ -27,12 +27,12 @@ class DBTransactionMappingStorage : StateMachineRecordedTransactionMappingStorag
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}transaction_mappings")
     class DBTransactionMapping(
-            @Id
-            @Column(name = "tx_id", length = 64)
-            var txId: String = "",
+        @Id
+        @Column(name = "tx_id", length = 64)
+        var txId: String = "",
 
-            @Column(name = "state_machine_run_id", length = 36)
-            var stateMachineRunId: String = ""
+        @Column(name = "state_machine_run_id", length = 36)
+        var stateMachineRunId: String = ""
     )
 
     private companion object {
@@ -62,5 +62,4 @@ class DBTransactionMappingStorage : StateMachineRecordedTransactionMappingStorag
     override fun track(): DataFeed<List<StateMachineTransactionMapping>, StateMachineTransactionMapping> =
             DataFeed(stateMachineTransactionMap.allPersisted().map { StateMachineTransactionMapping(it.second, it.first) }.toList(),
                     updates.bufferUntilSubscribed().wrapWithDatabaseTransaction())
-
 }

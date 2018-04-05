@@ -125,8 +125,8 @@ internal class NodeLoginModule : LoginModule {
         }
         securityManager.authenticate(username, password)
         loginListener(username)
-        principals += RolePrincipal(RPC_ROLE)  // This enables the RPC client to send requests
-        principals += RolePrincipal("${RPCApi.RPC_CLIENT_QUEUE_NAME_PREFIX}.$username")  // This enables the RPC client to receive responses
+        principals += RolePrincipal(RPC_ROLE) // This enables the RPC client to send requests
+        principals += RolePrincipal("${RPCApi.RPC_CLIENT_QUEUE_NAME_PREFIX}.$username") // This enables the RPC client to receive responses
     }
 
     private fun determineUserRole(certificates: Array<X509Certificate>, username: String, useSsl: Boolean): String? {

@@ -33,7 +33,7 @@ class NodeInfoFilesCopierTest {
     private val rootPath get() = folder.root.toPath()
     private val scheduler = TestScheduler()
 
-    private fun nodeDir(nodeBaseDir : String) = rootPath.resolve(nodeBaseDir).resolve(ORGANIZATION.toLowerCase())
+    private fun nodeDir(nodeBaseDir: String) = rootPath.resolve(nodeBaseDir).resolve(ORGANIZATION.toLowerCase())
 
     private val node1RootPath by lazy { nodeDir(NODE_1_PATH) }
     private val node2RootPath by lazy { nodeDir(NODE_2_PATH) }

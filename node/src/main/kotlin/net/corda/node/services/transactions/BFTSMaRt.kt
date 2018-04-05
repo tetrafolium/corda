@@ -168,12 +168,14 @@ object BFTSMaRt {
      *
      * The validation logic can be specified by implementing the [executeCommand] method.
      */
-    abstract class Replica(config: BFTSMaRtConfig,
-                           replicaId: Int,
-                           createMap: () -> AppendOnlyPersistentMap<StateRef, SecureHash,
-                                   BFTNonValidatingNotaryService.CommittedState, PersistentStateRef>,
-                           protected val services: ServiceHubInternal,
-                           protected val notaryIdentityKey: PublicKey) : DefaultRecoverable() {
+    abstract class Replica(
+        config: BFTSMaRtConfig,
+        replicaId: Int,
+        createMap: () -> AppendOnlyPersistentMap<StateRef, SecureHash,
+                BFTNonValidatingNotaryService.CommittedState, PersistentStateRef>,
+        protected val services: ServiceHubInternal,
+        protected val notaryIdentityKey: PublicKey
+    ) : DefaultRecoverable() {
         companion object {
             private val log = contextLogger()
         }

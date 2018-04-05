@@ -1,6 +1,5 @@
 package net.corda.node.internal.security
 
-
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.common.primitives.Ints
@@ -118,10 +117,9 @@ private class RPCPermission : DomainPermission {
      * Helper constructor directly setting actions and target field
      *
      * @param methods Set of allowed RPC methods
-     * @param target  An optional "target" type on which methods act
+     * @param target An optional "target" type on which methods act
      */
     constructor(methods: Set<String>, target: String? = null) : super(methods, target?.let { setOf(it) })
-
 
     /**
      * Default constructor instantiate an "ALL" permission
@@ -163,7 +161,7 @@ private object RPCPermissionResolver : PermissionResolver {
                 require(representation.count { it == SEPARATOR } == 1 && !rpcCall.isEmpty()) {
                     "Malformed permission string"
                 }
-                val permitted = when(rpcCall) {
+                val permitted = when (rpcCall) {
                     "startFlow" -> setOf("startFlowDynamic", rpcCall)
                     "startTrackedFlow" -> setOf("startTrackedFlowDynamic", rpcCall)
                     else -> setOf(rpcCall)
@@ -187,8 +185,9 @@ private object RPCPermissionResolver : PermissionResolver {
 }
 
 private class ShiroAuthorizingSubject(
-        private val subjectId: PrincipalCollection,
-        private val manager: DefaultSecurityManager) : AuthorizingSubject {
+    private val subjectId: PrincipalCollection,
+    private val manager: DefaultSecurityManager
+) : AuthorizingSubject {
 
     override val principal get() = subjectId.primaryPrincipal.toString()
 
@@ -201,9 +200,11 @@ private fun buildCredentialMatcher(type: PasswordEncryption) = when (type) {
     PasswordEncryption.SHIRO_1_CRYPT -> PasswordMatcher()
 }
 
-private class InMemoryRealm(users: List<User>,
-                            realmId: String,
-                            passwordEncryption: PasswordEncryption = PasswordEncryption.NONE) : AuthorizingRealm() {
+private class InMemoryRealm(
+    users: List<User>,
+    realmId: String,
+    passwordEncryption: PasswordEncryption = PasswordEncryption.NONE
+) : AuthorizingRealm() {
 
     private val authorizationInfoByUser: Map<String, AuthorizationInfo>
     private val authenticationInfoByUser: Map<String, AuthenticationInfo>
@@ -293,8 +294,10 @@ private fun <K : Any, V> Cache<K, V>.toShiroCache(name: String) = object : Shiro
  * Implementation of [org.apache.shiro.cache.CacheManager] based on
  * cache implementation in [com.github.benmanes.caffeine.cache.Cache]
  */
-private class CaffeineCacheManager(val maxSize: Long,
-                                   val timeToLiveSeconds: Long) : CacheManager {
+private class CaffeineCacheManager(
+    val maxSize: Long,
+    val timeToLiveSeconds: Long
+) : CacheManager {
 
     private val instances = ConcurrentHashMap<String, ShiroCache<*, *>>()
 

@@ -26,7 +26,6 @@ interface CheckpointStorage {
      * Return false from the block to terminate further iteration.
      */
     fun forEach(block: (Checkpoint) -> Boolean)
-
 }
 
 // This class will be serialised, so everything it points to transitively must also be serialisable (with Kryo).

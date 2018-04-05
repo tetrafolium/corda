@@ -10,8 +10,9 @@ fun testDefaultFactoryNoEvolution() = SerializerFactory(AllWhitelist, ClassLoade
 fun testDefaultFactoryWithWhitelist() = SerializerFactory(EmptyWhitelist, ClassLoader.getSystemClassLoader())
 
 class TestSerializationOutput(
-        private val verbose: Boolean,
-        serializerFactory: SerializerFactory = testDefaultFactory())
+    private val verbose: Boolean,
+    serializerFactory: SerializerFactory = testDefaultFactory()
+)
     : SerializationOutput(serializerFactory) {
 
     override fun writeSchema(schema: Schema, data: Data) {
@@ -20,7 +21,7 @@ class TestSerializationOutput(
     }
 
     override fun writeTransformSchema(transformsSchema: TransformsSchema, data: Data) {
-        if(verbose) {
+        if (verbose) {
             println ("Writing Transform Schema")
             println (transformsSchema)
         }
@@ -29,4 +30,3 @@ class TestSerializationOutput(
 }
 
 fun testName(): String = Thread.currentThread().stackTrace[2].methodName
-

@@ -63,19 +63,19 @@ interface MessagingService {
      */
     @Suspendable
     fun send(
-            message: Message,
-            target: MessageRecipients,
-            retryId: Long? = null,
-            sequenceKey: Any = target,
-            additionalHeaders: Map<String, String> = emptyMap()
+        message: Message,
+        target: MessageRecipients,
+        retryId: Long? = null,
+        sequenceKey: Any = target,
+        additionalHeaders: Map<String, String> = emptyMap()
     )
 
     /** A message with a target and sequenceKey specified. */
     data class AddressedMessage(
-            val message: Message,
-            val target: MessageRecipients,
-            val retryId: Long? = null,
-            val sequenceKey: Any = target
+        val message: Message,
+        val target: MessageRecipients,
+        val retryId: Long? = null,
+        val sequenceKey: Any = target
     )
 
     /**
@@ -106,9 +106,8 @@ interface MessagingService {
     val myAddress: SingleMessageRecipient
 }
 
-
-fun MessagingService.send(topicSession: String, payload: Any, to: MessageRecipients, deduplicationId: String = UUID.randomUUID().toString(), retryId: Long? = null)
-        = send(createMessage(topicSession, payload.serialize().bytes, deduplicationId), to, retryId)
+fun MessagingService.send(topicSession: String, payload: Any, to: MessageRecipients, deduplicationId: String = UUID.randomUUID().toString(), retryId: Long? = null) =
+        send(createMessage(topicSession, payload.serialize().bytes, deduplicationId), to, retryId)
 
 interface MessageHandlerRegistration
 
@@ -146,4 +145,3 @@ object TopicStringValidator {
     /** @throws IllegalArgumentException if the given topic contains invalid characters */
     fun check(tag: String) = require(regex.matcher(tag).matches())
 }
-

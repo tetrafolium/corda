@@ -85,9 +85,11 @@ object X509Utilities {
      * Create a de novo root self-signed X509 v3 CA cert.
      */
     @JvmStatic
-    fun createSelfSignedCACertificate(subject: X500Principal,
-                                      keyPair: KeyPair,
-                                      validityWindow: Pair<Duration, Duration> = DEFAULT_VALIDITY_WINDOW): X509Certificate {
+    fun createSelfSignedCACertificate(
+        subject: X500Principal,
+        keyPair: KeyPair,
+        validityWindow: Pair<Duration, Duration> = DEFAULT_VALIDITY_WINDOW
+    ): X509Certificate {
         val window = getCertificateValidityWindow(validityWindow.first, validityWindow.second)
         return createCertificate(CertificateType.ROOT_CA, subject, keyPair, subject, keyPair.public, window)
     }
@@ -144,12 +146,14 @@ object X509Utilities {
      * @param validityWindow the time period the certificate is valid for.
      * @param nameConstraints any name constraints to impose on certificates signed by the generated certificate.
      */
-    fun createPartialCertificate(certificateType: CertificateType,
-                                 issuer: X500Principal,
-                                 subject: X500Principal,
-                                 subjectPublicKey: PublicKey,
-                                 validityWindow: Pair<Date, Date>,
-                                 nameConstraints: NameConstraints? = null): X509v3CertificateBuilder {
+    fun createPartialCertificate(
+        certificateType: CertificateType,
+        issuer: X500Principal,
+        subject: X500Principal,
+        subjectPublicKey: PublicKey,
+        validityWindow: Pair<Date, Date>,
+        nameConstraints: NameConstraints? = null
+    ): X509v3CertificateBuilder {
         val serial = BigInteger.valueOf(random63BitValue())
         val keyPurposes = DERSequence(ASN1EncodableVector().apply { certificateType.purposes.forEach { add(it) } })
         val subjectPublicKeyInfo = SubjectPublicKeyInfo.getInstance(ASN1Sequence.getInstance(subjectPublicKey.encoded))
@@ -183,13 +187,15 @@ object X509Utilities {
      * Note the generated certificate tree is capped at max depth of 1 below this to be in line with commercially available certificates.
      */
     @JvmStatic
-    fun createCertificate(certificateType: CertificateType,
-                          issuerCertificate: X509Certificate,
-                          issuerKeyPair: KeyPair,
-                          subject: X500Principal,
-                          subjectPublicKey: PublicKey,
-                          validityWindow: Pair<Duration, Duration> = DEFAULT_VALIDITY_WINDOW,
-                          nameConstraints: NameConstraints? = null): X509Certificate {
+    fun createCertificate(
+        certificateType: CertificateType,
+        issuerCertificate: X509Certificate,
+        issuerKeyPair: KeyPair,
+        subject: X500Principal,
+        subjectPublicKey: PublicKey,
+        validityWindow: Pair<Duration, Duration> = DEFAULT_VALIDITY_WINDOW,
+        nameConstraints: NameConstraints? = null
+    ): X509Certificate {
         val window = getCertificateValidityWindow(validityWindow.first, validityWindow.second, issuerCertificate)
         return createCertificate(
                 certificateType,
@@ -212,13 +218,15 @@ object X509Utilities {
      * @param validityWindow the time period the certificate is valid for.
      * @param nameConstraints any name constraints to impose on certificates signed by the generated certificate.
      */
-    fun createCertificate(certificateType: CertificateType,
-                          issuer: X500Principal,
-                          issuerSigner: ContentSigner,
-                          subject: X500Principal,
-                          subjectPublicKey: PublicKey,
-                          validityWindow: Pair<Date, Date>,
-                          nameConstraints: NameConstraints? = null): X509Certificate {
+    fun createCertificate(
+        certificateType: CertificateType,
+        issuer: X500Principal,
+        issuerSigner: ContentSigner,
+        subject: X500Principal,
+        subjectPublicKey: PublicKey,
+        validityWindow: Pair<Date, Date>,
+        nameConstraints: NameConstraints? = null
+    ): X509Certificate {
         val builder = createPartialCertificate(certificateType, issuer, subject, subjectPublicKey, validityWindow, nameConstraints)
         return builder.build(issuerSigner).run {
             require(isValidOn(Date()))
@@ -236,13 +244,15 @@ object X509Utilities {
      * @param validityWindow the time period the certificate is valid for.
      * @param nameConstraints any name constraints to impose on certificates signed by the generated certificate.
      */
-    fun createCertificate(certificateType: CertificateType,
-                          issuer: X500Principal,
-                          issuerKeyPair: KeyPair,
-                          subject: X500Principal,
-                          subjectPublicKey: PublicKey,
-                          validityWindow: Pair<Date, Date>,
-                          nameConstraints: NameConstraints? = null): X509Certificate {
+    fun createCertificate(
+        certificateType: CertificateType,
+        issuer: X500Principal,
+        issuerKeyPair: KeyPair,
+        subject: X500Principal,
+        subjectPublicKey: PublicKey,
+        validityWindow: Pair<Date, Date>,
+        nameConstraints: NameConstraints? = null
+    ): X509Certificate {
         val signatureScheme = Crypto.findSignatureScheme(issuerKeyPair.private)
         val provider = Crypto.findProvider(signatureScheme.providerName)
         val signer = ContentSignerBuilder.build(signatureScheme, issuerKeyPair.private, provider)
@@ -257,11 +267,13 @@ object X509Utilities {
     /**
      * Create certificate signing request using provided information.
      */
-    private fun createCertificateSigningRequest(subject: X500Principal,
-                                                email: String,
-                                                keyPair: KeyPair,
-                                                signatureScheme: SignatureScheme,
-                                                certRole: CertRole): PKCS10CertificationRequest {
+    private fun createCertificateSigningRequest(
+        subject: X500Principal,
+        email: String,
+        keyPair: KeyPair,
+        signatureScheme: SignatureScheme,
+        certRole: CertRole
+    ): PKCS10CertificationRequest {
         val signer = ContentSignerBuilder.build(signatureScheme, keyPair.private, Crypto.findProvider(signatureScheme.providerName))
         return JcaPKCS10CertificationRequestBuilder(subject, keyPair.public)
                 .addAttribute(BCStyle.E, DERUTF8String(email))

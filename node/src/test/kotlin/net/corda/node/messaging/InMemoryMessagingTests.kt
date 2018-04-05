@@ -37,7 +37,7 @@ class InMemoryMessagingTests {
             TopicStringValidator.check("")
         }
         assertFails {
-            TopicStringValidator.check("this.is not ok")   // Spaces
+            TopicStringValidator.check("this.is not ok") // Spaces
         }
     }
 

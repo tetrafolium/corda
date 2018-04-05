@@ -26,11 +26,12 @@ import java.time.Duration
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class NetworkMapUpdater(private val networkMapCache: NetworkMapCacheInternal,
-                        private val fileWatcher: NodeInfoWatcher,
-                        private val networkMapClient: NetworkMapClient?,
-                        private val currentParametersHash: SecureHash,
-                        private val baseDirectory: Path
+class NetworkMapUpdater(
+    private val networkMapCache: NetworkMapCacheInternal,
+    private val fileWatcher: NodeInfoWatcher,
+    private val networkMapClient: NetworkMapClient?,
+    private val currentParametersHash: SecureHash,
+    private val baseDirectory: Path
 ) : AutoCloseable {
     companion object {
         private val logger = contextLogger()

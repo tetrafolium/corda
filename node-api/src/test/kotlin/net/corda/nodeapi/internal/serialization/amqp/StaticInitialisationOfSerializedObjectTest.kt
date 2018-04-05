@@ -68,7 +68,6 @@ class StaticInitialisationOfSerializedObjectTest {
         assertEquals(1, serialisersByType.size)
     }
 
-
     @Test
     fun deserializeTest() {
         data class D(val c: C2)

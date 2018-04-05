@@ -223,9 +223,10 @@ class ConfigParsingTest {
     }
 
     private inline fun <reified S : SingleData<V>, reified L : ListData<V>, V : Any> testPropertyType(
-            value1: V,
-            value2: V,
-            valuesToString: Boolean = false) {
+        value1: V,
+        value2: V,
+        valuesToString: Boolean = false
+    ) {
         testSingleProperty<S, V>(value1, valuesToString)
         testListProperty<L, V>(value1, value2, valuesToString)
     }
@@ -304,8 +305,9 @@ class ConfigParsingTest {
         }
     }
     data class OldData(
-            @OldConfig("oldValue")
-            val newValue: String)
+        @OldConfig("oldValue")
+        val newValue: String
+    )
 
     data class DataWithCompanion(val value: Int) {
         companion object {

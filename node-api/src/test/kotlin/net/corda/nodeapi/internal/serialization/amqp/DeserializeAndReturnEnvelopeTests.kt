@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 class DeserializeAndReturnEnvelopeTests {
     // the 'this' reference means we can't just move this to the common test utils
     @Suppress("NOTHING_TO_INLINE")
-    inline private fun classTestName(clazz: String) = "${this.javaClass.name}\$${testName()}\$$clazz"
+    private inline fun classTestName(clazz: String) = "${this.javaClass.name}\$${testName()}\$$clazz"
 
     val factory = testDefaultFactoryNoEvolution()
 

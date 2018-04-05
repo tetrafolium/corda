@@ -18,17 +18,21 @@ import org.apache.activemq.artemis.api.core.client.ClientConsumer
 import org.apache.activemq.artemis.api.core.client.ClientMessage
 import java.util.*
 
-class BridgeControlListener(val config: NodeSSLConfiguration,
-                            val artemisMessageClientFactory: () -> ArtemisSessionProvider) : AutoCloseable {
+class BridgeControlListener(
+    val config: NodeSSLConfiguration,
+    val artemisMessageClientFactory: () -> ArtemisSessionProvider
+) : AutoCloseable {
     private val bridgeId: String = UUID.randomUUID().toString()
     private val bridgeManager: BridgeManager = AMQPBridgeManager(config, artemisMessageClientFactory)
     private val validInboundQueues = mutableSetOf<String>()
     private var artemis: ArtemisSessionProvider? = null
     private var controlConsumer: ClientConsumer? = null
 
-    constructor(config: NodeSSLConfiguration,
-                p2pAddress: NetworkHostAndPort,
-                maxMessageSize: Int) : this(config, { ArtemisMessagingClient(config, p2pAddress, maxMessageSize) })
+    constructor(
+        config: NodeSSLConfiguration,
+        p2pAddress: NetworkHostAndPort,
+        maxMessageSize: Int
+    ) : this(config, { ArtemisMessagingClient(config, p2pAddress, maxMessageSize) })
 
     companion object {
         private val log = contextLogger()
@@ -120,5 +124,4 @@ class BridgeControlListener(val config: NodeSSLConfiguration,
             }
         }
     }
-
 }

@@ -62,15 +62,15 @@ internal fun constructorForDeserialization(type: Type): KFunction<Any>? {
  * have names accessible via reflection.
  */
 internal fun <T : Any> propertiesForSerialization(
-        kotlinConstructor: KFunction<T>?,
-        type: Type,
-        factory: SerializerFactory) = PropertySerializers.make(
+    kotlinConstructor: KFunction<T>?,
+    type: Type,
+    factory: SerializerFactory
+) = PropertySerializers.make(
         if (kotlinConstructor != null) {
             propertiesForSerializationFromConstructor(kotlinConstructor, type, factory)
         } else {
             propertiesForSerializationFromAbstract(type.asClass()!!, type, factory)
         }.sortedWith(PropertyAccessor))
-
 
 fun isConcrete(clazz: Class<*>): Boolean = !(clazz.isInterface || Modifier.isAbstract(clazz.modifiers))
 
@@ -93,7 +93,7 @@ data class PropertyDescriptor(var field: Field?, var setter: Method?, var getter
 
     constructor() : this(null, null, null, null)
 
-    fun preferredGetter() : Method? = getter ?: iser
+    fun preferredGetter(): Method? = getter ?: iser
 }
 
 object PropertyDescriptorsRegex {
@@ -161,9 +161,9 @@ fun Class<out Any?>.propertyDescriptors(): Map<String, PropertyDescriptor> {
                 // fails the getter doesn't refer to a property directly, but may to a cosntructor
                 // parameter that shadows a property
                 val properties =
-                        classProperties[groups[2]!!.value] ?:
-                        classProperties[groups[2]!!.value.decapitalize()] ?:
-                        // take into account those constructor properties that don't directly map to a named
+                        classProperties[groups[2]!!.value]
+                        ?: classProperties[groups[2]!!.value.decapitalize()]
+                        ?: // take into account those constructor properties that don't directly map to a named
                         // property which are, by default, already added to the map
                         classProperties.computeIfAbsent(groups[2]!!.value) { PropertyDescriptor() }
 
@@ -188,8 +188,8 @@ fun Class<out Any?>.propertyDescriptors(): Map<String, PropertyDescriptor> {
                         "is" -> {
                             if (func.parameterCount == 0) {
                                 val rtnType = TypeToken.of(func.genericReturnType)
-                                if ((rtnType == TypeToken.of(Boolean::class.java))
-                                        || (rtnType == TypeToken.of(Boolean::class.javaObjectType))) {
+                                if ((rtnType == TypeToken.of(Boolean::class.java)) ||
+                                        (rtnType == TypeToken.of(Boolean::class.javaObjectType))) {
                                     if (iser == null) iser = func
                                 }
                             }
@@ -212,9 +212,10 @@ fun Class<out Any?>.propertyDescriptors(): Map<String, PropertyDescriptor> {
  * @param factory The factory generating the serializer wrapping this function.
  */
 internal fun <T : Any> propertiesForSerializationFromConstructor(
-        kotlinConstructor: KFunction<T>,
-        type: Type,
-        factory: SerializerFactory): List<PropertyAccessor> {
+    kotlinConstructor: KFunction<T>,
+    type: Type,
+    factory: SerializerFactory
+): List<PropertyAccessor> {
     val clazz = (kotlinConstructor.returnType.classifier as KClass<*>).javaObjectType
 
     val classProperties = clazz.propertyDescriptors()
@@ -236,18 +237,18 @@ internal fun <T : Any> propertiesForSerializationFromConstructor(
             // We will already have disambiguated getA for property A or a but we still need to cope
             // with the case we don't know the case of A when the parameter doesn't match a property
             // but has a getter
-            val matchingProperty = classProperties[name] ?: classProperties[name.capitalize()] ?:
-                    throw NotSerializableException(
+            val matchingProperty = classProperties[name] ?: classProperties[name.capitalize()]
+                    ?: throw NotSerializableException(
                             "Constructor parameter - \"$name\" -  doesn't refer to a property of \"$clazz\"")
 
             // If the property has a getter we'll use that to retrieve it's value from the instance, if it doesn't
             // *for *know* we switch to a reflection based method
             val propertyReader = if (matchingProperty.getter != null) {
                 val getter = matchingProperty.getter ?: throw NotSerializableException(
-                        "Property has no getter method for - \"$name\" - of \"$clazz\". If using Java and the parameter name"
-                                + "looks anonymous, check that you have the -parameters option specified in the "
-                                + "Java compiler. Alternately, provide a proxy serializer "
-                                + "(SerializationCustomSerializer) if recompiling isn't an option.")
+                        "Property has no getter method for - \"$name\" - of \"$clazz\". If using Java and the parameter name" +
+                                "looks anonymous, check that you have the -parameters option specified in the " +
+                                "Java compiler. Alternately, provide a proxy serializer " +
+                                "(SerializationCustomSerializer) if recompiling isn't an option.")
 
                 val returnType = resolveTypeVariables(getter.genericReturnType, type)
                 if (!constructorParamTakesReturnTypeOfGetter(returnType, getter.genericReturnType, param.value)) {
@@ -258,8 +259,8 @@ internal fun <T : Any> propertiesForSerializationFromConstructor(
 
                 Pair(PublicPropertyReader(getter), returnType)
             } else {
-                val field = classProperties[name]!!.field ?:
-                        throw NotSerializableException("No property matching constructor parameter named - \"$name\" - " +
+                val field = classProperties[name]!!.field
+                        ?: throw NotSerializableException("No property matching constructor parameter named - \"$name\" - " +
                                 "of \"$clazz\". If using Java, check that you have the -parameters option specified " +
                                 "in the Java compiler. Alternately, provide a proxy serializer " +
                                 "(SerializationCustomSerializer) if recompiling isn't an option")
@@ -279,9 +280,10 @@ internal fun <T : Any> propertiesForSerializationFromConstructor(
  * and use those
  */
 fun propertiesForSerializationFromSetters(
-        properties: Map<String, PropertyDescriptor>,
-        type: Type,
-        factory: SerializerFactory): List<PropertyAccessor> {
+    properties: Map<String, PropertyDescriptor>,
+    type: Type,
+    factory: SerializerFactory
+): List<PropertyAccessor> {
     return mutableListOf<PropertyAccessorGetterSetter>().apply {
         var idx = 0
 
@@ -321,25 +323,27 @@ fun propertiesForSerializationFromSetters(
 }
 
 private fun constructorParamTakesReturnTypeOfGetter(
-        getterReturnType: Type,
-        rawGetterReturnType: Type,
-        param: KParameter): Boolean {
+    getterReturnType: Type,
+    rawGetterReturnType: Type,
+    param: KParameter
+): Boolean {
     val paramToken = TypeToken.of(param.type.javaType)
     val rawParamType = TypeToken.of(paramToken.rawType)
 
-    return paramToken.isSupertypeOf(getterReturnType)
-            || paramToken.isSupertypeOf(rawGetterReturnType)
+    return paramToken.isSupertypeOf(getterReturnType) ||
+            paramToken.isSupertypeOf(rawGetterReturnType)
             // cope with the case where the constructor parameter is a generic type (T etc) but we
             // can discover it's raw type. When bounded this wil be the bounding type, unbounded
-            // generics this will be object
-            || rawParamType.isSupertypeOf(getterReturnType)
-            || rawParamType.isSupertypeOf(rawGetterReturnType)
+            // generics this will be object ||
+            rawParamType.isSupertypeOf(getterReturnType) ||
+            rawParamType.isSupertypeOf(rawGetterReturnType)
 }
 
 private fun propertiesForSerializationFromAbstract(
-        clazz: Class<*>,
-        type: Type,
-        factory: SerializerFactory): List<PropertyAccessor> {
+    clazz: Class<*>,
+    type: Type,
+    factory: SerializerFactory
+): List<PropertyAccessor> {
     val properties = clazz.propertyDescriptors()
 
     return mutableListOf<PropertyAccessorConstructor>().apply {
@@ -521,9 +525,9 @@ fun ClassWhitelist.isNotWhitelisted(clazz: Class<*>) = !(this.isWhitelisted(claz
 
 // Recursively check the class, interfaces and superclasses for our annotation.
 fun ClassWhitelist.hasAnnotationInHierarchy(type: Class<*>): Boolean {
-    return type.isAnnotationPresent(CordaSerializable::class.java)
-            || type.interfaces.any { hasAnnotationInHierarchy(it) }
-            || (type.superclass != null && hasAnnotationInHierarchy(type.superclass))
+    return type.isAnnotationPresent(CordaSerializable::class.java) ||
+            type.interfaces.any { hasAnnotationInHierarchy(it) } ||
+            (type.superclass != null && hasAnnotationInHierarchy(type.superclass))
 }
 
 /**

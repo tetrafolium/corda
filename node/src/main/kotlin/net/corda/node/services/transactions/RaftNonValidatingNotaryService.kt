@@ -8,9 +8,9 @@ import java.security.PublicKey
 
 /** A non-validating notary service operated by a group of mutually trusting parties, uses the Raft algorithm to achieve consensus. */
 class RaftNonValidatingNotaryService(
-        override val services: ServiceHub,
-        override val notaryIdentityKey: PublicKey,
-        override val uniquenessProvider: RaftUniquenessProvider
+    override val services: ServiceHub,
+    override val notaryIdentityKey: PublicKey,
+    override val uniquenessProvider: RaftUniquenessProvider
 ) : TrustedAuthorityNotaryService() {
     override fun createServiceFlow(otherPartySession: FlowSession): NotaryFlow.Service {
         return NonValidatingNotaryFlow(otherPartySession, this)

@@ -8,8 +8,6 @@ import org.apache.qpid.proton.amqp.UnsignedInteger
 import org.apache.qpid.proton.amqp.UnsignedLong
 import org.apache.qpid.proton.codec.DescribedTypeConstructor
 import java.io.NotSerializableException
-import net.corda.nodeapi.internal.serialization.carpenter.Field as CarpenterField
-import net.corda.nodeapi.internal.serialization.carpenter.Schema as CarpenterSchema
 
 const val DESCRIPTOR_DOMAIN: String = "net.corda"
 val amqpMagic = CordaSerializationMagic("corda".toByteArray() + byteArrayOf(1, 0))
@@ -87,13 +85,14 @@ data class Descriptor(val name: Symbol?, val code: UnsignedLong? = null) : Descr
 }
 
 data class Field(
-        val name: String,
-        val type: String,
-        val requires: List<String>,
-        val default: String?,
-        val label: String?,
-        val mandatory: Boolean,
-        val multiple: Boolean) : DescribedType {
+    val name: String,
+    val type: String,
+    val requires: List<String>,
+    val default: String?,
+    val label: String?,
+    val mandatory: Boolean,
+    val multiple: Boolean
+) : DescribedType {
     companion object : DescribedTypeConstructor<Field> {
         val DESCRIPTOR = AMQPDescriptorRegistry.FIELD.amqpDescriptor
 
@@ -197,12 +196,14 @@ data class CompositeType(override val name: String, override val label: String?,
     }
 }
 
-data class RestrictedType(override val name: String,
-                          override val label: String?,
-                          override val provides: List<String>,
-                          val source: String,
-                          override val descriptor: Descriptor,
-                          val choices: List<Choice>) : TypeNotation() {
+data class RestrictedType(
+    override val name: String,
+    override val label: String?,
+    override val provides: List<String>,
+    val source: String,
+    override val descriptor: Descriptor,
+    val choices: List<Choice>
+) : TypeNotation() {
     companion object : DescribedTypeConstructor<RestrictedType> {
         val DESCRIPTOR = AMQPDescriptorRegistry.RESTRICTED_TYPE.amqpDescriptor
 
@@ -302,5 +303,4 @@ data class ReferencedObject(private val refCounter: Int) : DescribedType {
 
     override fun toString(): String = "<refObject refCounter=$refCounter/>"
 }
-
 

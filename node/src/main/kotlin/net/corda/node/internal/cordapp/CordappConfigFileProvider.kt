@@ -31,5 +31,4 @@ class CordappConfigFileProvider(val configDir: File = DEFAULT_CORDAPP_CONFIG_DIR
             ConfigFactory.empty()
         }
     }
-
 }

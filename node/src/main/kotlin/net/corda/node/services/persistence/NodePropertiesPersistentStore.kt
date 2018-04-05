@@ -28,12 +28,12 @@ class NodePropertiesPersistentStore(readPhysicalNodeId: () -> String, persistenc
     @Entity
     @Table(name = "${NODE_DATABASE_PREFIX}properties")
     class DBNodeProperty(
-            @Id
-            @Column(name = "property_key")
-            val key: String = "",
+        @Id
+        @Column(name = "property_key")
+        val key: String = "",
 
-            @Column(name = "property_value")
-            var value: String? = ""
+        @Column(name = "property_value")
+        var value: String? = ""
     )
 }
 

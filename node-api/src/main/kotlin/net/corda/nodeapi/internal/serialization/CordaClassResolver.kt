@@ -123,10 +123,10 @@ class CordaClassResolver(serializationContext: SerializationContext) : DefaultCl
     // We also do not allow extension of KryoSerializable for annotated classes, or combination with @DefaultSerializer for custom serialisation.
     // TODO: Later we can support annotations on attachment classes and spin up a proxy via bytecode that we know is harmless.
     private fun checkForAnnotation(type: Class<*>): Boolean {
-        return (type.classLoader !is AttachmentsClassLoader)
-                && !KryoSerializable::class.java.isAssignableFrom(type)
-                && !type.isAnnotationPresent(DefaultSerializer::class.java)
-                && (type.isAnnotationPresent(CordaSerializable::class.java) || whitelist.hasAnnotationInHierarchy(type))
+        return (type.classLoader !is AttachmentsClassLoader) &&
+                !KryoSerializable::class.java.isAssignableFrom(type) &&
+                !type.isAnnotationPresent(DefaultSerializer::class.java) &&
+                (type.isAnnotationPresent(CordaSerializable::class.java) || whitelist.hasAnnotationInHierarchy(type))
     }
 
     // Need to clear out class names from attachments.
@@ -162,7 +162,7 @@ object AllWhitelist : ClassWhitelist {
     override fun hasListed(type: Class<*>): Boolean = true
 }
 
-sealed class AbstractMutableClassWhitelist(private val whitelist: MutableSet<String>,  private val delegate: ClassWhitelist) : MutableClassWhitelist {
+sealed class AbstractMutableClassWhitelist(private val whitelist: MutableSet<String>, private val delegate: ClassWhitelist) : MutableClassWhitelist {
 
     override fun hasListed(type: Class<*>): Boolean {
         /**
@@ -236,4 +236,3 @@ class LoggingWhitelist(val delegate: ClassWhitelist, val global: Boolean = true)
         }
     }
 }
-

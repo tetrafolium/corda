@@ -29,18 +29,17 @@ class DBTransactionStorage(cacheSizeBytes: Long) : WritableTransactionStorage, S
     @Entity
     @Table(name = "${NODE_DATABASE_PREFIX}transactions")
     class DBTransaction(
-            @Id
-            @Column(name = "tx_id", length = 64)
-            var txId: String = "",
+        @Id
+        @Column(name = "tx_id", length = 64)
+        var txId: String = "",
 
-            @Lob
-            @Column(name = "transaction_value")
-            var transaction: ByteArray = EMPTY_BYTE_ARRAY
+        @Lob
+        @Column(name = "transaction_value")
+        var transaction: ByteArray = EMPTY_BYTE_ARRAY
     )
 
     private companion object {
-        fun createTransactionsMap(maxSizeInBytes: Long)
-                : AppendOnlyPersistentMapBase<SecureHash, TxCacheValue, DBTransaction, String> {
+        fun createTransactionsMap(maxSizeInBytes: Long): AppendOnlyPersistentMapBase<SecureHash, TxCacheValue, DBTransaction, String> {
             return WeightBasedAppendOnlyPersistentMap<SecureHash, TxCacheValue, DBTransaction, String>(
                     toPersistentEntityKey = { it.toString() },
                     fromPersistentEntity = {
@@ -51,8 +50,8 @@ class DBTransactionStorage(cacheSizeBytes: Long) : WritableTransactionStorage, S
                     toPersistentEntity = { key: SecureHash, value: TxCacheValue ->
                         DBTransaction().apply {
                             txId = key.toString()
-                            transaction = value.toSignedTx().
-                                    serialize(context = SerializationDefaults.STORAGE_CONTEXT).bytes
+                            transaction = value.toSignedTx()
+                                    .serialize(context = SerializationDefaults.STORAGE_CONTEXT).bytes
                         }
                     },
                     persistentEntityClass = DBTransaction::class.java,

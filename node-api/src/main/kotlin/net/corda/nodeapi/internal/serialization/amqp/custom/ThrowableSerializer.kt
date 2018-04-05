@@ -75,12 +75,13 @@ class ThrowableSerializer(factory: SerializerFactory) : CustomSerializer.Proxy<T
     }
 
     class ThrowableProxy(
-            val exceptionClass: String,
-            val message: String?,
-            val stackTrace: Array<StackTraceElement>,
-            val cause: Throwable?,
-            val suppressed: Array<Throwable>,
-            val additionalProperties: Map<String, Any?>)
+        val exceptionClass: String,
+        val message: String?,
+        val stackTrace: Array<StackTraceElement>,
+        val cause: Throwable?,
+        val suppressed: Array<Throwable>,
+        val additionalProperties: Map<String, Any?>
+    )
 }
 
 class StackTraceElementSerializer(factory: SerializerFactory) : CustomSerializer.Proxy<StackTraceElement, StackTraceElementSerializer.StackTraceElementProxy>(StackTraceElement::class.java, StackTraceElementProxy::class.java, factory) {

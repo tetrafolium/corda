@@ -45,10 +45,10 @@ private fun CriteriaBuilder.executeUpdate(session: Session, configure: Root<*>.(
  * TODO: have transaction storage do some caching.
  */
 class NodeVaultService(
-        private val clock: Clock,
-        private val keyManagementService: KeyManagementService,
-        private val servicesForResolution: ServicesForResolution,
-        hibernateConfig: HibernateConfiguration
+    private val clock: Clock,
+    private val keyManagementService: KeyManagementService,
+    private val servicesForResolution: ServicesForResolution,
+    hibernateConfig: HibernateConfiguration
 ) : SingletonSerializeAsToken(), VaultServiceInternal {
     private companion object {
         private val log = contextLogger()
@@ -157,13 +157,13 @@ class NodeVaultService(
                 else -> throw IllegalArgumentException("Unsupported transaction type: ${tx.javaClass.name}")
             }
             val myKeys = keyManagementService.filterMyKeys(ltx.outputs.flatMap { it.data.participants.map { it.owningKey } })
-            val (consumedStateAndRefs, producedStates) = ltx.inputs.
-                    zip(ltx.outputs).
-                    filter { (_, output) ->
+            val (consumedStateAndRefs, producedStates) = ltx.inputs
+                    .zip(ltx.outputs)
+                    .filter { (_, output) ->
                         if (statesToRecord == StatesToRecord.ONLY_RELEVANT) isRelevant(output.data, myKeys.toSet())
                         else true
-                    }.
-                    unzip()
+                    }
+                    .unzip()
 
             val producedStateAndRefs = producedStates.map { ltx.outRef<ContractState>(it.data) }
             if (consumedStateAndRefs.isEmpty() && producedStateAndRefs.isEmpty()) {
@@ -178,7 +178,6 @@ class NodeVaultService(
             }
             return Vault.Update(consumedStateAndRefs.toSet(), producedStateAndRefs.toSet(), null, updateType)
         }
-
 
         return batch.mapNotNull {
             if (it is WireTransaction) makeUpdate(it) else resolveAndMakeUpdate(it)
@@ -307,10 +306,12 @@ class NodeVaultService(
 
     @Suspendable
     @Throws(StatesNotAvailableException::class)
-    override fun <T : FungibleAsset<U>, U : Any> tryLockFungibleStatesForSpending(lockId: UUID,
-                                                                                  eligibleStatesQuery: QueryCriteria,
-                                                                                  amount: Amount<U>,
-                                                                                  contractStateType: Class<out T>): List<StateAndRef<T>> {
+    override fun <T : FungibleAsset<U>, U : Any> tryLockFungibleStatesForSpending(
+        lockId: UUID,
+        eligibleStatesQuery: QueryCriteria,
+        amount: Amount<U>,
+        contractStateType: Class<out T>
+    ): List<StateAndRef<T>> {
         if (amount.quantity == 0L) {
             return emptyList()
         }
@@ -411,7 +412,7 @@ class NodeVaultService(
             }
 
             query.firstResult = (paging.pageNumber - 1) * paging.pageSize
-            query.maxResults = paging.pageSize + 1  // detection too many results
+            query.maxResults = paging.pageSize + 1 // detection too many results
 
             // execution
             val results = query.resultList

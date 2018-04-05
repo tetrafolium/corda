@@ -14,9 +14,9 @@ var contextTransactionOrNull: DatabaseTransaction?
 val contextTransaction get() = contextTransactionOrNull ?: error("Was expecting to find transaction set on current strand: ${Strand.currentStrand()}")
 
 class DatabaseTransaction(
-        isolation: Int,
-        private val outerTransaction: DatabaseTransaction?,
-        val database: CordaPersistence
+    isolation: Int,
+    private val outerTransaction: DatabaseTransaction?,
+    val database: CordaPersistence
 ) {
     val id: UUID = UUID.randomUUID()
 

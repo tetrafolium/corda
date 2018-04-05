@@ -15,9 +15,9 @@ object VerifierApi {
     private const val RESULT_EXCEPTION_FIELD_NAME = "result-exception"
 
     data class VerificationRequest(
-            val verificationId: Long,
-            val transaction: LedgerTransaction,
-            val responseAddress: SimpleString
+        val verificationId: Long,
+        val transaction: LedgerTransaction,
+        val responseAddress: SimpleString
     ) {
         companion object {
             fun fromClientMessage(message: ClientMessage): ObjectWithCompatibleContext<VerificationRequest> {
@@ -40,8 +40,8 @@ object VerifierApi {
     }
 
     data class VerificationResponse(
-            val verificationId: Long,
-            val exception: Throwable?
+        val verificationId: Long,
+        val exception: Throwable?
     ) {
         companion object {
             fun fromClientMessage(message: ClientMessage): VerificationResponse {

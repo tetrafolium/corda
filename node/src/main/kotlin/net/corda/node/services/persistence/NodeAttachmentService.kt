@@ -40,9 +40,9 @@ import javax.persistence.*
  */
 @ThreadSafe
 class NodeAttachmentService(
-        metrics: MetricRegistry,
-        attachmentContentCacheSize: Long = NodeConfiguration.defaultAttachmentContentCacheSize,
-        attachmentCacheBound: Long = NodeConfiguration.defaultAttachmentCacheBound
+    metrics: MetricRegistry,
+    attachmentContentCacheSize: Long = NodeConfiguration.defaultAttachmentContentCacheSize,
+    attachmentCacheBound: Long = NodeConfiguration.defaultAttachmentCacheBound
 ) : AttachmentStorage, SingletonSerializeAsToken(
 ) {
 
@@ -73,29 +73,29 @@ class NodeAttachmentService(
     @Table(name = "${NODE_DATABASE_PREFIX}attachments",
             indexes = arrayOf(Index(name = "att_id_idx", columnList = "att_id")))
     class DBAttachment(
-            @Id
-            @Column(name = "att_id")
-            var attId: String,
+        @Id
+        @Column(name = "att_id")
+        var attId: String,
 
-            @Column(name = "content")
-            @Lob
-            var content: ByteArray,
+        @Column(name = "content")
+        @Lob
+        var content: ByteArray,
 
-            @Column(name = "insertion_date", nullable = false, updatable = false)
-            var insertionDate: Instant = Instant.now(),
+        @Column(name = "insertion_date", nullable = false, updatable = false)
+        var insertionDate: Instant = Instant.now(),
 
-            @Column(name = "uploader", updatable = false)
-            var uploader: String? = null,
+        @Column(name = "uploader", updatable = false)
+        var uploader: String? = null,
 
-            @Column(name = "filename", updatable = false)
-            var filename: String? = null,
+        @Column(name = "filename", updatable = false)
+        var filename: String? = null,
 
-            @ElementCollection
-            @Column(name = "contract_class_name")
-            @CollectionTable(name = "node_attchments_contracts", joinColumns = arrayOf(
-                    JoinColumn(name = "att_id", referencedColumnName = "att_id")),
-                    foreignKey = ForeignKey(name = "FK__ctr_class__attachments"))
-            var contractClassNames: List<ContractClassName>? = null
+        @ElementCollection
+        @Column(name = "contract_class_name")
+        @CollectionTable(name = "node_attchments_contracts", joinColumns = arrayOf(
+                JoinColumn(name = "att_id", referencedColumnName = "att_id")),
+                foreignKey = ForeignKey(name = "FK__ctr_class__attachments"))
+        var contractClassNames: List<ContractClassName>? = null
     ) : Serializable
 
     @VisibleForTesting
@@ -125,11 +125,13 @@ class NodeAttachmentService(
      */
     @VisibleForTesting
     @CordaSerializable
-    class HashCheckingStream(val expected: SecureHash.SHA256,
-                             val expectedSize: Int,
-                             input: InputStream,
-                             private val counter: CountingInputStream = CountingInputStream(input),
-                             private val stream: HashingInputStream = HashingInputStream(Hashing.sha256(), counter)) : FilterInputStream(stream) {
+    class HashCheckingStream(
+        val expected: SecureHash.SHA256,
+        val expectedSize: Int,
+        input: InputStream,
+        private val counter: CountingInputStream = CountingInputStream(input),
+        private val stream: HashingInputStream = HashingInputStream(Hashing.sha256(), counter)
+    ) : FilterInputStream(stream) {
         @Throws(IOException::class)
         override fun close() {
             super.close()
@@ -190,9 +192,7 @@ class NodeAttachmentService(
         }
 
         override fun toToken(context: SerializeAsTokenContext) = Token(id, checkOnLoad)
-
     }
-
 
     // slightly complex 2 level approach to attachment caching:
     // On the first level we cache attachment contents loaded from the DB by their key. This is a weight based
@@ -326,5 +326,4 @@ class NodeAttachmentService(
 
         return results.map { AttachmentId.parse(it.attId) }
     }
-
 }

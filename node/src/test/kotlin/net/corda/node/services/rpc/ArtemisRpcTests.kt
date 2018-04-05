@@ -163,8 +163,15 @@ class ArtemisRpcTests {
         }
     }
 
-    private fun testSslCommunication(brokerSslOptions: SSLConfiguration, useSslForBroker: Boolean, clientSslOptions: SSLConfiguration?, address: NetworkHostAndPort = ports.nextHostAndPort(),
-                                     adminAddress: NetworkHostAndPort = ports.nextHostAndPort(), baseDirectory: Path = Files.createTempDirectory(null), clientConnectionSpy: (() -> Unit) -> Unit = {}) {
+    private fun testSslCommunication(
+        brokerSslOptions: SSLConfiguration,
+        useSslForBroker: Boolean,
+        clientSslOptions: SSLConfiguration?,
+        address: NetworkHostAndPort = ports.nextHostAndPort(),
+        adminAddress: NetworkHostAndPort = ports.nextHostAndPort(),
+        baseDirectory: Path = Files.createTempDirectory(null),
+        clientConnectionSpy: (() -> Unit) -> Unit = {}
+    ) {
         val maxMessageSize = 10000
         val jmxEnabled = false
         val certificateChainCheckPolicies: List<CertChainPolicyConfig> = listOf()

@@ -25,23 +25,25 @@ import javax.persistence.Lob
  *
  * This class needs database transactions to be in-flight during method calls and init.
  */
-class PersistentKeyManagementService(val identityService: IdentityService,
-                                     initialKeys: Set<KeyPair>) : SingletonSerializeAsToken(), KeyManagementService {
+class PersistentKeyManagementService(
+    val identityService: IdentityService,
+    initialKeys: Set<KeyPair>
+) : SingletonSerializeAsToken(), KeyManagementService {
 
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}our_key_pairs")
     class PersistentKey(
 
-            @Id
-            @Column(name = "public_key_hash", length = MAX_HASH_HEX_SIZE)
-            var publicKeyHash: String,
+        @Id
+        @Column(name = "public_key_hash", length = MAX_HASH_HEX_SIZE)
+        var publicKeyHash: String,
 
-            @Lob
-            @Column(name = "public_key")
-            var publicKey: ByteArray = EMPTY_BYTE_ARRAY,
-            @Lob
-            @Column(name = "private_key")
-            var privateKey: ByteArray = EMPTY_BYTE_ARRAY
+        @Lob
+        @Column(name = "public_key")
+        var publicKey: ByteArray = EMPTY_BYTE_ARRAY,
+        @Lob
+        @Column(name = "private_key")
+        var privateKey: ByteArray = EMPTY_BYTE_ARRAY
     ) {
         constructor(publicKey: PublicKey, privateKey: PrivateKey)
             : this(publicKey.toStringShort(), publicKey.encoded, privateKey.encoded)

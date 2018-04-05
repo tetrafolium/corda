@@ -442,5 +442,3 @@ class DeserializeNeedingCarpentrySimpleTypesTest : AmqpCarpenterBase(AllWhitelis
     }
 }
 
-
-

@@ -35,10 +35,12 @@ sealed class AuditEvent {
 /**
  * Sealed data class to mark system related events as a distinct category.
  */
-data class SystemAuditEvent(override val timestamp: Instant,
-                            override val context: InvocationContext,
-                            override val description: String,
-                            override val contextData: Map<String, String>) : AuditEvent()
+data class SystemAuditEvent(
+    override val timestamp: Instant,
+    override val context: InvocationContext,
+    override val description: String,
+    override val contextData: Map<String, String>
+) : AuditEvent()
 
 /**
  * Interface to mandate flow identification properties
@@ -59,25 +61,27 @@ interface FlowAuditInfo {
  * Sealed data class to record custom application specified flow event.
  */
 data class FlowAppAuditEvent(
-        override val timestamp: Instant,
-        override val context: InvocationContext,
-        override val description: String,
-        override val contextData: Map<String, String>,
-        override val flowType: Class<out FlowLogic<*>>,
-        override val flowId: StateMachineRunId,
-        val auditEventType: String) : AuditEvent(), FlowAuditInfo
+    override val timestamp: Instant,
+    override val context: InvocationContext,
+    override val description: String,
+    override val contextData: Map<String, String>,
+    override val flowType: Class<out FlowLogic<*>>,
+    override val flowId: StateMachineRunId,
+    val auditEventType: String
+) : AuditEvent(), FlowAuditInfo
 
 /**
  * Sealed data class to record the initiation of a new flow.
  * The flow parameters should be captured to the context data.
  */
 data class FlowStartEvent(
-        override val timestamp: Instant,
-        override val context: InvocationContext,
-        override val description: String,
-        override val contextData: Map<String, String>,
-        override val flowType: Class<out FlowLogic<*>>,
-        override val flowId: StateMachineRunId) : AuditEvent(), FlowAuditInfo
+    override val timestamp: Instant,
+    override val context: InvocationContext,
+    override val description: String,
+    override val contextData: Map<String, String>,
+    override val flowType: Class<out FlowLogic<*>>,
+    override val flowId: StateMachineRunId
+) : AuditEvent(), FlowAuditInfo
 
 /**
  * Sealed data class to record ProgressTracker Step object whenever a change is signalled.
@@ -85,39 +89,44 @@ data class FlowStartEvent(
  * which is copied into the contextData Map.
  */
 data class FlowProgressAuditEvent(
-        override val timestamp: Instant,
-        override val context: InvocationContext,
-        override val description: String,
-        override val flowType: Class<out FlowLogic<*>>,
-        override val flowId: StateMachineRunId,
-        val flowProgress: ProgressTracker.Step) : AuditEvent(), FlowAuditInfo {
+    override val timestamp: Instant,
+    override val context: InvocationContext,
+    override val description: String,
+    override val flowType: Class<out FlowLogic<*>>,
+    override val flowId: StateMachineRunId,
+    val flowProgress: ProgressTracker.Step
+) : AuditEvent(), FlowAuditInfo {
     override val contextData: Map<String, String> get() = flowProgress.extraAuditData
 }
 
 /**
  * Sealed data class to record any FlowExceptions, or other unexpected terminations of a Flow.
  */
-data class FlowErrorAuditEvent(override val timestamp: Instant,
-                               override val context: InvocationContext,
-                               override val description: String,
-                               override val contextData: Map<String, String>,
-                               override val flowType: Class<out FlowLogic<*>>,
-                               override val flowId: StateMachineRunId,
-                               val error: Throwable) : AuditEvent(), FlowAuditInfo
+data class FlowErrorAuditEvent(
+    override val timestamp: Instant,
+    override val context: InvocationContext,
+    override val description: String,
+    override val contextData: Map<String, String>,
+    override val flowType: Class<out FlowLogic<*>>,
+    override val flowId: StateMachineRunId,
+    val error: Throwable
+) : AuditEvent(), FlowAuditInfo
 
 /**
  * Sealed data class to record  checks on per flow permissions and the verdict of these checks
  * If the permission is denied i.e. permissionGranted is false, then it is expected that the flow will be terminated immediately
  * after recording the FlowPermissionAuditEvent. This may cause an extra FlowErrorAuditEvent to be recorded too.
  */
-data class FlowPermissionAuditEvent(override val timestamp: Instant,
-                                    override val context: InvocationContext,
-                                    override val description: String,
-                                    override val contextData: Map<String, String>,
-                                    override val flowType: Class<out FlowLogic<*>>,
-                                    override val flowId: StateMachineRunId,
-                                    val permissionRequested: String,
-                                    val permissionGranted: Boolean) : AuditEvent(), FlowAuditInfo
+data class FlowPermissionAuditEvent(
+    override val timestamp: Instant,
+    override val context: InvocationContext,
+    override val description: String,
+    override val contextData: Map<String, String>,
+    override val flowType: Class<out FlowLogic<*>>,
+    override val flowId: StateMachineRunId,
+    val permissionRequested: String,
+    val permissionGranted: Boolean
+) : AuditEvent(), FlowAuditInfo
 
 /**
  * Minimal interface for recording audit information within the system. The AuditService is assumed to be available only
@@ -136,4 +145,3 @@ class DummyAuditService : AuditService, SingletonSerializeAsToken() {
         //TODO Implement transformation of the audit events to formal audit data
     }
 }
-

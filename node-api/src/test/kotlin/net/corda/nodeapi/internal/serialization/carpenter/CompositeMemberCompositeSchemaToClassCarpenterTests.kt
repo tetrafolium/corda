@@ -284,4 +284,3 @@ class CompositeMembers : AmqpCarpenterBase(AllWhitelist) {
     }
     */
 }
-

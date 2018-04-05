@@ -22,9 +22,9 @@ class FlowSessionImpl(override val counterparty: Party) : FlowSession() {
 
     @Suspendable
     override fun <R : Any> sendAndReceive(
-            receiveType: Class<R>,
-            payload: Any,
-            maySkipCheckpoint: Boolean
+        receiveType: Class<R>,
+        payload: Any,
+        maySkipCheckpoint: Boolean
     ): UntrustworthyData<R> {
         return stateMachine.sendAndReceive(
                 receiveType,
@@ -57,4 +57,3 @@ class FlowSessionImpl(override val counterparty: Party) : FlowSession() {
 
     override fun toString() = "Flow session with $counterparty"
 }
-

@@ -54,8 +54,8 @@ class FlowLogicRefFactoryImpl(private val classloader: ClassLoader) : SingletonS
         } catch (e: ClassNotFoundException) {
             throw IllegalFlowLogicException(flowClassName, "Flow not found: $flowClassName")
         }
-        return forName.asSubclass(FlowLogic::class.java) ?:
-            throw IllegalFlowLogicException(flowClassName, "The class $flowClassName is not a subclass of FlowLogic.")
+        return forName.asSubclass(FlowLogic::class.java)
+            ?: throw IllegalFlowLogicException(flowClassName, "The class $flowClassName is not a subclass of FlowLogic.")
     }
 
     override fun createForRPC(flowClass: Class<out FlowLogic<*>>, vararg args: Any?): FlowLogicRef {
@@ -69,7 +69,7 @@ class FlowLogicRefFactoryImpl(private val classloader: ClassLoader) : SingletonS
                 if (argTypes.size != ctorTypes.size)
                     return@single false
                 for ((argType, ctorType) in argTypes.zip(ctorTypes)) {
-                    if (argType == null) continue   // Try and find a match based on the other arguments.
+                    if (argType == null) continue // Try and find a match based on the other arguments.
                     if (!ctorType.isAssignableFrom(argType)) return@single false
                 }
                 true

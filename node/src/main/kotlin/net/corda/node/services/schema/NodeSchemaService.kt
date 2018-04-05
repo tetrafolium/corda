@@ -78,9 +78,9 @@ class NodeSchemaService(extraSchemas: Set<MappedSchema> = emptySet(), includeNot
         if (state is QueryableState)
             schemas += state.supportedSchemas()
         if (state is LinearState)
-            schemas += VaultSchemaV1   // VaultLinearStates
+            schemas += VaultSchemaV1 // VaultLinearStates
         if (state is FungibleAsset<*>)
-            schemas += VaultSchemaV1   // VaultFungibleStates
+            schemas += VaultSchemaV1 // VaultFungibleStates
 
         return schemas
     }

@@ -19,9 +19,11 @@ interface ArtemisSessionProvider {
     val started: ArtemisMessagingClient.Started?
 }
 
-class ArtemisMessagingClient(private val config: SSLConfiguration,
-                             private val serverAddress: NetworkHostAndPort,
-                             private val maxMessageSize: Int) : ArtemisSessionProvider {
+class ArtemisMessagingClient(
+    private val config: SSLConfiguration,
+    private val serverAddress: NetworkHostAndPort,
+    private val maxMessageSize: Int
+) : ArtemisSessionProvider {
     companion object {
         private val log = loggerFor<ArtemisMessagingClient>()
     }

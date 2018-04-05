@@ -527,16 +527,18 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
 
     private data class RunResult(
             // The buyer is not created immediately, only when the seller starts running
-            val buyer: CordaFuture<FlowStateMachine<*>>,
-            val sellerResult: CordaFuture<SignedTransaction>,
-            val sellerId: StateMachineRunId
+        val buyer: CordaFuture<FlowStateMachine<*>>,
+        val sellerResult: CordaFuture<SignedTransaction>,
+        val sellerId: StateMachineRunId
     )
 
-    private fun runBuyerAndSeller(notary: Party,
-                                  buyer: Party,
-                                  sellerNode: StartedNode<InternalMockNetwork.MockNode>,
-                                  buyerNode: StartedNode<InternalMockNetwork.MockNode>,
-                                  assetToSell: StateAndRef<OwnableState>): RunResult {
+    private fun runBuyerAndSeller(
+        notary: Party,
+        buyer: Party,
+        sellerNode: StartedNode<InternalMockNetwork.MockNode>,
+        buyerNode: StartedNode<InternalMockNetwork.MockNode>,
+        assetToSell: StateAndRef<OwnableState>
+    ): RunResult {
         val buyerFlows: Observable<out FlowLogic<*>> = buyerNode.registerInitiatedFlow(BuyerAcceptor::class.java)
         val firstBuyerFiber = buyerFlows.toFuture().map { it.stateMachine }
         val seller = SellerInitiator(buyer, notary, assetToSell, 1000.DOLLARS, anonymous)
@@ -545,11 +547,13 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
     }
 
     @InitiatingFlow
-    class SellerInitiator(private val buyer: Party,
-                          private val notary: Party,
-                          private val assetToSell: StateAndRef<OwnableState>,
-                          private val price: Amount<Currency>,
-                          private val anonymous: Boolean) : FlowLogic<SignedTransaction>() {
+    class SellerInitiator(
+        private val buyer: Party,
+        private val notary: Party,
+        private val assetToSell: StateAndRef<OwnableState>,
+        private val price: Amount<Currency>,
+        private val anonymous: Boolean
+    ) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {
             val myPartyAndCert = if (anonymous) {
@@ -583,10 +587,10 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
     data class TestTx(val notaryIdentity: Party, val price: Amount<Currency>, val anonymous: Boolean)
 
     private fun LedgerDSL<TestTransactionDSLInterpreter, TestLedgerDSLInterpreter>.runWithError(
-            ledgerIdentityService: IdentityServiceInternal,
-            bobError: Boolean,
-            aliceError: Boolean,
-            expectedMessageSubstring: String
+        ledgerIdentityService: IdentityServiceInternal,
+        bobError: Boolean,
+        aliceError: Boolean,
+        expectedMessageSubstring: String
     ) {
         val notaryNode = mockNet.defaultNotaryNode
         val aliceNode = mockNet.createPartyNode(ALICE_NAME)
@@ -604,7 +608,7 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
             fillUpForBuyer(bobError, issuer, bob, notary).second
         }
         val alicesFakePaper = aliceNode.database.transaction {
-            fillUpForSeller(aliceError, issuer, alice,1200.DOLLARS `issued by` issuer, null, notary).second
+            fillUpForSeller(aliceError, issuer, alice, 1200.DOLLARS `issued by` issuer, null, notary).second
         }
 
         insertFakeTransactions(bobsBadCash, bobNode, bob, notaryNode, bankNode)
@@ -626,13 +630,13 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
         }
     }
 
-
     private fun insertFakeTransactions(
-            wtxToSign: List<WireTransaction>,
-            node: StartedNode<*>,
-            identity: Party,
-            notaryNode: StartedNode<*>,
-            vararg extraSigningNodes: StartedNode<*>): Map<SecureHash, SignedTransaction> {
+        wtxToSign: List<WireTransaction>,
+        node: StartedNode<*>,
+        identity: Party,
+        notaryNode: StartedNode<*>,
+        vararg extraSigningNodes: StartedNode<*>
+    ): Map<SecureHash, SignedTransaction> {
         val notaryParty = mockNet.defaultNotaryIdentity
         val signed = wtxToSign.map {
             val id = it.id
@@ -667,10 +671,11 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
     }
 
     private fun LedgerDSL<TestTransactionDSLInterpreter, TestLedgerDSLInterpreter>.fillUpForBuyer(
-            withError: Boolean,
-            issuer: PartyAndReference,
-            owner: AbstractParty,
-            notary: Party): Pair<Vault<ContractState>, List<WireTransaction>> {
+        withError: Boolean,
+        issuer: PartyAndReference,
+        owner: AbstractParty,
+        notary: Party
+    ): Pair<Vault<ContractState>, List<WireTransaction>> {
         val interimOwner = issuer.party
         // Bob (Buyer) has some cash he got from the Bank of Elbonia, Alice (Seller) has some commercial paper she
         // wants to sell to Bob.
@@ -703,7 +708,7 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
         val bc2 = transaction(transactionBuilder = TransactionBuilder(notary = notary)) {
             input("elbonian money 2")
             output(Cash.PROGRAM_ID, "bob cash 2", notary = notary, contractState = 300.DOLLARS.CASH issuedBy issuer ownedBy owner)
-            output(Cash.PROGRAM_ID, notary = notary, contractState = 700.DOLLARS.CASH issuedBy issuer ownedBy interimOwner)   // Change output.
+            output(Cash.PROGRAM_ID, notary = notary, contractState = 700.DOLLARS.CASH issuedBy issuer ownedBy interimOwner) // Change output.
             command(interimOwner.owningKey, Cash.Commands.Move())
             this.verifies()
         }
@@ -713,12 +718,13 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
     }
 
     private fun LedgerDSL<TestTransactionDSLInterpreter, TestLedgerDSLInterpreter>.fillUpForSeller(
-            withError: Boolean,
-            issuer: PartyAndReference,
-            owner: AbstractParty,
-            amount: Amount<Issued<Currency>>,
-            attachmentID: SecureHash?,
-            notary: Party): Pair<Vault<ContractState>, List<WireTransaction>> {
+        withError: Boolean,
+        issuer: PartyAndReference,
+        owner: AbstractParty,
+        amount: Amount<Issued<Currency>>,
+        attachmentID: SecureHash?,
+        notary: Party
+    ): Pair<Vault<ContractState>, List<WireTransaction>> {
         val ap = transaction(transactionBuilder = TransactionBuilder(notary = notary)) {
             output(CommercialPaper.CP_PROGRAM_ID, "alice's paper", notary = notary,
                 contractState = CommercialPaper.State(issuer, owner, amount, TEST_TX_TIME + 7.days))
@@ -738,10 +744,9 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
         return Pair(vault, listOf(ap))
     }
 
-
     class RecordingTransactionStorage(
-            private val database: CordaPersistence,
-            private val delegate: WritableTransactionStorage
+        private val database: CordaPersistence,
+        private val delegate: WritableTransactionStorage
     ) : WritableTransactionStorage, SingletonSerializeAsToken() {
         override fun track(): DataFeed<List<SignedTransaction>, SignedTransaction> {
             return database.transaction {
@@ -773,5 +778,4 @@ class TwoPartyTradeFlowTests(private val anonymous: Boolean) {
         data class Add(val transaction: SignedTransaction) : TxRecord
         data class Get(val id: SecureHash) : TxRecord
     }
-
 }

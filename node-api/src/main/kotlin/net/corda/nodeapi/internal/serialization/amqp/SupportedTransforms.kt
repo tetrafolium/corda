@@ -16,9 +16,10 @@ import net.corda.core.serialization.CordaSerializationTransformRenames
  * of a transform or a meta list of them.
  */
 data class SupportedTransform(
-        val type: Class<out Annotation>,
-        val enum: TransformTypes,
-        val getAnnotations: (Annotation) -> List<Annotation>)
+    val type: Class<out Annotation>,
+    val enum: TransformTypes,
+    val getAnnotations: (Annotation) -> List<Annotation>
+)
 
 /**
  * Extract from an annotated class the list of annotations that refer to a particular

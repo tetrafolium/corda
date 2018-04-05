@@ -55,7 +55,7 @@ class NodeAttachmentStorageTest {
 
     @Test
     fun `insert and retrieve`() {
-        val (testJar,expectedHash) = makeTestJar()
+        val (testJar, expectedHash) = makeTestJar()
 
         database.transaction {
             val storage = NodeAttachmentService(MetricRegistry())
@@ -90,7 +90,6 @@ class NodeAttachmentStorageTest {
             val id = testJar.read { storage.importAttachment(it) }
             assertEquals(expectedHash, id)
 
-
             assertNull(storage.openAttachment(hashB))
             val stream = storage.openAttachment(expectedHash)!!.openAsJAR()
             val e1 = stream.nextJarEntry!!
@@ -117,12 +116,11 @@ class NodeAttachmentStorageTest {
         }
     }
 
-
     @Test
     fun `metadata can be used to search`() {
         val (jarA, _) = makeTestJar()
-        val (jarB, hashB) = makeTestJar(listOf(Pair("file","content")))
-        val (jarC, hashC) = makeTestJar(listOf(Pair("magic_file","magic_content_puff")))
+        val (jarB, hashB) = makeTestJar(listOf(Pair("file", "content")))
+        val (jarC, hashC) = makeTestJar(listOf(Pair("magic_file", "magic_content_puff")))
 
         database.transaction {
             val storage = NodeAttachmentService(MetricRegistry())
@@ -145,12 +143,12 @@ class NodeAttachmentStorageTest {
 
     @Test
     fun `sorting and compound conditions work`() {
-        val (jarA,hashA) = makeTestJar(listOf(Pair("a","a")))
-        val (jarB,hashB) = makeTestJar(listOf(Pair("b","b")))
-        val (jarC,hashC) = makeTestJar(listOf(Pair("c","c")))
+        val (jarA, hashA) = makeTestJar(listOf(Pair("a", "a")))
+        val (jarB, hashB) = makeTestJar(listOf(Pair("b", "b")))
+        val (jarC, hashC) = makeTestJar(listOf(Pair("c", "c")))
 
-        fun uploaderCondition(s:String) = AttachmentQueryCriteria.AttachmentsQueryCriteria(uploaderCondition = Builder.equal(s))
-        fun filenamerCondition(s:String) = AttachmentQueryCriteria.AttachmentsQueryCriteria(filenameCondition = Builder.equal(s))
+        fun uploaderCondition(s: String) = AttachmentQueryCriteria.AttachmentsQueryCriteria(uploaderCondition = Builder.equal(s))
+        fun filenamerCondition(s: String) = AttachmentQueryCriteria.AttachmentsQueryCriteria(filenameCondition = Builder.equal(s))
 
         fun filenameSort(direction: Sort.Direction) = AttachmentSort(listOf(AttachmentSort.AttachmentSortColumn(AttachmentSort.AttachmentSortAttribute.FILENAME, direction)))
 
@@ -191,14 +189,13 @@ class NodeAttachmentStorageTest {
                     listOf(hashC, hashB),
                 storage.queryAttachments(complexCondition, sorting = filenameSort(Sort.Direction.DESC))
             )
-
         }
     }
 
     @Ignore("We need to be able to restart nodes - make importing attachments idempotent?")
     @Test
     fun `duplicates not allowed`() {
-        val (testJar,_) = makeTestJar()
+        val (testJar, _) = makeTestJar()
         database.transaction {
             val storage = NodeAttachmentService(MetricRegistry())
             testJar.read {
@@ -214,7 +211,7 @@ class NodeAttachmentStorageTest {
 
     @Test
     fun `corrupt entry throws exception`() {
-        val (testJar,_) = makeTestJar()
+        val (testJar, _) = makeTestJar()
         val id = database.transaction {
             val storage = NodeAttachmentService(MetricRegistry())
             val id = testJar.read { storage.importAttachment(it) }
@@ -257,7 +254,7 @@ class NodeAttachmentStorageTest {
     }
 
     private var counter = 0
-    private fun makeTestJar(extraEntries: List<Pair<String,String>> = emptyList()): Pair<Path, SecureHash> {
+    private fun makeTestJar(extraEntries: List<Pair<String, String>> = emptyList()): Pair<Path, SecureHash> {
         counter++
         val file = fs.getPath("$counter.jar")
         file.write {

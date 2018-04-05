@@ -22,36 +22,36 @@ object NodeInfoSchemaV1 : MappedSchema(
     @Entity
     @Table(name = "node_infos")
     class PersistentNodeInfo(
-            @Id
-            @GeneratedValue
-            @Column(name = "node_info_id")
-            var id: Int,
+        @Id
+        @GeneratedValue
+        @Column(name = "node_info_id")
+        var id: Int,
 
-            @Column(name="node_info_hash", length = 64)
-            val hash: String,
+        @Column(name = "node_info_hash", length = 64)
+        val hash: String,
 
-            @Column(name = "addresses")
-            @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
-            @JoinColumn(name = "node_info_id", foreignKey = ForeignKey(name = "FK__info_hosts__infos"))
-            val addresses: List<DBHostAndPort>,
+        @Column(name = "addresses")
+        @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
+        @JoinColumn(name = "node_info_id", foreignKey = ForeignKey(name = "FK__info_hosts__infos"))
+        val addresses: List<DBHostAndPort>,
 
-            @Column(name = "legal_identities_certs")
-            @ManyToMany(cascade = arrayOf(CascadeType.ALL))
-            @JoinTable(name = "node_link_nodeinfo_party",
-                    joinColumns = arrayOf(JoinColumn(name = "node_info_id", foreignKey = ForeignKey(name = "FK__link_nodeinfo_party__infos"))),
-                    inverseJoinColumns = arrayOf(JoinColumn(name = "party_name", foreignKey = ForeignKey(name = "FK__link_ni_p__info_p_cert"))))
-            val legalIdentitiesAndCerts: List<DBPartyAndCertificate>,
+        @Column(name = "legal_identities_certs")
+        @ManyToMany(cascade = arrayOf(CascadeType.ALL))
+        @JoinTable(name = "node_link_nodeinfo_party",
+                joinColumns = arrayOf(JoinColumn(name = "node_info_id", foreignKey = ForeignKey(name = "FK__link_nodeinfo_party__infos"))),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "party_name", foreignKey = ForeignKey(name = "FK__link_ni_p__info_p_cert"))))
+        val legalIdentitiesAndCerts: List<DBPartyAndCertificate>,
 
-            @Column(name = "platform_version")
-            val platformVersion: Int,
+        @Column(name = "platform_version")
+        val platformVersion: Int,
 
-            /**
-             * serial is an increasing value which represents the version of [NodeInfo].
-             * Not expected to be sequential, but later versions of the registration must have higher values
-             * Similar to the serial number on DNS records.
-             */
-            @Column(name = "serial")
-            val serial: Long
+        /**
+         * serial is an increasing value which represents the version of [NodeInfo].
+         * Not expected to be sequential, but later versions of the registration must have higher values
+         * Similar to the serial number on DNS records.
+         */
+        @Column(name = "serial")
+        val serial: Long
     ) {
         fun toNodeInfo(): NodeInfo {
             return NodeInfo(
@@ -66,12 +66,12 @@ object NodeInfoSchemaV1 : MappedSchema(
     @Entity
     @Table(name = "node_info_hosts")
     data class DBHostAndPort(
-            @Id
-            @GeneratedValue
-            @Column(name = "hosts_id")
-            var id: Int,
-            val host: String? = null,
-            val port: Int? = null
+        @Id
+        @GeneratedValue
+        @Column(name = "hosts_id")
+        var id: Int,
+        val host: String? = null,
+        val port: Int? = null
     ) {
         companion object {
             fun fromHostAndPort(hostAndPort: NetworkHostAndPort) = DBHostAndPort(
@@ -90,22 +90,21 @@ object NodeInfoSchemaV1 : MappedSchema(
     @Entity
     @Table(name = "node_info_party_cert")
     data class DBPartyAndCertificate(
-            @Id
-            @Column(name = "party_name", nullable = false)
-            val name: String,
+        @Id
+        @Column(name = "party_name", nullable = false)
+        val name: String,
 
-            @Column(name = "owning_key_hash", length = MAX_HASH_HEX_SIZE)
-            val owningKeyHash: String,
+        @Column(name = "owning_key_hash", length = MAX_HASH_HEX_SIZE)
+        val owningKeyHash: String,
 
-            @Lob
-            @Column(name = "party_cert_binary")
-            val partyCertBinary: ByteArray,
+        @Lob
+        @Column(name = "party_cert_binary")
+        val partyCertBinary: ByteArray,
 
+        val isMain: Boolean,
 
-            val isMain: Boolean,
-
-            @ManyToMany(mappedBy = "legalIdentitiesAndCerts", cascade = arrayOf(CascadeType.ALL)) // ManyToMany because of distributed services.
-            private val persistentNodeInfos: Set<PersistentNodeInfo> = emptySet()
+        @ManyToMany(mappedBy = "legalIdentitiesAndCerts", cascade = arrayOf(CascadeType.ALL)) // ManyToMany because of distributed services.
+        private val persistentNodeInfos: Set<PersistentNodeInfo> = emptySet()
     ) {
         constructor(partyAndCert: PartyAndCertificate, isMain: Boolean = false)
                 : this(partyAndCert.name.toString(),

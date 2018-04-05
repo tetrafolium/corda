@@ -31,8 +31,10 @@ data class ObjectAndEnvelope<out T>(val obj: T, val envelope: Envelope)
  * @param serializerFactory This is the factory for [AMQPSerializer] instances and can be shared across multiple
  * instances and threads.
  */
-class DeserializationInput @JvmOverloads constructor(private val serializerFactory: SerializerFactory,
-                                                     private val encodingWhitelist: EncodingWhitelist = NullEncodingWhitelist) {
+class DeserializationInput @JvmOverloads constructor(
+    private val serializerFactory: SerializerFactory,
+    private val encodingWhitelist: EncodingWhitelist = NullEncodingWhitelist
+) {
     private val objectHistory: MutableList<Any> = mutableListOf()
 
     internal companion object {
@@ -85,7 +87,7 @@ class DeserializationInput @JvmOverloads constructor(private val serializerFacto
     inline fun <reified T : Any> deserialize(bytes: SerializedBytes<T>): T = deserialize(bytes, T::class.java)
 
     @Throws(NotSerializableException::class)
-    inline internal fun <reified T : Any> deserializeAndReturnEnvelope(bytes: SerializedBytes<T>): ObjectAndEnvelope<T> =
+    internal inline fun <reified T : Any> deserializeAndReturnEnvelope(bytes: SerializedBytes<T>): ObjectAndEnvelope<T> =
             deserializeAndReturnEnvelope(bytes, T::class.java)
 
     @Throws(NotSerializableException::class)
@@ -145,7 +147,7 @@ class DeserializationInput @JvmOverloads constructor(private val serializerFacto
                 if (!objectRetrieved::class.java.isSubClassOf(type.asClass()!!)) {
                     throw NotSerializableException(
                             "Existing reference type mismatch. Expected: '$type', found: '${objectRetrieved::class.java}' " +
-                                    "@ ${objectIndex}")
+                                    "@ $objectIndex")
                 }
                 objectRetrieved
             } else {

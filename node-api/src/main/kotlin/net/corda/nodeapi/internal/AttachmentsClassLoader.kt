@@ -97,10 +97,10 @@ class AttachmentsClassLoader(attachments: List<Attachment>, parent: ClassLoader 
     }
 
     override fun getResourceAsStream(name: String): InputStream? {
-        val url = getResource(name) ?: return null   // May check parent classloaders, for example.
+        val url = getResource(name) ?: return null // May check parent classloaders, for example.
         if (url.protocol != "attachment") return null
         val attachment = idsToAttachments[SecureHash.parse(url.host)] ?: return null
-        val path = url.path?.substring(1) ?: return null   // Chop off the leading slash.
+        val path = url.path?.substring(1) ?: return null // Chop off the leading slash.
         try {
             val stream = ByteArrayOutputStream()
             attachment.extractFile(path, stream)
@@ -110,5 +110,4 @@ class AttachmentsClassLoader(attachments: List<Attachment>, parent: ClassLoader 
         }
     }
 }
-
 

@@ -177,7 +177,6 @@ class TLSAuthenticationTests {
         testConnect(serverSocket, clientSocket, "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256")
     }
 
-
     @Test
     fun `Server EC R1 - Client RSA - Mixed CAs`() {
         val (serverSocketFactory, clientSocketFactory) = buildTLSFactories(
@@ -243,12 +242,12 @@ class TLSAuthenticationTests {
     private fun tempFile(name: String): Path = tempFolder.root.toPath() / name
 
     private fun buildTLSFactories(
-            rootCAScheme: SignatureScheme,
-            intermediateCAScheme: SignatureScheme,
-            client1CAScheme: SignatureScheme,
-            client1TLSScheme: SignatureScheme,
-            client2CAScheme: SignatureScheme,
-            client2TLSScheme: SignatureScheme
+        rootCAScheme: SignatureScheme,
+        intermediateCAScheme: SignatureScheme,
+        client1CAScheme: SignatureScheme,
+        client1TLSScheme: SignatureScheme,
+        client2CAScheme: SignatureScheme,
+        client2TLSScheme: SignatureScheme
     ): Pair<SSLServerSocketFactory, SSLSocketFactory> {
 
         val trustStorePath = tempFile("cordaTrustStore.jks")
@@ -338,12 +337,12 @@ class TLSAuthenticationTests {
     }
 
     private fun buildTLSSockets(
-            serverSocketFactory: SSLServerSocketFactory,
-            clientSocketFactory: SSLSocketFactory,
-            serverPort: Int = 0, // Use 0 to get first free socket.
-            clientPort: Int = 0, // Use 0 to get first free socket.
-            cipherSuitesServer: Array<String> = CORDA_TLS_CIPHER_SUITES,
-            cipherSuitesClient: Array<String> = CORDA_TLS_CIPHER_SUITES
+        serverSocketFactory: SSLServerSocketFactory,
+        clientSocketFactory: SSLSocketFactory,
+        serverPort: Int = 0, // Use 0 to get first free socket.
+        clientPort: Int = 0, // Use 0 to get first free socket.
+        cipherSuitesServer: Array<String> = CORDA_TLS_CIPHER_SUITES,
+        cipherSuitesClient: Array<String> = CORDA_TLS_CIPHER_SUITES
     ): Pair<SSLServerSocket, SSLSocket> {
         val serverSocket = serverSocketFactory.createServerSocket(serverPort) as SSLServerSocket // use 0 to get first free socket.
         val serverParams = SSLParameters(cipherSuitesServer, arrayOf("TLSv1.2"))
@@ -410,7 +409,7 @@ class TLSAuthenticationTests {
     }
 
     // Generate an SSLContext from a KeyStore and a TrustStore.
-    private fun sslContext(sslKeyStore: KeyStore, sslKeyStorePassword: String, sslTrustStore: KeyStore) : SSLContext  {
+    private fun sslContext(sslKeyStore: KeyStore, sslKeyStorePassword: String, sslTrustStore: KeyStore): SSLContext {
         val context = SSLContext.getInstance("TLS")
         val keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
         // Requires the KeyStore password as well.
@@ -420,6 +419,6 @@ class TLSAuthenticationTests {
         // Password is not required for TrustStore.
         trustMgrFactory.init(sslTrustStore)
         val trustManagers = trustMgrFactory.trustManagers
-        return context.apply {  init(keyManagers, trustManagers, newSecureRandom()) }
+        return context.apply { init(keyManagers, trustManagers, newSecureRandom()) }
     }
 }

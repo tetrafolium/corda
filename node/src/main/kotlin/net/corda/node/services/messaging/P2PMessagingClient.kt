@@ -84,18 +84,19 @@ import javax.persistence.Lob
  * @param maxMessageSize A bound applied to the message size.
  */
 @ThreadSafe
-class P2PMessagingClient(private val config: NodeConfiguration,
-                         private val versionInfo: VersionInfo,
-                         private val serverAddress: NetworkHostAndPort,
-                         private val myIdentity: PublicKey,
-                         private val serviceIdentity: PublicKey?,
-                         private val nodeExecutor: AffinityExecutor.ServiceAffinityExecutor,
-                         private val database: CordaPersistence,
-                         private val networkMap: NetworkMapCacheInternal,
-                         advertisedAddress: NetworkHostAndPort = serverAddress,
-                         private val maxMessageSize: Int,
-                         private val isDrainingModeOn: () -> Boolean,
-                         private val drainingModeWasChangedEvents: Observable<Pair<Boolean, Boolean>>
+class P2PMessagingClient(
+    private val config: NodeConfiguration,
+    private val versionInfo: VersionInfo,
+    private val serverAddress: NetworkHostAndPort,
+    private val myIdentity: PublicKey,
+    private val serviceIdentity: PublicKey?,
+    private val nodeExecutor: AffinityExecutor.ServiceAffinityExecutor,
+    private val database: CordaPersistence,
+    private val networkMap: NetworkMapCacheInternal,
+    advertisedAddress: NetworkHostAndPort = serverAddress,
+    private val maxMessageSize: Int,
+    private val isDrainingModeOn: () -> Boolean,
+    private val drainingModeWasChangedEvents: Observable<Pair<Boolean, Boolean>>
 ) : SingletonSerializeAsToken(), MessagingService, AutoCloseable {
     companion object {
         private val log = contextLogger()
@@ -164,8 +165,10 @@ class P2PMessagingClient(private val config: NodeConfiguration,
     private val scheduledMessageRedeliveries = ConcurrentHashMap<Long, ScheduledFuture<*>>()
 
     /** A registration to handle messages of different types */
-    data class Handler(val topic: String,
-                       val callback: (ReceivedMessage, MessageHandlerRegistration) -> Unit) : MessageHandlerRegistration
+    data class Handler(
+        val topic: String,
+        val callback: (ReceivedMessage, MessageHandlerRegistration) -> Unit
+    ) : MessageHandlerRegistration
 
     private val cordaVendor = SimpleString(versionInfo.vendor)
     private val releaseVersion = SimpleString(versionInfo.releaseVersion)
@@ -183,27 +186,27 @@ class P2PMessagingClient(private val config: NodeConfiguration,
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}message_ids")
     class ProcessedMessage(
-            @Id
-            @Column(name = "message_id", length = 64)
-            var uuid: String = "",
+        @Id
+        @Column(name = "message_id", length = 64)
+        var uuid: String = "",
 
-            @Column(name = "insertion_time")
-            var insertionTime: Instant = Instant.now()
+        @Column(name = "insertion_time")
+        var insertionTime: Instant = Instant.now()
     )
 
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}message_retry")
     class RetryMessage(
-            @Id
-            @Column(name = "message_id", length = 64)
-            var key: Long = 0,
+        @Id
+        @Column(name = "message_id", length = 64)
+        var key: Long = 0,
 
-            @Lob
-            @Column
-            var message: ByteArray = EMPTY_BYTE_ARRAY,
-            @Lob
-            @Column
-            var recipients: ByteArray = EMPTY_BYTE_ARRAY
+        @Lob
+        @Column
+        var message: ByteArray = EMPTY_BYTE_ARRAY,
+        @Lob
+        @Column
+        var recipients: ByteArray = EMPTY_BYTE_ARRAY
     )
 
     fun start() {
@@ -405,11 +408,13 @@ class P2PMessagingClient(private val config: NodeConfiguration,
         return extractor(key)
     }
 
-    private class ArtemisReceivedMessage(override val topic: String,
-                                         override val peer: CordaX500Name,
-                                         override val platformVersion: Int,
-                                         override val uniqueMessageId: String,
-                                         private val message: ClientMessage) : ReceivedMessage {
+    private class ArtemisReceivedMessage(
+        override val topic: String,
+        override val peer: CordaX500Name,
+        override val platformVersion: Int,
+        override val uniqueMessageId: String,
+        private val message: ClientMessage
+    ) : ReceivedMessage {
         override val data: ByteSequence by lazy { OpaqueBytes(ByteArray(message.bodySize).apply { message.bodyBuffer.readBytes(this) }) }
         override val debugTimestamp: Instant get() = Instant.ofEpochMilli(message.timestamp)
         override fun toString() = "$topic#$data"
@@ -542,7 +547,6 @@ class P2PMessagingClient(private val config: NodeConfiguration,
                     scheduledMessageRedeliveries[it] = messagingExecutor.schedule({
                         sendWithRetry(0, mqAddress, artemisMessage, it)
                     }, messageRedeliveryDelaySeconds, TimeUnit.SECONDS)
-
                 }
             }
         }
@@ -629,8 +633,10 @@ class P2PMessagingClient(private val config: NodeConfiguration,
         }
     }
 
-    override fun addMessageHandler(topic: String,
-                                   callback: (ReceivedMessage, MessageHandlerRegistration) -> Unit): MessageHandlerRegistration {
+    override fun addMessageHandler(
+        topic: String,
+        callback: (ReceivedMessage, MessageHandlerRegistration) -> Unit
+    ): MessageHandlerRegistration {
         require(!topic.isBlank()) { "Topic must not be blank, as the empty topic is a special case." }
         val handler = Handler(topic, callback)
         handlers.add(handler)
@@ -656,10 +662,11 @@ class P2PMessagingClient(private val config: NodeConfiguration,
 }
 
 private class P2PMessagingConsumer(
-        queueNames: Set<String>,
-        createSession: () -> ClientSession,
-        private val isDrainingModeOn: () -> Boolean,
-        private val drainingModeWasChangedEvents: Observable<Pair<Boolean, Boolean>>) : LifecycleSupport {
+    queueNames: Set<String>,
+    createSession: () -> ClientSession,
+    private val isDrainingModeOn: () -> Boolean,
+    private val drainingModeWasChangedEvents: Observable<Pair<Boolean, Boolean>>
+) : LifecycleSupport {
 
     private companion object {
         private const val initialSessionMessages = "${P2PMessagingHeaders.Type.KEY}<>'${P2PMessagingHeaders.Type.SESSION_INIT_VALUE}'"

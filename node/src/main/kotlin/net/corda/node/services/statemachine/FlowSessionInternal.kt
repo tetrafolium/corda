@@ -15,12 +15,13 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 // TODO rename this
 class FlowSessionInternal(
-        val flow: FlowLogic<*>,
-        val flowSession : FlowSession,
-        val ourSessionId: SessionId,
-        val initiatingParty: Party?,
-        var state: FlowSessionState,
-        var retryable: Boolean = false) {
+    val flow: FlowLogic<*>,
+    val flowSession: FlowSession,
+    val ourSessionId: SessionId,
+    val initiatingParty: Party?,
+    var state: FlowSessionState,
+    var retryable: Boolean = false
+) {
     val receivedMessages = ConcurrentLinkedQueue<ReceivedSessionMessage>()
     val fiber: FlowStateMachineImpl<*> get() = flow.stateMachine as FlowStateMachineImpl<*>
 

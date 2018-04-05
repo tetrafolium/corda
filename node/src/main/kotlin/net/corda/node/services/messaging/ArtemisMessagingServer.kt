@@ -8,7 +8,6 @@ import net.corda.core.serialization.SingletonSerializeAsToken
 import net.corda.core.utilities.NetworkHostAndPort
 import net.corda.core.utilities.contextLogger
 import net.corda.core.utilities.debug
-import net.corda.node.internal.Node
 import net.corda.node.internal.artemis.ArtemisBroker
 import net.corda.node.internal.artemis.BrokerAddresses
 import net.corda.node.internal.artemis.CertificateChainCheckPolicy
@@ -25,7 +24,6 @@ import net.corda.nodeapi.internal.ArtemisMessagingComponent.Companion.NODE_USER
 import net.corda.nodeapi.internal.ArtemisMessagingComponent.Companion.NOTIFICATIONS_ADDRESS
 import net.corda.nodeapi.internal.ArtemisMessagingComponent.Companion.P2P_PREFIX
 import net.corda.nodeapi.internal.ArtemisMessagingComponent.Companion.PEER_USER
-import net.corda.nodeapi.internal.ArtemisMessagingComponent.NodeAddress
 import net.corda.nodeapi.internal.requireOnDefaultFileSystem
 import org.apache.activemq.artemis.api.core.SimpleString
 import org.apache.activemq.artemis.api.core.management.ActiveMQServerControl
@@ -69,9 +67,11 @@ import javax.security.auth.spi.LoginModule
  * a fully connected network, trusted network or on localhost.
  */
 @ThreadSafe
-class ArtemisMessagingServer(private val config: NodeConfiguration,
-                             private val p2pPort: Int,
-                             val maxMessageSize: Int) : ArtemisBroker, SingletonSerializeAsToken() {
+class ArtemisMessagingServer(
+    private val config: NodeConfiguration,
+    private val p2pPort: Int,
+    val maxMessageSize: Int
+) : ArtemisBroker, SingletonSerializeAsToken() {
     companion object {
         private val log = contextLogger()
     }
@@ -148,7 +148,6 @@ class ArtemisMessagingServer(private val config: NodeConfiguration,
             isJMXManagementEnabled = true
             isJMXUseBrokerName = true
         }
-
     }.configureAddressSecurity()
 
     /**
@@ -160,16 +159,24 @@ class ArtemisMessagingServer(private val config: NodeConfiguration,
      */
     private fun ConfigurationImpl.configureAddressSecurity(): Configuration {
         val nodeInternalRole = Role(NODE_ROLE, true, true, true, true, true, true, true, true)
-        securityRoles["$INTERNAL_PREFIX#"] = setOf(nodeInternalRole)  // Do not add any other roles here as it's only for the node
+        securityRoles["$INTERNAL_PREFIX#"] = setOf(nodeInternalRole) // Do not add any other roles here as it's only for the node
         securityRoles["$P2P_PREFIX#"] = setOf(nodeInternalRole, restrictedRole(PEER_ROLE, send = true))
         securityRoles[VerifierApi.VERIFICATION_REQUESTS_QUEUE_NAME] = setOf(nodeInternalRole, restrictedRole(VERIFIER_ROLE, consume = true))
         securityRoles["${VerifierApi.VERIFICATION_RESPONSES_QUEUE_NAME_PREFIX}.#"] = setOf(nodeInternalRole, restrictedRole(VERIFIER_ROLE, send = true))
         return this
     }
 
-    private fun restrictedRole(name: String, send: Boolean = false, consume: Boolean = false, createDurableQueue: Boolean = false,
-                               deleteDurableQueue: Boolean = false, createNonDurableQueue: Boolean = false,
-                               deleteNonDurableQueue: Boolean = false, manage: Boolean = false, browse: Boolean = false): Role {
+    private fun restrictedRole(
+        name: String,
+        send: Boolean = false,
+        consume: Boolean = false,
+        createDurableQueue: Boolean = false,
+        deleteDurableQueue: Boolean = false,
+        createNonDurableQueue: Boolean = false,
+        deleteNonDurableQueue: Boolean = false,
+        manage: Boolean = false,
+        browse: Boolean = false
+    ): Role {
         return Role(name, send, consume, createDurableQueue, deleteDurableQueue, createNonDurableQueue,
                 deleteNonDurableQueue, manage, browse)
     }

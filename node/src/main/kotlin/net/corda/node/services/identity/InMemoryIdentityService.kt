@@ -24,8 +24,10 @@ import javax.annotation.concurrent.ThreadSafe
  */
 // TODO There is duplicated logic between this and PersistentIdentityService
 @ThreadSafe
-class InMemoryIdentityService(identities: Array<out PartyAndCertificate>,
-                              override val trustRoot: X509Certificate) : SingletonSerializeAsToken(), IdentityService {
+class InMemoryIdentityService(
+    identities: Array<out PartyAndCertificate>,
+    override val trustRoot: X509Certificate
+) : SingletonSerializeAsToken(), IdentityService {
     companion object {
         private val log = contextLogger()
     }
@@ -125,8 +127,8 @@ class InMemoryIdentityService(identities: Array<out PartyAndCertificate>,
 
     @Throws(UnknownAnonymousPartyException::class)
     override fun assertOwnership(party: Party, anonymousParty: AnonymousParty) {
-        val anonymousIdentity = keyToParties[anonymousParty.owningKey] ?:
-                throw UnknownAnonymousPartyException("Unknown $anonymousParty")
+        val anonymousIdentity = keyToParties[anonymousParty.owningKey]
+                ?: throw UnknownAnonymousPartyException("Unknown $anonymousParty")
         val issuingCert = anonymousIdentity.certPath.certificates[1]
         require(issuingCert.publicKey == party.owningKey) {
             "Issuing certificate's public key must match the party key ${party.owningKey.toStringShort()}."

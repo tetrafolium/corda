@@ -45,7 +45,6 @@ class EnumTests {
         TSHIRT, UNDERWIRE, PUSHUP, SPACER, BRALETTE, SPACER2
     }
 
-
     enum class BrasWithInit(val someList: List<Int>) {
         TSHIRT(emptyList()),
         UNDERWIRE(listOf(1, 2, 3)),
@@ -63,7 +62,7 @@ class EnumTests {
     }
 
     @Suppress("NOTHING_TO_INLINE")
-    inline private fun classTestName(clazz: String) = "${this.javaClass.name}\$${testName()}\$$clazz"
+    private inline fun classTestName(clazz: String) = "${this.javaClass.name}\$${testName()}\$$clazz"
 
     private val sf1 = testDefaultFactoryNoEvolution()
 

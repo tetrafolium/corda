@@ -16,7 +16,6 @@ import net.corda.node.services.messaging.MessagingService
 import net.corda.node.services.messaging.ReceivedMessage
 import net.corda.node.services.messaging.send
 import net.corda.testing.core.ALICE_NAME
-import net.corda.testing.core.singleIdentity
 import net.corda.testing.driver.DriverDSL
 import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.InProcess
@@ -44,7 +43,6 @@ class P2PMessagingTest {
         }
     }
 
-    
     @Test
     fun `distributed service requests are retried if one of the nodes in the cluster goes down without sending a response`() {
         startDriverWithDistributedService { distributedServiceNodes ->
@@ -110,7 +108,6 @@ class P2PMessagingTest {
         }
     }
 
-
     private fun startDriverWithDistributedService(dsl: DriverDSL.(List<InProcess>) -> Unit) {
         driver(DriverParameters(startNodesInProcess = true, notarySpecs = listOf(NotarySpec(DISTRIBUTED_SERVICE_NAME, cluster = ClusterSpec.Raft(clusterSize = 2))))) {
             dsl(defaultNotaryHandle.nodeHandles.getOrThrow().map { (it as InProcess) })
@@ -124,9 +121,9 @@ class P2PMessagingTest {
     }
 
     data class CrashingNodes(
-            val firstRequestReceived: CountDownLatch,
-            val requestsReceived: AtomicInteger,
-            var ignoreRequests: Boolean
+        val firstRequestReceived: CountDownLatch,
+        val requestsReceived: AtomicInteger,
+        var ignoreRequests: Boolean
     )
 
     /**
@@ -184,7 +181,7 @@ class P2PMessagingTest {
         }
         assertThat(participatingNodes).containsOnlyElementsOf(participatingServiceNodes.map { it.services.myInfo })
     }
-    
+
     private fun InProcess.respondWith(message: Any) {
         internalServices.networkService.addMessageHandler("test.request") { netMessage, _ ->
             val request = netMessage.data.deserialize<TestRequest>()

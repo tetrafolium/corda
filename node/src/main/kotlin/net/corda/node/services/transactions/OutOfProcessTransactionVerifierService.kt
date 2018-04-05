@@ -17,17 +17,17 @@ import org.apache.activemq.artemis.api.core.client.ClientConsumer
 import java.util.concurrent.ConcurrentHashMap
 
 class OutOfProcessTransactionVerifierService(
-        private val metrics: MetricRegistry,
-        private val sendRequest: (Long, LedgerTransaction) -> Unit
+    private val metrics: MetricRegistry,
+    private val sendRequest: (Long, LedgerTransaction) -> Unit
 ) : SingletonSerializeAsToken(), TransactionVerifierService {
     companion object {
         private val log = contextLogger()
     }
 
     private data class VerificationHandle(
-            val transactionId: SecureHash,
-            val resultFuture: OpenFuture<Unit>,
-            val durationTimerContext: Timer.Context
+        val transactionId: SecureHash,
+        val resultFuture: OpenFuture<Unit>,
+        val durationTimerContext: Timer.Context
     )
 
     private val verificationHandles = ConcurrentHashMap<Long, VerificationHandle>()
@@ -47,8 +47,8 @@ class OutOfProcessTransactionVerifierService(
         metrics.register(metric("VerificationsInFlight"), Gauge { verificationHandles.size })
         responseConsumer.setMessageHandler { message ->
             val response = VerifierApi.VerificationResponse.fromClientMessage(message)
-            val handle = verificationHandles.remove(response.verificationId) ?:
-                    throw VerificationResultForUnknownTransaction(response.verificationId)
+            val handle = verificationHandles.remove(response.verificationId)
+                    ?: throw VerificationResultForUnknownTransaction(response.verificationId)
             handle.durationTimerContext.stop()
             val exception = response.exception
             if (exception == null) {

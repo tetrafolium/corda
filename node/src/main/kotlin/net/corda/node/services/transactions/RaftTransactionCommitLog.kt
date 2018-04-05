@@ -31,16 +31,16 @@ import java.time.Clock
  * State re-synchronisation is achieved by replaying the command log to the new (or re-joining) cluster member.
  */
 class RaftTransactionCommitLog<E, EK>(
-        val db: CordaPersistence,
-        val nodeClock: Clock,
-        createMap: () -> AppendOnlyPersistentMap<StateRef, Pair<Long, SecureHash>, E, EK>
+    val db: CordaPersistence,
+    val nodeClock: Clock,
+    createMap: () -> AppendOnlyPersistentMap<StateRef, Pair<Long, SecureHash>, E, EK>
 ) : StateMachine(), Snapshottable {
     object Commands {
         class CommitTransaction(
-                val states: List<StateRef>,
-                val txId: SecureHash,
-                val requestingParty: String,
-                val requestSignature: ByteArray
+            val states: List<StateRef>,
+            val txId: SecureHash,
+            val requestingParty: String,
+            val requestSignature: ByteArray
         ) : Command<Map<StateRef, SecureHash>> {
             override fun compaction(): Command.CompactionMode {
                 // The FULL compaction mode retains the command in the log until it has been stored and applied on all
@@ -164,9 +164,11 @@ class RaftTransactionCommitLog<E, EK>(
             Serializer().apply {
                 register(RaftTransactionCommitLog.Commands.CommitTransaction::class.java) {
                     object : TypeSerializer<Commands.CommitTransaction> {
-                        override fun write(obj: RaftTransactionCommitLog.Commands.CommitTransaction,
-                                           buffer: BufferOutput<out BufferOutput<*>>,
-                                           serializer: Serializer) {
+                        override fun write(
+                            obj: RaftTransactionCommitLog.Commands.CommitTransaction,
+                            buffer: BufferOutput<out BufferOutput<*>>,
+                            serializer: Serializer
+                        ) {
                             buffer.writeUnsignedShort(obj.states.size)
                             with(serializer) {
                                 obj.states.forEach {
@@ -179,9 +181,11 @@ class RaftTransactionCommitLog<E, EK>(
                             buffer.write(obj.requestSignature)
                         }
 
-                        override fun read(type: Class<RaftTransactionCommitLog.Commands.CommitTransaction>,
-                                          buffer: BufferInput<out BufferInput<*>>,
-                                          serializer: Serializer): RaftTransactionCommitLog.Commands.CommitTransaction {
+                        override fun read(
+                            type: Class<RaftTransactionCommitLog.Commands.CommitTransaction>,
+                            buffer: BufferInput<out BufferInput<*>>,
+                            serializer: Serializer
+                        ): RaftTransactionCommitLog.Commands.CommitTransaction {
                             val stateCount = buffer.readUnsignedShort()
                             val states = (1..stateCount).map {
                                 serializer.readObject<StateRef>(buffer)
@@ -205,7 +209,6 @@ class RaftTransactionCommitLog<E, EK>(
                             val key = serializer.readObject<StateRef>(buffer)
                             return RaftTransactionCommitLog.Commands.Get(key)
                         }
-
                     }
                 }
                 register(StateRef::class.java) {

@@ -55,17 +55,19 @@ import com.google.common.util.concurrent.SettableFuture as GuavaSettableFuture
  * but that starts to sound a lot like off-ledger state.
  */
 @ThreadSafe
-class NodeSchedulerService(private val clock: CordaClock,
-                           private val database: CordaPersistence,
-                           private val flowStarter: FlowStarter,
-                           private val servicesForResolution: ServicesForResolution,
-                           private val unfinishedSchedules: ReusableLatch = ReusableLatch(),
-                           private val serverThread: Executor,
-                           private val flowLogicRefFactory: FlowLogicRefFactory,
-                           private val nodeProperties: NodePropertiesStore,
-                           private val drainingModePollPeriod: Duration,
-                           private val log: Logger = staticLog,
-                           private val scheduledStates: MutableMap<StateRef, ScheduledStateRef> = createMap())
+class NodeSchedulerService(
+    private val clock: CordaClock,
+    private val database: CordaPersistence,
+    private val flowStarter: FlowStarter,
+    private val servicesForResolution: ServicesForResolution,
+    private val unfinishedSchedules: ReusableLatch = ReusableLatch(),
+    private val serverThread: Executor,
+    private val flowLogicRefFactory: FlowLogicRefFactory,
+    private val nodeProperties: NodePropertiesStore,
+    private val drainingModePollPeriod: Duration,
+    private val log: Logger = staticLog,
+    private val scheduledStates: MutableMap<StateRef, ScheduledStateRef> = createMap()
+)
     : SchedulerService, SingletonSerializeAsToken() {
 
     companion object {
@@ -150,11 +152,11 @@ class NodeSchedulerService(private val clock: CordaClock,
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}scheduled_states")
     class PersistentScheduledState(
-            @EmbeddedId
-            var output: PersistentStateRef = PersistentStateRef(),
+        @EmbeddedId
+        var output: PersistentStateRef = PersistentStateRef(),
 
-            @Column(name = "scheduled_at", nullable = false)
-            var scheduledAt: Instant = Instant.now()
+        @Column(name = "scheduled_at", nullable = false)
+        var scheduledAt: Instant = Instant.now()
     )
 
     private class InnerState {

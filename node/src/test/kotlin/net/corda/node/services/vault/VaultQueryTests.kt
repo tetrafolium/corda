@@ -286,7 +286,7 @@ class VaultQueryTests {
             // order by
             //    vaultschem1_.output_index,
             //    vaultschem1_.transaction_id asc
-            assertThat(results.states).hasSize(8)       // -3 CONSUMED + 1 NEW UNCONSUMED (change)
+            assertThat(results.states).hasSize(8) // -3 CONSUMED + 1 NEW UNCONSUMED (change)
 
             val sortedStateRefs = stateRefs.sortedBy { it.index }
 
@@ -418,7 +418,7 @@ class VaultQueryTests {
             val resultsBeforeConsume = vaultService.queryBy<ContractState>(criteria, paging)
             assertThat(resultsBeforeConsume.states).hasSize(1)
             assertThat(resultsBeforeConsume.totalStatesAvailable).isEqualTo(1)
-            consumeCash(50.DOLLARS)    // consumed 100 (spent), produced 50 (change)
+            consumeCash(50.DOLLARS) // consumed 100 (spent), produced 50 (change)
             val resultsAfterConsume = vaultService.queryBy<ContractState>(criteria, paging)
             assertThat(resultsAfterConsume.states).hasSize(2)
             assertThat(resultsAfterConsume.totalStatesAvailable).isEqualTo(2)
@@ -636,7 +636,7 @@ class VaultQueryTests {
             listOf(USD, GBP, CHF).forEach {
                 vaultFiller.fillWithSomeTestCash(AMOUNT(100, it), notaryServices, 1, DUMMY_CASH_ISSUER)
             }
-            val logicalExpression = builder { CashSchemaV1.PersistentCashState::currency.like("%BP") }  // GPB
+            val logicalExpression = builder { CashSchemaV1.PersistentCashState::currency.like("%BP") } // GPB
             val criteria = VaultCustomQueryCriteria(logicalExpression)
             val results = vaultService.queryBy<Cash.State>(criteria)
             assertThat(results.states).hasSize(1)
@@ -649,7 +649,7 @@ class VaultQueryTests {
             listOf(USD, GBP, CHF).forEach {
                 vaultFiller.fillWithSomeTestCash(AMOUNT(100, it), notaryServices, 1, DUMMY_CASH_ISSUER)
             }
-            val logicalExpression = builder { CashSchemaV1.PersistentCashState::currency.notLike("%BP") }  // GPB
+            val logicalExpression = builder { CashSchemaV1.PersistentCashState::currency.notLike("%BP") } // GPB
             val criteria = VaultCustomQueryCriteria(logicalExpression)
             val results = vaultService.queryBy<Cash.State>(criteria)
             assertThat(results.states).hasSize(2)
@@ -747,9 +747,9 @@ class VaultQueryTests {
 
             assertThat(results.otherResults).hasSize(15)
             // the order of rows not guaranteed, a row has format 'NUM, NUM, NUM, CURRENCY_CODE'
-            val actualRows = mapOf(results.otherResults[4] as String to results.otherResults.subList(0,4),
-                    results.otherResults[9] as String to results.otherResults.subList(5,9),
-                    results.otherResults[14] as String to results.otherResults.subList(10,14))
+            val actualRows = mapOf(results.otherResults[4] as String to results.otherResults.subList(0, 4),
+                    results.otherResults[9] as String to results.otherResults.subList(5, 9),
+                    results.otherResults[14] as String to results.otherResults.subList(10, 14))
 
             val expectedRows = mapOf("CHF" to listOf(50000L, 10274L, 9481L, 10000.0),
                     "GBP" to listOf(40000L, 10343L, 9351L, 10000.0),
@@ -983,7 +983,7 @@ class VaultQueryTests {
         database.transaction {
             vaultFiller.fillWithSomeTestCash(100.DOLLARS, notaryServices, 100, DUMMY_CASH_ISSUER)
             @Suppress("EXPECTED_CONDITION")
-            val pagingSpec = PageSpecification(DEFAULT_PAGE_NUM, @Suppress("INTEGER_OVERFLOW") MAX_PAGE_SIZE + 1)  // overflow = -2147483648
+            val pagingSpec = PageSpecification(DEFAULT_PAGE_NUM, @Suppress("INTEGER_OVERFLOW") MAX_PAGE_SIZE + 1) // overflow = -2147483648
             val criteria = VaultQueryCriteria(status = Vault.StateStatus.ALL)
             vaultService.queryBy<ContractState>(criteria, paging = pagingSpec)
         }
@@ -1027,7 +1027,7 @@ class VaultQueryTests {
             assertThat(metadata.first().contractStateClassName).isEqualTo("$DUMMY_LINEAR_CONTRACT_PROGRAM_ID\$State")
             assertThat(metadata.first().status).isEqualTo(Vault.StateStatus.UNCONSUMED) // 0 = UNCONSUMED
             assertThat(metadata.last().contractStateClassName).isEqualTo("net.corda.finance.contracts.asset.Cash\$State")
-            assertThat(metadata.last().status).isEqualTo(Vault.StateStatus.CONSUMED)    // 1 = CONSUMED
+            assertThat(metadata.last().status).isEqualTo(Vault.StateStatus.CONSUMED) // 1 = CONSUMED
         }
     }
 
@@ -1170,7 +1170,7 @@ class VaultQueryTests {
             val txns = vaultFiller.fillWithSomeTestLinearStates(1, "TEST")
             val linearState = txns.states.first()
             repeat(3) {
-                vaultFiller.evolveLinearState(linearState)  // consume current and produce new state reference
+                vaultFiller.evolveLinearState(linearState) // consume current and produce new state reference
             }
             val linearId = linearState.state.data.linearId
 
@@ -1190,7 +1190,7 @@ class VaultQueryTests {
             val txns = vaultFiller.fillWithSomeTestLinearStates(2, "TEST")
             val linearStates = txns.states.toList()
             repeat(3) {
-                vaultFiller.evolveLinearStates(linearStates)  // consume current and produce new state reference
+                vaultFiller.evolveLinearStates(linearStates) // consume current and produce new state reference
             }
             // should now have 1 UNCONSUMED & 3 CONSUMED state refs for Linear State with "TEST"
             val linearStateCriteria = LinearStateQueryCriteria(uuid = linearStates.map { it.state.data.linearId.id }, status = Vault.StateStatus.ALL)
@@ -1257,9 +1257,9 @@ class VaultQueryTests {
         database.transaction {
             val txns = vaultFiller.fillWithSomeTestLinearStates(1, "TEST")
             val linearState = txns.states.first()
-            val linearState2 = vaultFiller.evolveLinearState(linearState)  // consume current and produce new state reference
-            val linearState3 = vaultFiller.evolveLinearState(linearState2)  // consume current and produce new state reference
-            vaultFiller.evolveLinearState(linearState3)  // consume current and produce new state reference
+            val linearState2 = vaultFiller.evolveLinearState(linearState) // consume current and produce new state reference
+            val linearState3 = vaultFiller.evolveLinearState(linearState2) // consume current and produce new state reference
+            vaultFiller.evolveLinearState(linearState3) // consume current and produce new state reference
             // should now have 1 UNCONSUMED & 3 CONSUMED state refs for Linear State with "TEST"
             val linearStateCriteria = LinearStateQueryCriteria(linearId = txns.states.map { it.state.data.linearId }, status = Vault.StateStatus.CONSUMED)
             val vaultCriteria = VaultQueryCriteria(status = Vault.StateStatus.CONSUMED)
@@ -1379,7 +1379,7 @@ class VaultQueryTests {
         database.transaction {
             val criteria = FungibleAssetQueryCriteria(owner = listOf(MEGA_CORP))
             val results = vaultService.queryBy<FungibleAsset<*>>(criteria)
-            assertThat(results.states).hasSize(1)   // can only be 1 owner of a node (MEGA_CORP in this MockServices setup)
+            assertThat(results.states).hasSize(1) // can only be 1 owner of a node (MEGA_CORP in this MockServices setup)
         }
     }
 
@@ -1388,7 +1388,7 @@ class VaultQueryTests {
         database.transaction {
             vaultFillerCashNotary.fillWithSomeTestCash(100.DOLLARS, notaryServices, 1, DUMMY_CASH_ISSUER)
             vaultFiller.fillWithSomeTestCash(100.DOLLARS, notaryServices, 1, MEGA_CORP.ref(0), MEGA_CORP)
-            vaultFiller.fillWithSomeTestCash(100.DOLLARS, notaryServices, 1, BOC.ref(0), MINI_CORP)  // irrelevant to this vault
+            vaultFiller.fillWithSomeTestCash(100.DOLLARS, notaryServices, 1, BOC.ref(0), MINI_CORP) // irrelevant to this vault
         }
         database.transaction {
             // DOCSTART VaultQueryExample5.2
@@ -1396,7 +1396,7 @@ class VaultQueryTests {
             val results = vaultService.queryBy<ContractState>(criteria)
             // DOCEND VaultQueryExample5.2
 
-            assertThat(results.states).hasSize(2)   // can only be 1 owner of a node (MEGA_CORP in this MockServices setup)
+            assertThat(results.states).hasSize(2) // can only be 1 owner of a node (MEGA_CORP in this MockServices setup)
         }
     }
 
@@ -1471,7 +1471,7 @@ class VaultQueryTests {
             val results = vaultService.queryBy<Cash.State>(fungibleAssetCriteria)
             // DOCEND VaultQueryExample13
 
-            assertThat(results.states).hasSize(4)  // POUNDS, SWISS_FRANCS
+            assertThat(results.states).hasSize(4) // POUNDS, SWISS_FRANCS
         }
     }
 
@@ -1502,7 +1502,7 @@ class VaultQueryTests {
             val fungibleAssetCriteria = FungibleAssetQueryCriteria(quantity = builder { greaterThan(5000L) })
             val results = vaultService.queryBy<Cash.State>(fungibleAssetCriteria.and(customCriteria))
 
-            assertThat(results.states).hasSize(1)   // POUNDS > 50
+            assertThat(results.states).hasSize(1) // POUNDS > 50
         }
     }
 
@@ -1806,7 +1806,7 @@ class VaultQueryTests {
             // Enrich and override QueryCriteria with additional default attributes (such as soft locks)
             val enrichedCriteria = VaultQueryCriteria(contractStateTypes = setOf(DealState::class.java), // enrich
                     softLockingCondition = QueryCriteria.SoftLockingCondition(QueryCriteria.SoftLockingType.UNLOCKED_AND_SPECIFIED, listOf(UUID.randomUUID())),
-                    status = Vault.StateStatus.UNCONSUMED)  // override
+                    status = Vault.StateStatus.UNCONSUMED) // override
             // Sorting
             val sortAttribute = SortAttribute.Standard(Sort.CommonStateAttribute.STATE_REF)
             val sorter = Sort(setOf(Sort.SortColumn(sortAttribute, Sort.Direction.ASC)))
@@ -1826,7 +1826,7 @@ class VaultQueryTests {
         val updates =
                 database.transaction {
                     // DOCSTART VaultQueryExample15
-                    vaultService.trackBy<Cash.State>().updates     // UNCONSUMED default
+                    vaultService.trackBy<Cash.State>().updates // UNCONSUMED default
                     // DOCEND VaultQueryExample15
                 }
         val (linearStates, dealStates) =

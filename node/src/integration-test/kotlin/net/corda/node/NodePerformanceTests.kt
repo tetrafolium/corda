@@ -42,8 +42,8 @@ class NodePerformanceTests {
     }
 
     private data class FlowMeasurementResult(
-            val flowPerSecond: Double,
-            val averageMs: Double
+        val flowPerSecond: Double,
+        val averageMs: Double
     )
 
     @Test

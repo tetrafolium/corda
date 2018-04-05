@@ -28,8 +28,10 @@ import javax.persistence.Lob
 
 // TODO There is duplicated logic between this and InMemoryIdentityService
 @ThreadSafe
-class PersistentIdentityService(override val trustRoot: X509Certificate,
-                                vararg caCertificates: X509Certificate) : SingletonSerializeAsToken(), IdentityServiceInternal {
+class PersistentIdentityService(
+    override val trustRoot: X509Certificate,
+    vararg caCertificates: X509Certificate
+) : SingletonSerializeAsToken(), IdentityServiceInternal {
 
     companion object {
         private val log = contextLogger()
@@ -68,24 +70,24 @@ class PersistentIdentityService(override val trustRoot: X509Certificate,
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}identities")
     class PersistentIdentity(
-            @Id
-            @Column(name = "pk_hash", length = MAX_HASH_HEX_SIZE)
-            var publicKeyHash: String = "",
+        @Id
+        @Column(name = "pk_hash", length = MAX_HASH_HEX_SIZE)
+        var publicKeyHash: String = "",
 
-            @Lob
-            @Column(name = "identity_value")
-            var identity: ByteArray = EMPTY_BYTE_ARRAY
+        @Lob
+        @Column(name = "identity_value")
+        var identity: ByteArray = EMPTY_BYTE_ARRAY
     )
 
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}named_identities")
     class PersistentIdentityNames(
-            @Id
-            @Column(name = "name", length = 128)
-            var name: String = "",
+        @Id
+        @Column(name = "name", length = 128)
+        var name: String = "",
 
-            @Column(name = "pk_hash", length = MAX_HASH_HEX_SIZE)
-            var publicKeyHash: String = ""
+        @Column(name = "pk_hash", length = MAX_HASH_HEX_SIZE)
+        var publicKeyHash: String = ""
     )
 
     override val caCertStore: CertStore
@@ -199,8 +201,8 @@ class PersistentIdentityService(override val trustRoot: X509Certificate,
 
     @Throws(UnknownAnonymousPartyException::class)
     override fun assertOwnership(party: Party, anonymousParty: AnonymousParty) {
-        val anonymousIdentity = certificateFromKey(anonymousParty.owningKey) ?:
-                throw UnknownAnonymousPartyException("Unknown $anonymousParty")
+        val anonymousIdentity = certificateFromKey(anonymousParty.owningKey)
+                ?: throw UnknownAnonymousPartyException("Unknown $anonymousParty")
         val issuingCert = anonymousIdentity.certPath.certificates[1]
         require(issuingCert.publicKey == party.owningKey) {
             "Issuing certificate's public key must match the party key ${party.owningKey.toStringShort()}."

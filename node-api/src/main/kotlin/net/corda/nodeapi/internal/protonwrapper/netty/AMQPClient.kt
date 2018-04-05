@@ -31,15 +31,17 @@ import kotlin.concurrent.withLock
  * otherwise it creates a self-contained Netty thraed pool and socket objects.
  * Once connected it can accept application packets to send via the AMQP protocol.
  */
-class AMQPClient(val targets: List<NetworkHostAndPort>,
-                 val allowedRemoteLegalNames: Set<CordaX500Name>,
-                 private val userName: String?,
-                 private val password: String?,
-                 private val keyStore: KeyStore,
-                 private val keyStorePrivateKeyPassword: String,
-                 private val trustStore: KeyStore,
-                 private val trace: Boolean = false,
-                 private val sharedThreadPool: EventLoopGroup? = null) : AutoCloseable {
+class AMQPClient(
+    val targets: List<NetworkHostAndPort>,
+    val allowedRemoteLegalNames: Set<CordaX500Name>,
+    private val userName: String?,
+    private val password: String?,
+    private val keyStore: KeyStore,
+    private val keyStorePrivateKeyPassword: String,
+    private val trustStore: KeyStore,
+    private val trace: Boolean = false,
+    private val sharedThreadPool: EventLoopGroup? = null
+) : AutoCloseable {
     companion object {
         init {
             InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE)
@@ -132,9 +134,9 @@ class AMQPClient(val targets: List<NetworkHostAndPort>,
     private fun restart() {
         val bootstrap = Bootstrap()
         // TODO Needs more configuration control when we profile. e.g. to use EPOLL on Linux
-        bootstrap.group(workerGroup).
-                channel(NioSocketChannel::class.java).
-                handler(ClientChannelInitializer(this))
+        bootstrap.group(workerGroup)
+                .channel(NioSocketChannel::class.java)
+                .handler(ClientChannelInitializer(this))
         currentTarget = targets[targetIndex]
         val clientFuture = bootstrap.connect(currentTarget.host, currentTarget.port)
         clientFuture.addListener(connectListener)
@@ -168,10 +170,12 @@ class AMQPClient(val targets: List<NetworkHostAndPort>,
             return channel?.isActive ?: false
         }
 
-    fun createMessage(payload: ByteArray,
-                      topic: String,
-                      destinationLegalName: String,
-                      properties: Map<Any?, Any?>): SendableMessage {
+    fun createMessage(
+        payload: ByteArray,
+        topic: String,
+        destinationLegalName: String,
+        properties: Map<Any?, Any?>
+    ): SendableMessage {
         return SendableMessageImpl(payload, topic, destinationLegalName, currentTarget, properties)
     }
 

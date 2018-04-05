@@ -28,14 +28,16 @@ import java.security.cert.X509Certificate
  *  It also add some extra checks to the SSL handshake to support our non-standard certificate checks of legal identity.
  *  When a valid SSL connections is made then it initialises a proton-j engine instance to handle the protocol layer.
  */
-internal class AMQPChannelHandler(private val serverMode: Boolean,
-                                  private val allowedRemoteLegalNames: Set<CordaX500Name>?,
-                                  private val userName: String?,
-                                  private val password: String?,
-                                  private val trace: Boolean,
-                                  private val onOpen: (Pair<SocketChannel, ConnectionChange>) -> Unit,
-                                  private val onClose: (Pair<SocketChannel, ConnectionChange>) -> Unit,
-                                  private val onReceive: (ReceivedMessage) -> Unit) : ChannelDuplexHandler() {
+internal class AMQPChannelHandler(
+    private val serverMode: Boolean,
+    private val allowedRemoteLegalNames: Set<CordaX500Name>?,
+    private val userName: String?,
+    private val password: String?,
+    private val trace: Boolean,
+    private val onOpen: (Pair<SocketChannel, ConnectionChange>) -> Unit,
+    private val onClose: (Pair<SocketChannel, ConnectionChange>) -> Unit,
+    private val onReceive: (ReceivedMessage) -> Unit
+) : ChannelDuplexHandler() {
     private val log = LoggerFactory.getLogger(allowedRemoteLegalNames?.firstOrNull()?.toString() ?: "AMQPChannelHandler")
     private lateinit var remoteAddress: InetSocketAddress
     private var localCert: X509Certificate? = null

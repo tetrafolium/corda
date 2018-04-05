@@ -19,10 +19,12 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Cordapp provider and store. For querying CorDapps for their attachment and vice versa.
  */
-open class CordappProviderImpl(private val cordappLoader: CordappLoader,
-                               private val cordappConfigProvider: CordappConfigProvider,
-                               attachmentStorage: AttachmentStorage,
-                               private val whitelistedContractImplementations: Map<String, List<AttachmentId>>) : SingletonSerializeAsToken(), CordappProviderInternal {
+open class CordappProviderImpl(
+    private val cordappLoader: CordappLoader,
+    private val cordappConfigProvider: CordappConfigProvider,
+    attachmentStorage: AttachmentStorage,
+    private val whitelistedContractImplementations: Map<String, List<AttachmentId>>
+) : SingletonSerializeAsToken(), CordappProviderInternal {
 
     companion object {
         private val log = loggerFor<CordappProviderImpl>()

@@ -33,14 +33,16 @@ import kotlin.concurrent.withLock
  * This create a socket acceptor instance that can receive possibly multiple AMQP connections.
  * As of now this is not used outside of testing, but in future it will be used for standalone bridging components.
  */
-class AMQPServer(val hostName: String,
-                 val port: Int,
-                 private val userName: String?,
-                 private val password: String?,
-                 private val keyStore: KeyStore,
-                 private val keyStorePrivateKeyPassword: CharArray,
-                 private val trustStore: KeyStore,
-                 private val trace: Boolean = false) : AutoCloseable {
+class AMQPServer(
+    val hostName: String,
+    val port: Int,
+    private val userName: String?,
+    private val password: String?,
+    private val keyStore: KeyStore,
+    private val keyStorePrivateKeyPassword: CharArray,
+    private val trustStore: KeyStore,
+    private val trace: Boolean = false
+) : AutoCloseable {
 
     companion object {
         init {
@@ -59,14 +61,16 @@ class AMQPServer(val hostName: String,
     private var serverChannel: Channel? = null
     private val clientChannels = ConcurrentHashMap<InetSocketAddress, SocketChannel>()
 
-    constructor(hostName: String,
-                port: Int,
-                userName: String?,
-                password: String?,
-                keyStore: KeyStore,
-                keyStorePrivateKeyPassword: String,
-                trustStore: KeyStore,
-                trace: Boolean = false) : this(hostName, port, userName, password, keyStore, keyStorePrivateKeyPassword.toCharArray(), trustStore, trace)
+    constructor(
+        hostName: String,
+        port: Int,
+        userName: String?,
+        password: String?,
+        keyStore: KeyStore,
+        keyStorePrivateKeyPassword: String,
+        trustStore: KeyStore,
+        trace: Boolean = false
+    ) : this(hostName, port, userName, password, keyStore, keyStorePrivateKeyPassword.toCharArray(), trustStore, trace)
 
     private class ServerChannelInitializer(val parent: AMQPServer) : ChannelInitializer<SocketChannel>() {
         private val keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
@@ -108,11 +112,11 @@ class AMQPServer(val hostName: String,
 
             val server = ServerBootstrap()
             // TODO Needs more configuration control when we profile. e.g. to use EPOLL on Linux
-            server.group(bossGroup, workerGroup).
-                    channel(NioServerSocketChannel::class.java).
-                    option(ChannelOption.SO_BACKLOG, 100).
-                    handler(LoggingHandler(LogLevel.INFO)).
-                    childHandler(ServerChannelInitializer(this))
+            server.group(bossGroup, workerGroup)
+                    .channel(NioServerSocketChannel::class.java)
+                    .option(ChannelOption.SO_BACKLOG, 100)
+                    .handler(LoggingHandler(LogLevel.INFO))
+                    .childHandler(ServerChannelInitializer(this))
 
             log.info("Try to bind $port")
             val channelFuture = server.bind(hostName, port).sync() // block/throw here as better to know we failed to claim port than carry on
@@ -153,11 +157,13 @@ class AMQPServer(val hostName: String,
             return channel?.isActive ?: false
         }
 
-    fun createMessage(payload: ByteArray,
-                      topic: String,
-                      destinationLegalName: String,
-                      destinationLink: NetworkHostAndPort,
-                      properties: Map<Any?, Any?>): SendableMessage {
+    fun createMessage(
+        payload: ByteArray,
+        topic: String,
+        destinationLegalName: String,
+        destinationLink: NetworkHostAndPort,
+        properties: Map<Any?, Any?>
+    ): SendableMessage {
         val dest = InetSocketAddress(destinationLink.host, destinationLink.port)
         require(dest in clientChannels.keys) {
             "Destination not available"
@@ -196,5 +202,4 @@ class AMQPServer(val hostName: String,
     private val _onConnection = PublishSubject.create<ConnectionChange>().toSerialized()
     val onConnection: Observable<ConnectionChange>
         get() = _onConnection
-
 }

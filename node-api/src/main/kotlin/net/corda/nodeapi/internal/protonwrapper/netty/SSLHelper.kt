@@ -8,9 +8,11 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 
-internal fun createClientSslHelper(target: NetworkHostAndPort,
-                                   keyManagerFactory: KeyManagerFactory,
-                                   trustManagerFactory: TrustManagerFactory): SslHandler {
+internal fun createClientSslHelper(
+    target: NetworkHostAndPort,
+    keyManagerFactory: KeyManagerFactory,
+    trustManagerFactory: TrustManagerFactory
+): SslHandler {
     val sslContext = SSLContext.getInstance("TLS")
     val keyManagers = keyManagerFactory.keyManagers
     val trustManagers = trustManagerFactory.trustManagers
@@ -23,8 +25,10 @@ internal fun createClientSslHelper(target: NetworkHostAndPort,
     return SslHandler(sslEngine)
 }
 
-internal fun createServerSslHelper(keyManagerFactory: KeyManagerFactory,
-                                   trustManagerFactory: TrustManagerFactory): SslHandler {
+internal fun createServerSslHelper(
+    keyManagerFactory: KeyManagerFactory,
+    trustManagerFactory: TrustManagerFactory
+): SslHandler {
     val sslContext = SSLContext.getInstance("TLS")
     val keyManagers = keyManagerFactory.keyManagers
     val trustManagers = trustManagerFactory.trustManagers

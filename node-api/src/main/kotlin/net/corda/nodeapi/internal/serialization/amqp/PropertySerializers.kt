@@ -57,9 +57,9 @@ class PublicPropertyReader(private val readMethod: Method?) : PropertyReader() {
  */
 class PrivatePropertyReader(val field: Field, parentType: Type) : PropertyReader() {
     init {
-        loggerFor<PropertySerializer>().warn("Create property Serializer for private property '${field.name}' not "
-                + "exposed by a getter on class '$parentType'\n"
-                + "\tNOTE: This behaviour will be deprecated at some point in the future and a getter required")
+        loggerFor<PropertySerializer>().warn("Create property Serializer for private property '${field.name}' not " +
+                "exposed by a getter on class '$parentType'\n" +
+                "\tNOTE: This behaviour will be deprecated at some point in the future and a getter required")
     }
 
     override fun read(obj: Any?): Any? {
@@ -79,7 +79,7 @@ class PrivatePropertyReader(val field: Field, parentType: Type) : PropertyReader
         // So this used to report as an error, but given we serialise exceptions all the time it
         // provides for very scary log files so move this to trace level
         loggerFor<PropertySerializer>().let { logger ->
-            logger.trace("Using kotlin introspection on internal type ${field}")
+            logger.trace("Using kotlin introspection on internal type $field")
             logger.trace("Unexpected internal Kotlin error", e)
         }
         true
@@ -93,8 +93,8 @@ class PrivatePropertyReader(val field: Field, parentType: Type) : PropertyReader
  */
 class EvolutionPropertyReader : PropertyReader() {
     override fun read(obj: Any?): Any? {
-        throw UnsupportedOperationException("It should be impossible for an evolution serializer to "
-                + "be reading from an object")
+        throw UnsupportedOperationException("It should be impossible for an evolution serializer to " +
+                "be reading from an object")
     }
 
     override fun isNullable() = true
@@ -109,8 +109,9 @@ class EvolutionPropertyReader : PropertyReader() {
  * making the property accessible.
  */
 abstract class PropertyAccessor(
-        val initialPosition: Int,
-        open val getter: PropertySerializer) {
+    val initialPosition: Int,
+    open val getter: PropertySerializer
+) {
     companion object : Comparator<PropertyAccessor> {
         override fun compare(p0: PropertyAccessor?, p1: PropertyAccessor?): Int {
             return p0?.getter?.name?.compareTo(p1?.getter?.name ?: "") ?: 0
@@ -132,9 +133,10 @@ abstract class PropertyAccessor(
  * is serialized and deserialized via JavaBean getter and setter style methods.
  */
 class PropertyAccessorGetterSetter(
-        initialPosition: Int,
-        getter: PropertySerializer,
-        private val setter: Method) : PropertyAccessor(initialPosition, getter) {
+    initialPosition: Int,
+    getter: PropertySerializer,
+    private val setter: Method
+) : PropertyAccessor(initialPosition, getter) {
     init {
         /**
          * Play nicely with Java interop, public methods aren't marked as accessible
@@ -155,8 +157,9 @@ class PropertyAccessorGetterSetter(
  * of the object the property belongs to.
  */
 class PropertyAccessorConstructor(
-        initialPosition: Int,
-        override val getter: PropertySerializer) : PropertyAccessor(initialPosition, getter) {
+    initialPosition: Int,
+    override val getter: PropertySerializer
+) : PropertyAccessor(initialPosition, getter) {
     /**
      * Because the property should be being set on the obejct through the constructor any
      * calls to the explicit setter should be an error.
@@ -179,7 +182,8 @@ class PropertyAccessorConstructor(
  * overridden and set appropriately by child types.
  */
 abstract class PropertySerializers(
-        val serializationOrder: List<PropertyAccessor>) {
+    val serializationOrder: List<PropertyAccessor>
+) {
     companion object {
         fun make(serializationOrder: List<PropertyAccessor>) =
                 when (serializationOrder.firstOrNull()) {
@@ -201,17 +205,18 @@ class PropertySerializersNoProperties : PropertySerializers (emptyList()) {
 }
 
 class PropertySerializersConstructor(
-        serializationOrder: List<PropertyAccessor>) : PropertySerializers(serializationOrder) {
+    serializationOrder: List<PropertyAccessor>
+) : PropertySerializers(serializationOrder) {
     override val byConstructor get() = true
 }
 
 class PropertySerializersSetter(
-        serializationOrder: List<PropertyAccessor>) : PropertySerializers(serializationOrder) {
+    serializationOrder: List<PropertyAccessor>
+) : PropertySerializers(serializationOrder) {
     override val byConstructor get() = false
 }
 
 class PropertySerializersEvolution : PropertySerializers(emptyList()) {
     override val byConstructor get() = false
 }
-
 

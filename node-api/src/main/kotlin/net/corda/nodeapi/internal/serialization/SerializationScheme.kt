@@ -22,14 +22,16 @@ internal object NullEncodingWhitelist : EncodingWhitelist {
     override fun acceptEncoding(encoding: SerializationEncoding) = false
 }
 
-data class SerializationContextImpl @JvmOverloads constructor(override val preferredSerializationVersion: SerializationMagic,
-                                                              override val deserializationClassLoader: ClassLoader,
-                                                              override val whitelist: ClassWhitelist,
-                                                              override val properties: Map<Any, Any>,
-                                                              override val objectReferencesEnabled: Boolean,
-                                                              override val useCase: SerializationContext.UseCase,
-                                                              override val encoding: SerializationEncoding?,
-                                                              override val encodingWhitelist: EncodingWhitelist = NullEncodingWhitelist) : SerializationContext {
+data class SerializationContextImpl @JvmOverloads constructor(
+    override val preferredSerializationVersion: SerializationMagic,
+    override val deserializationClassLoader: ClassLoader,
+    override val whitelist: ClassWhitelist,
+    override val properties: Map<Any, Any>,
+    override val objectReferencesEnabled: Boolean,
+    override val useCase: SerializationContext.UseCase,
+    override val encoding: SerializationEncoding?,
+    override val encodingWhitelist: EncodingWhitelist = NullEncodingWhitelist
+) : SerializationContext {
     private val cache: Cache<List<SecureHash>, AttachmentsClassLoader> = Caffeine.newBuilder().weakValues().maximumSize(1024).build()
 
     /**
@@ -141,9 +143,6 @@ open class SerializationFactoryImpl : SerializationFactory() {
 
     override fun hashCode(): Int = registeredSchemes.hashCode()
 }
-
-
-
 
 interface SerializationScheme {
     fun canDeserializeVersion(magic: CordaSerializationMagic, target: SerializationContext.UseCase): Boolean

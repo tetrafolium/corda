@@ -98,7 +98,7 @@ object DefaultKryoCustomizer {
             register(ECPublicKeyImpl::class.java, publicKeySerializer)
             register(EdDSAPublicKey::class.java, publicKeySerializer)
             register(EdDSAPrivateKey::class.java, PrivateKeySerializer)
-            register(CompositeKey::class.java, publicKeySerializer)  // Using a custom serializer for compactness
+            register(CompositeKey::class.java, publicKeySerializer) // Using a custom serializer for compactness
             // Exceptions. We don't bother sending the stack traces as the client will fill in its own anyway.
             register(Array<StackTraceElement>::class, read = { _, _ -> emptyArray() }, write = { _, _, _ -> })
             // This ensures a NonEmptySetSerializer is constructed with an initial value.

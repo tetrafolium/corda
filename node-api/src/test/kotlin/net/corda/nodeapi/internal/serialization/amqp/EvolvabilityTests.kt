@@ -487,7 +487,7 @@ class EvolvabilityTests {
     //
     @Test
     @Ignore("Test fails after moving NetworkParameters and NotaryInfo into core from node-api")
-    fun readBrokenNetworkParameters(){
+    fun readBrokenNetworkParameters() {
         val sf = testDefaultFactory()
         sf.register(net.corda.nodeapi.internal.serialization.amqp.custom.InstantSerializer(sf))
         sf.register(net.corda.nodeapi.internal.serialization.amqp.custom.PublicKeySerializer)
@@ -524,7 +524,7 @@ class EvolvabilityTests {
         val resource = "networkParams.<corda version>.<commit sha>"
         val DUMMY_NOTARY = TestIdentity(DUMMY_NOTARY_NAME, 20).party
         val networkParameters = NetworkParameters(
-                3, listOf(NotaryInfo(DUMMY_NOTARY, false)),1000, 1000, Instant.EPOCH, 1, emptyMap())
+                3, listOf(NotaryInfo(DUMMY_NOTARY, false)), 1000, 1000, Instant.EPOCH, 1, emptyMap())
 
         val sf = testDefaultFactory()
         sf.register(net.corda.nodeapi.internal.serialization.amqp.custom.InstantSerializer(sf))

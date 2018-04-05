@@ -6,24 +6,23 @@ import net.corda.core.utilities.contextLogger
 import net.corda.nodeapi.internal.persistence.currentDBSession
 import java.util.*
 
-
 /**
  * Implements a caching layer on top of an *append-only* table accessed via Hibernate mapping. Note that if the same key is [set] twice the
  * behaviour is unpredictable! There is a best-effort check for double inserts, but this should *not* be relied on, so
  * ONLY USE THIS IF YOUR TABLE IS APPEND-ONLY
  */
 abstract class AppendOnlyPersistentMapBase<K, V, E, out EK>(
-        val toPersistentEntityKey: (K) -> EK,
-        val fromPersistentEntity: (E) -> Pair<K, V>,
-        val toPersistentEntity: (key: K, value: V) -> E,
-        val persistentEntityClass: Class<E>
+    val toPersistentEntityKey: (K) -> EK,
+    val fromPersistentEntity: (E) -> Pair<K, V>,
+    val toPersistentEntity: (key: K, value: V) -> E,
+    val persistentEntityClass: Class<E>
 ) {
 
     private companion object {
         private val log = contextLogger()
     }
 
-    abstract protected val cache: LoadingCache<K, Optional<V>>
+    protected abstract val cache: LoadingCache<K, Optional<V>>
 
     /**
      * Returns the value associated with the key, first loading that value from the storage if necessary.
@@ -135,11 +134,11 @@ abstract class AppendOnlyPersistentMapBase<K, V, E, out EK>(
 }
 
 class AppendOnlyPersistentMap<K, V, E, out EK>(
-        toPersistentEntityKey: (K) -> EK,
-        fromPersistentEntity: (E) -> Pair<K, V>,
-        toPersistentEntity: (key: K, value: V) -> E,
-        persistentEntityClass: Class<E>,
-        cacheBound: Long = 1024
+    toPersistentEntityKey: (K) -> EK,
+    fromPersistentEntity: (E) -> Pair<K, V>,
+    toPersistentEntity: (key: K, value: V) -> E,
+    persistentEntityClass: Class<E>,
+    cacheBound: Long = 1024
 ) : AppendOnlyPersistentMapBase<K, V, E, EK>(
         toPersistentEntityKey,
         fromPersistentEntity,
@@ -152,12 +151,12 @@ class AppendOnlyPersistentMap<K, V, E, out EK>(
 }
 
 class WeightBasedAppendOnlyPersistentMap<K, V, E, out EK>(
-        toPersistentEntityKey: (K) -> EK,
-        fromPersistentEntity: (E) -> Pair<K, V>,
-        toPersistentEntity: (key: K, value: V) -> E,
-        persistentEntityClass: Class<E>,
-        maxWeight: Long,
-        weighingFunc: (K, Optional<V>) -> Int
+    toPersistentEntityKey: (K) -> EK,
+    fromPersistentEntity: (E) -> Pair<K, V>,
+    toPersistentEntity: (key: K, value: V) -> E,
+    persistentEntityClass: Class<E>,
+    maxWeight: Long,
+    weighingFunc: (K, Optional<V>) -> Int
 ) : AppendOnlyPersistentMapBase<K, V, E, EK>(
         toPersistentEntityKey,
         fromPersistentEntity,

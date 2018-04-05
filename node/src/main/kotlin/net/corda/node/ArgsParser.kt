@@ -4,7 +4,6 @@ import com.typesafe.config.ConfigFactory
 import joptsimple.OptionParser
 import joptsimple.util.EnumConverter
 import joptsimple.util.PathConverter
-import net.corda.core.internal.CertRole
 import net.corda.core.internal.div
 import net.corda.core.internal.exists
 import net.corda.node.services.config.ConfigHelper
@@ -94,17 +93,19 @@ class ArgsParser {
 
 data class NodeRegistrationOption(val networkRootTrustStorePath: Path, val networkRootTrustStorePassword: String)
 
-data class CmdLineOptions(val baseDirectory: Path,
-                          val configFile: Path,
-                          val help: Boolean,
-                          val loggingLevel: Level,
-                          val logToConsole: Boolean,
-                          val nodeRegistrationConfig: NodeRegistrationOption?,
-                          val isVersion: Boolean,
-                          val noLocalShell: Boolean,
-                          val sshdServer: Boolean,
-                          val justGenerateNodeInfo: Boolean,
-                          val bootstrapRaftCluster: Boolean) {
+data class CmdLineOptions(
+    val baseDirectory: Path,
+    val configFile: Path,
+    val help: Boolean,
+    val loggingLevel: Level,
+    val logToConsole: Boolean,
+    val nodeRegistrationConfig: NodeRegistrationOption?,
+    val isVersion: Boolean,
+    val noLocalShell: Boolean,
+    val sshdServer: Boolean,
+    val justGenerateNodeInfo: Boolean,
+    val bootstrapRaftCluster: Boolean
+) {
     fun loadConfig(): NodeConfiguration {
         val config = ConfigHelper.loadConfig(baseDirectory, configFile, configOverrides = ConfigFactory.parseMap(
                 mapOf("noLocalShell" to this.noLocalShell)

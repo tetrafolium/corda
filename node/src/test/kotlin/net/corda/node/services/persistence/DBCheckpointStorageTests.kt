@@ -150,5 +150,4 @@ class DBCheckpointStorageTests {
 
     private var checkpointCount = 1
     private fun newCheckpoint() = Checkpoint(SerializedBytes(Ints.toByteArray(checkpointCount++)))
-
 }

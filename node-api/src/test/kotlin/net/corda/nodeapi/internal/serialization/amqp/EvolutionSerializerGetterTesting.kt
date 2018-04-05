@@ -9,10 +9,12 @@ import java.io.NotSerializableException
  * prevents that by simply throwing an exception whenever such a serializer is requested.
  */
 class EvolutionSerializerGetterTesting : EvolutionSerializerGetterBase() {
-    override fun getEvolutionSerializer(factory: SerializerFactory,
-                                        typeNotation: TypeNotation,
-                                        newSerializer: AMQPSerializer<Any>,
-                                        schemas: SerializationSchemas): AMQPSerializer<Any> {
+    override fun getEvolutionSerializer(
+        factory: SerializerFactory,
+        typeNotation: TypeNotation,
+        newSerializer: AMQPSerializer<Any>,
+        schemas: SerializationSchemas
+    ): AMQPSerializer<Any> {
         throw NotSerializableException("No evolution should be occurring\n" +
                 "    ${typeNotation.name}\n" +
                 "        ${typeNotation.descriptor.name}\n" +

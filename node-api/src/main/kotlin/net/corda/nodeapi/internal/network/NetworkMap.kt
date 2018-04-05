@@ -13,7 +13,6 @@ import net.corda.nodeapi.internal.crypto.X509Utilities
 import java.security.cert.X509Certificate
 import java.time.Instant
 
-
 const val NETWORK_PARAMS_FILE_NAME = "network-parameters"
 const val NETWORK_PARAMS_UPDATE_FILE_NAME = "network-parameters-update"
 
@@ -28,9 +27,9 @@ typealias SignedNetworkParameters = SignedDataWithCert<NetworkParameters>
  */
 @CordaSerializable
 data class NetworkMap(
-        val nodeInfoHashes: List<SecureHash>,
-        val networkParameterHash: SecureHash,
-        val parametersUpdate: ParametersUpdate?
+    val nodeInfoHashes: List<SecureHash>,
+    val networkParameterHash: SecureHash,
+    val parametersUpdate: ParametersUpdate?
 )
 
 /**
@@ -42,9 +41,9 @@ data class NetworkMap(
  */
 @CordaSerializable
 data class ParametersUpdate(
-        val newParametersHash: SecureHash,
-        val description: String,
-        val updateDeadline: Instant
+    val newParametersHash: SecureHash,
+    val description: String,
+    val updateDeadline: Instant
 )
 
 /** Verify that a Network Map certificate is issued by Root CA and its [CertRole] is correct. */

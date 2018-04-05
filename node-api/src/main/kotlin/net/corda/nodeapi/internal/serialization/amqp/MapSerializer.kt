@@ -18,8 +18,8 @@ private typealias MapCreationFunction = (Map<*, *>) -> Map<*, *>
  * Serialization / deserialization of certain supported [Map] types.
  */
 class MapSerializer(private val declaredType: ParameterizedType, factory: SerializerFactory) : AMQPSerializer<Any> {
-    override val type: Type = (declaredType as? DeserializedParameterizedType) ?:
-            DeserializedParameterizedType.make(SerializerFactory.nameForType(declaredType), factory.classloader)
+    override val type: Type = (declaredType as? DeserializedParameterizedType)
+            ?: DeserializedParameterizedType.make(SerializerFactory.nameForType(declaredType), factory.classloader)
     override val typeDescriptor: Symbol = Symbol.valueOf(
             "$DESCRIPTOR_DOMAIN:${factory.fingerPrinter.fingerprint(type)}")
 
@@ -59,7 +59,6 @@ class MapSerializer(private val declaredType: ParameterizedType, factory: Serial
         private fun deriveParametrizedType(declaredType: Type, collectionClass: Class<out Map<*, *>>): ParameterizedType =
                 (declaredType as? ParameterizedType) ?: DeserializedParameterizedType(collectionClass, arrayOf(SerializerFactory.AnyType, SerializerFactory.AnyType))
 
-
         private fun findMostSuitableMapType(actualClass: Class<*>): Class<out Map<*, *>> =
                 MapSerializer.supportedTypes.keys.findLast { it.isAssignableFrom(actualClass) }!!
     }
@@ -76,11 +75,12 @@ class MapSerializer(private val declaredType: ParameterizedType, factory: Serial
     }
 
     override fun writeObject(
-            obj: Any,
-            data: Data,
-            type: Type,
-            output: SerializationOutput,
-            debugIndent: Int) = ifThrowsAppend({ declaredType.typeName }) {
+        obj: Any,
+        data: Data,
+        type: Type,
+        output: SerializationOutput,
+        debugIndent: Int
+    ) = ifThrowsAppend({ declaredType.typeName }) {
         obj.javaClass.checkSupportedMapType()
         // Write described
         data.withDescribed(typeNotation.descriptor) {
@@ -115,8 +115,8 @@ internal fun Class<*>.checkSupportedMapType() {
         throw IllegalArgumentException(
                 "Map type $this is unstable under iteration. Suggested fix: use java.util.LinkedHashMap instead.")
     } else if (WeakHashMap::class.java.isAssignableFrom(this)) {
-        throw IllegalArgumentException("Weak references with map types not supported. Suggested fix: "
-                + "use java.util.LinkedHashMap instead.")
+        throw IllegalArgumentException("Weak references with map types not supported. Suggested fix: " +
+                "use java.util.LinkedHashMap instead.")
     } else if (Dictionary::class.java.isAssignableFrom(this)) {
         throw IllegalArgumentException(
                 "Unable to serialise deprecated type $this. Suggested fix: prefer java.util.map implementations")

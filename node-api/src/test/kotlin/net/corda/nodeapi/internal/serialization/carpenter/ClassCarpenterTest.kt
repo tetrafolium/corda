@@ -28,9 +28,9 @@ class ClassCarpenterTest {
     fun empty() {
         val clazz = cc.build(ClassSchema("gen.EmptyClass", emptyMap(), null))
         assertEquals(0, clazz.nonSyntheticFields.size)
-        assertEquals(2, clazz.nonSyntheticMethods.size)   // get, toString
+        assertEquals(2, clazz.nonSyntheticMethods.size) // get, toString
         assertEquals(0, clazz.declaredConstructors[0].parameterCount)
-        clazz.newInstance()   // just test there's no exception.
+        clazz.newInstance() // just test there's no exception.
     }
 
     @Test

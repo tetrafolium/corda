@@ -210,11 +210,13 @@ class SerializationOutputTests(private val compression: CordaSerializationEncodi
             AllWhitelist, ClassLoader.getSystemClassLoader(),
             EvolutionSerializerGetterTesting())
 
-    private inline fun <reified T : Any> serdes(obj: T,
-                                                factory: SerializerFactory = defaultFactory(),
-                                                freshDeserializationFactory: SerializerFactory = defaultFactory(),
-                                                expectedEqual: Boolean = true,
-                                                expectDeserializedEqual: Boolean = true): T {
+    private inline fun <reified T : Any> serdes(
+        obj: T,
+        factory: SerializerFactory = defaultFactory(),
+        freshDeserializationFactory: SerializerFactory = defaultFactory(),
+        expectedEqual: Boolean = true,
+        expectDeserializedEqual: Boolean = true
+    ): T {
         val ser = SerializationOutput(factory, compression)
         val bytes = ser.serialize(obj)
 
@@ -416,7 +418,6 @@ class SerializationOutputTests(private val compression: CordaSerializationEncodi
         val obj = CapturesGenericX(ImplementsGenericX(1, "Ginger"))
         serdes(obj)
     }
-
 
     @Test
     fun `test inherits generic captured`() {
@@ -620,7 +621,6 @@ class SerializationOutputTests(private val compression: CordaSerializationEncodi
 
     object FooContract : Contract {
         override fun verify(tx: LedgerTransaction) {
-
         }
     }
 
@@ -1085,7 +1085,7 @@ class SerializationOutputTests(private val compression: CordaSerializationEncodi
         val bytes = ByteArray(10) { it.toByte() }
         val obj = ByteArrayInputStream(bytes)
         val obj2 = serdes(obj, factory, factory2, expectedEqual = false, expectDeserializedEqual = false)
-        val obj3 = ByteArrayInputStream(bytes)  // Can't use original since the stream pointer has moved.
+        val obj3 = ByteArrayInputStream(bytes) // Can't use original since the stream pointer has moved.
         assertEquals(obj3.available(), obj2.available())
         assertEquals(obj3.read(), obj2.read())
     }
@@ -1231,7 +1231,5 @@ class SerializationOutputTests(private val compression: CordaSerializationEncodi
         val testExcp = TestException("hello", Throwable().apply { stackTrace = Thread.currentThread().stackTrace })
         val factory = testDefaultFactoryNoEvolution()
         SerializationOutput(factory).serialize(testExcp)
-
     }
 }
-

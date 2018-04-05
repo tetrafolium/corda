@@ -112,7 +112,7 @@ class PrimIntArraySerializer(factory: SerializerFactory) :
         PrimArraySerializer(IntArray::class.java, factory) {
     override fun writeObject(obj: Any, data: Data, type: Type, output: SerializationOutput, debugIndent: Int) {
         localWriteObject(data) {
-            (obj as IntArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent+1) }
+            (obj as IntArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent + 1) }
         }
     }
 }
@@ -121,7 +121,7 @@ class PrimCharArraySerializer(factory: SerializerFactory) :
         PrimArraySerializer(CharArray::class.java, factory) {
     override fun writeObject(obj: Any, data: Data, type: Type, output: SerializationOutput, debugIndent: Int) {
         localWriteObject(data) { (obj as CharArray).forEach {
-            output.writeObjectOrNull(it, data, elementType, debugIndent+1) }
+            output.writeObjectOrNull(it, data, elementType, debugIndent + 1) }
         }
     }
 
@@ -139,7 +139,7 @@ class PrimBooleanArraySerializer(factory: SerializerFactory) :
         PrimArraySerializer(BooleanArray::class.java, factory) {
     override fun writeObject(obj: Any, data: Data, type: Type, output: SerializationOutput, debugIndent: Int) {
         localWriteObject(data) {
-            (obj as BooleanArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent+1) }
+            (obj as BooleanArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent + 1) }
         }
     }
 }
@@ -148,7 +148,7 @@ class PrimDoubleArraySerializer(factory: SerializerFactory) :
         PrimArraySerializer(DoubleArray::class.java, factory) {
     override fun writeObject(obj: Any, data: Data, type: Type, output: SerializationOutput, debugIndent: Int) {
         localWriteObject(data) {
-            (obj as DoubleArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent+1) }
+            (obj as DoubleArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent + 1) }
         }
     }
 }
@@ -157,7 +157,7 @@ class PrimFloatArraySerializer(factory: SerializerFactory) :
         PrimArraySerializer(FloatArray::class.java, factory) {
     override fun writeObject(obj: Any, data: Data, type: Type, output: SerializationOutput, debugIndent: Int) {
         localWriteObject(data) {
-            (obj as FloatArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent+1) }
+            (obj as FloatArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent + 1) }
         }
     }
 }
@@ -166,7 +166,7 @@ class PrimShortArraySerializer(factory: SerializerFactory) :
         PrimArraySerializer(ShortArray::class.java, factory) {
     override fun writeObject(obj: Any, data: Data, type: Type, output: SerializationOutput, debugIndent: Int) {
         localWriteObject(data) {
-            (obj as ShortArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent+1) }
+            (obj as ShortArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent + 1) }
         }
     }
 }
@@ -175,7 +175,7 @@ class PrimLongArraySerializer(factory: SerializerFactory) :
         PrimArraySerializer(LongArray::class.java, factory) {
     override fun writeObject(obj: Any, data: Data, type: Type, output: SerializationOutput, debugIndent: Int) {
         localWriteObject(data) {
-            (obj as LongArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent+1) }
+            (obj as LongArray).forEach { output.writeObjectOrNull(it, data, elementType, debugIndent + 1) }
         }
     }
 }

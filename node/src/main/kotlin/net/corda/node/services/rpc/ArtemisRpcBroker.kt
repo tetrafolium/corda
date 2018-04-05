@@ -23,15 +23,16 @@ import java.util.concurrent.CompletableFuture
 import javax.security.auth.login.AppConfigurationEntry
 
 internal class ArtemisRpcBroker internal constructor(
-        address: NetworkHostAndPort,
-        private val adminAddressOptional: NetworkHostAndPort?,
-        private val sslOptions: SSLConfiguration,
-        private val useSsl: Boolean,
-        private val securityManager: RPCSecurityManager,
-        private val certificateChainCheckPolicies: List<CertChainPolicyConfig>,
-        private val maxMessageSize: Int,
-        private val jmxEnabled: Boolean = false,
-        private val baseDirectory: Path) : ArtemisBroker {
+    address: NetworkHostAndPort,
+    private val adminAddressOptional: NetworkHostAndPort?,
+    private val sslOptions: SSLConfiguration,
+    private val useSsl: Boolean,
+    private val securityManager: RPCSecurityManager,
+    private val certificateChainCheckPolicies: List<CertChainPolicyConfig>,
+    private val maxMessageSize: Int,
+    private val jmxEnabled: Boolean = false,
+    private val baseDirectory: Path
+) : ArtemisBroker {
 
     companion object {
         private val logger = loggerFor<ArtemisRpcBroker>()

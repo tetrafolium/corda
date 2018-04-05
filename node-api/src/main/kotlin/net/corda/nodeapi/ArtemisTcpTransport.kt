@@ -12,8 +12,8 @@ import org.apache.activemq.artemis.core.remoting.impl.netty.TransportConstants
 sealed class ConnectionDirection {
     data class Inbound(val acceptorFactoryClassName: String) : ConnectionDirection()
     data class Outbound(
-            val expectedCommonNames: Set<CordaX500Name> = emptySet(), // TODO SNI? Or we need a notion of node's network identity?
-            val connectorFactoryClassName: String = NettyConnectorFactory::class.java.name
+        val expectedCommonNames: Set<CordaX500Name> = emptySet(), // TODO SNI? Or we need a notion of node's network identity?
+        val connectorFactoryClassName: String = NettyConnectorFactory::class.java.name
     ) : ConnectionDirection()
 }
 
@@ -49,10 +49,10 @@ class ArtemisTcpTransport {
 
         /** Specify [TransportConfiguration] for TCP communication. */
         fun tcpTransport(
-                direction: ConnectionDirection,
-                hostAndPort: NetworkHostAndPort,
-                config: SSLConfiguration?,
-                enableSSL: Boolean = true
+            direction: ConnectionDirection,
+            hostAndPort: NetworkHostAndPort,
+            config: SSLConfiguration?,
+            enableSSL: Boolean = true
         ): TransportConfiguration {
             val options = mutableMapOf<String, Any?>(
                     // Basic TCP target details.

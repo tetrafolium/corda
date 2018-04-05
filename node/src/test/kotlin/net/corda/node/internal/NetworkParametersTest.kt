@@ -66,7 +66,7 @@ class NetworkParametersTest {
     fun `choosing notary not specified in network parameters will fail`() {
         val fakeNotary = mockNet.createNode(InternalMockNodeParameters(legalName = BOB_NAME, configOverrides = {
             val notary = NotaryConfig(false)
-            doReturn(notary).whenever(it).notary}))
+            doReturn(notary).whenever(it).notary }))
         val fakeNotaryId = fakeNotary.info.singleIdentity()
         val alice = mockNet.createPartyNode(ALICE_NAME)
         assertThat(alice.services.networkMapCache.notaryIdentities).doesNotContain(fakeNotaryId)

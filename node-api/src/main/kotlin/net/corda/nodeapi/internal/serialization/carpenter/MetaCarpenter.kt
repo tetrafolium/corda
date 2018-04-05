@@ -24,9 +24,10 @@ import net.corda.nodeapi.internal.serialization.amqp.TypeNotation
  * and if that list is reduced to zero know we can now generate a [Schema] for them and carpent them up
  */
 data class CarpenterMetaSchema(
-        val carpenterSchemas: MutableList<Schema>,
-        val dependencies: MutableMap<String, Pair<TypeNotation, MutableList<String>>>,
-        val dependsOn: MutableMap<String, MutableList<String>>) {
+    val carpenterSchemas: MutableList<Schema>,
+    val dependencies: MutableMap<String, Pair<TypeNotation, MutableList<String>>>,
+    val dependsOn: MutableMap<String, MutableList<String>>
+) {
     companion object CarpenterSchemaConstructor {
         fun newInstance(): CarpenterMetaSchema {
             return CarpenterMetaSchema(mutableListOf(), mutableMapOf(), mutableMapOf())
@@ -106,4 +107,3 @@ class TestMetaCarpenter(schemas: CarpenterMetaSchema, cc: ClassCarpenter) : Meta
         step(schemas.carpenterSchemas.removeAt(0))
     }
 }
-

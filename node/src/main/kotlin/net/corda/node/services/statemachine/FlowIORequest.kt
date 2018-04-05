@@ -2,7 +2,6 @@ package net.corda.node.services.statemachine
 
 import co.paralleluniverse.fibers.Suspendable
 import net.corda.core.crypto.SecureHash
-import net.corda.core.identity.Party
 import java.time.Instant
 
 interface FlowIORequest {
@@ -29,16 +28,18 @@ interface ReceiveRequest : SessionedFlowIORequest, WaitingRequest {
     override fun shouldResume(message: ExistingSessionMessage, session: FlowSessionInternal): Boolean = this.session === session
 }
 
-data class SendAndReceive(override val session: FlowSessionInternal,
-                          override val message: SessionMessage,
-                          override val userReceiveType: Class<*>?) : SendRequest, ReceiveRequest {
+data class SendAndReceive(
+    override val session: FlowSessionInternal,
+    override val message: SessionMessage,
+    override val userReceiveType: Class<*>?
+) : SendRequest, ReceiveRequest {
     @Transient
     override val stackTraceInCaseOfProblems: StackSnapshot = StackSnapshot()
 }
 
 data class ReceiveOnly(
-        override val session: FlowSessionInternal,
-        override val userReceiveType: Class<*>?
+    override val session: FlowSessionInternal,
+    override val userReceiveType: Class<*>?
 ) : ReceiveRequest {
     @Transient
     override val stackTraceInCaseOfProblems: StackSnapshot = StackSnapshot()

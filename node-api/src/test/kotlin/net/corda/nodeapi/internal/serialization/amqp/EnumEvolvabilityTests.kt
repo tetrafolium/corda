@@ -82,7 +82,6 @@ class EnumEvolvabilityTests {
 
         assertEquals(2, bAndS.schema.types.size)
         assertEquals(0, bAndS.transformsSchema.types.size)
-
     }
 
     @Test
@@ -413,7 +412,6 @@ class EnumEvolvabilityTests {
                 sb2.transformsSchema.types[AnnotatedEnumOnce::class.java.name])
     }
 
-
     //@UnknownTransformAnnotation (10, 20, 30)
     enum class WithUnknownTest {
         A, B, C, D
@@ -533,5 +531,4 @@ class EnumEvolvabilityTests {
             SerializationOutput(sf).serialize(C(RejectBadDefaultToSelf.D))
         }.isInstanceOf(NotSerializableException::class.java)
     }
-
 }

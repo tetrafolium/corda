@@ -13,9 +13,10 @@ import java.util.*
 import kotlin.collections.LinkedHashSet
 
 data class BytesAndSchemas<T : Any>(
-        val obj: SerializedBytes<T>,
-        val schema: Schema,
-        val transformsSchema: TransformsSchema)
+    val obj: SerializedBytes<T>,
+    val schema: Schema,
+    val transformsSchema: TransformsSchema
+)
 
 /**
  * Main entry point for serializing an object to AMQP.
@@ -41,7 +42,6 @@ open class SerializationOutput @JvmOverloads constructor(internal val serializer
             andFinally()
         }
     }
-
 
     @Throws(NotSerializableException::class)
     fun <T : Any> serializeAndReturnSchema(obj: T): BytesAndSchemas<T> {
@@ -128,11 +128,11 @@ open class SerializationOutput @JvmOverloads constructor(internal val serializer
         }
     }
 
-    open internal fun writeTypeNotations(vararg typeNotation: TypeNotation): Boolean {
+    internal open fun writeTypeNotations(vararg typeNotation: TypeNotation): Boolean {
         return schemaHistory.addAll(typeNotation)
     }
 
-    open internal fun requireSerializer(type: Type) {
+    internal open fun requireSerializer(type: Type) {
         if (type != SerializerFactory.AnyType && type != Object::class.java) {
             val serializer = serializerFactory.get(null, type)
             if (serializer !in serializerHistory) {
@@ -142,4 +142,3 @@ open class SerializationOutput @JvmOverloads constructor(internal val serializer
         }
     }
 }
-

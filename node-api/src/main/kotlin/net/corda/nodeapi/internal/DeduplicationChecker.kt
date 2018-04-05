@@ -28,4 +28,3 @@ class DeduplicationChecker(cacheExpiry: Duration) {
         return watermarkCache[identity]!!.getAndUpdate { maxOf(sequenceNumber, it) } >= sequenceNumber
     }
 }
-

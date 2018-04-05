@@ -20,9 +20,11 @@ import javax.security.auth.x500.X500Principal
  * Create the node and SSL key stores needed by a node. The node key store will be populated with a node CA cert (using
  * the given legal name), and the SSL key store will store the TLS cert which is a sub-cert of the node CA.
  */
-fun SSLConfiguration.createDevKeyStores(legalName: CordaX500Name,
-                                        rootCert: X509Certificate = DEV_ROOT_CA.certificate,
-                                        intermediateCa: CertificateAndKeyPair = DEV_INTERMEDIATE_CA): Pair<X509KeyStore, X509KeyStore> {
+fun SSLConfiguration.createDevKeyStores(
+    legalName: CordaX500Name,
+    rootCert: X509Certificate = DEV_ROOT_CA.certificate,
+    intermediateCa: CertificateAndKeyPair = DEV_INTERMEDIATE_CA
+): Pair<X509KeyStore, X509KeyStore> {
     val (nodeCaCert, nodeCaKeyPair) = createDevNodeCa(intermediateCa, legalName)
 
     val nodeKeyStore = loadNodeKeyStore(createNew = true)
@@ -80,9 +82,11 @@ fun createDevNetworkMapCa(rootCa: CertificateAndKeyPair = DEV_ROOT_CA): Certific
  * Create a dev node CA cert, as a sub-cert of the given [intermediateCa], and matching key pair using the given
  * [CordaX500Name] as the cert subject.
  */
-fun createDevNodeCa(intermediateCa: CertificateAndKeyPair,
-                    legalName: CordaX500Name,
-                    nodeKeyPair: KeyPair = generateKeyPair(X509Utilities.DEFAULT_TLS_SIGNATURE_SCHEME)): CertificateAndKeyPair {
+fun createDevNodeCa(
+    intermediateCa: CertificateAndKeyPair,
+    legalName: CordaX500Name,
+    nodeKeyPair: KeyPair = generateKeyPair(X509Utilities.DEFAULT_TLS_SIGNATURE_SCHEME)
+): CertificateAndKeyPair {
     val nameConstraints = NameConstraints(arrayOf(GeneralSubtree(GeneralName(GeneralName.directoryName, legalName.x500Name))), arrayOf())
     val cert = X509Utilities.createCertificate(
             CertificateType.NODE_CA,

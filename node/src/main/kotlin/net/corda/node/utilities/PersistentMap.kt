@@ -10,10 +10,10 @@ import java.util.*
  * Implements an unbound caching layer on top of a table accessed via Hibernate mapping.
  */
 class PersistentMap<K : Any, V, E, out EK>(
-        val toPersistentEntityKey: (K) -> EK,
-        val fromPersistentEntity: (E) -> Pair<K, V>,
-        val toPersistentEntity: (key: K, value: V) -> E,
-        val persistentEntityClass: Class<E>
+    val toPersistentEntityKey: (K) -> EK,
+    val fromPersistentEntity: (E) -> Pair<K, V>,
+    val toPersistentEntity: (key: K, value: V) -> E,
+    val persistentEntityClass: Class<E>
 ) : MutableMap<K, V>, AbstractMap<K, V>() {
 
     private companion object {

@@ -15,7 +15,6 @@ import net.corda.testing.contracts.DummyContract
 import net.corda.testing.contracts.DummyState
 import net.corda.testing.core.*
 import net.corda.testing.driver.DriverParameters
-import net.corda.testing.driver.PortAllocation
 import net.corda.testing.driver.driver
 import net.corda.testing.driver.internal.RandomFree
 import net.corda.testing.node.User
@@ -34,10 +33,12 @@ class LargeTransactionsTest {
 
     @StartableByRPC
     @InitiatingFlow
-    class SendLargeTransactionFlow(private val hash1: SecureHash,
-                                   private val hash2: SecureHash,
-                                   private val hash3: SecureHash,
-                                   private val hash4: SecureHash) : FlowLogic<Unit>() {
+    class SendLargeTransactionFlow(
+        private val hash1: SecureHash,
+        private val hash2: SecureHash,
+        private val hash3: SecureHash,
+        private val hash4: SecureHash
+    ) : FlowLogic<Unit>() {
         @Suspendable
         override fun call() {
             val tx = TransactionBuilder(notary = DUMMY_NOTARY)

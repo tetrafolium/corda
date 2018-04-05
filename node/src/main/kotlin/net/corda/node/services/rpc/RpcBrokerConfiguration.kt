@@ -118,14 +118,21 @@ internal class RpcBrokerConfiguration(baseDirectory: Path, maxMessageSize: Int, 
         return configuration
     }
 
-
     private fun acceptorConfiguration(address: NetworkHostAndPort, enableSsl: Boolean, sslOptions: SSLConfiguration?): TransportConfiguration {
         return tcpTransport(ConnectionDirection.Inbound(NettyAcceptorFactory::class.java.name), address, sslOptions, enableSsl)
     }
 
-    private fun restrictedRole(name: String, send: Boolean = false, consume: Boolean = false, createDurableQueue: Boolean = false,
-                               deleteDurableQueue: Boolean = false, createNonDurableQueue: Boolean = false,
-                               deleteNonDurableQueue: Boolean = false, manage: Boolean = false, browse: Boolean = false): Role {
+    private fun restrictedRole(
+        name: String,
+        send: Boolean = false,
+        consume: Boolean = false,
+        createDurableQueue: Boolean = false,
+        deleteDurableQueue: Boolean = false,
+        createNonDurableQueue: Boolean = false,
+        deleteNonDurableQueue: Boolean = false,
+        manage: Boolean = false,
+        browse: Boolean = false
+    ): Role {
         return Role(name, send, consume, createDurableQueue, deleteDurableQueue, createNonDurableQueue, deleteNonDurableQueue, manage, browse)
     }
 }

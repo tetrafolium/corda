@@ -97,15 +97,14 @@ abstract class AbstractAMQPSerializationScheme(val cordappLoader: List<Cordapp>)
                 }
             }
         }
-
     }
 
     private val serializerFactoriesForContexts = ConcurrentHashMap<Pair<ClassWhitelist, ClassLoader>, SerializerFactory>()
 
     protected abstract fun rpcClientSerializerFactory(context: SerializationContext): SerializerFactory
     protected abstract fun rpcServerSerializerFactory(context: SerializationContext): SerializerFactory
-    open protected val publicKeySerializer: CustomSerializer.Implements<PublicKey>
-            = net.corda.nodeapi.internal.serialization.amqp.custom.PublicKeySerializer
+    protected open val publicKeySerializer: CustomSerializer.Implements<PublicKey> =
+            net.corda.nodeapi.internal.serialization.amqp.custom.PublicKeySerializer
 
     private fun getSerializerFactory(context: SerializationContext): SerializerFactory {
         return serializerFactoriesForContexts.computeIfAbsent(Pair(context.whitelist, context.deserializationClassLoader)) {
@@ -148,7 +147,6 @@ class AMQPServerSerializationScheme(cordapps: List<Cordapp> = emptyList()) : Abs
         return canDeserializeVersion(magic) &&
                 (target == SerializationContext.UseCase.P2P || target == SerializationContext.UseCase.Storage)
     }
-
 }
 
 // TODO: This will eventually cover client RPC as well and move to client module, but for now this is not implemented
@@ -165,6 +163,4 @@ class AMQPClientSerializationScheme(cordapps: List<Cordapp> = emptyList()) : Abs
         return canDeserializeVersion(magic) &&
                 (target == SerializationContext.UseCase.P2P || target == SerializationContext.UseCase.Storage)
     }
-
 }
-

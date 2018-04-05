@@ -60,10 +60,11 @@ sealed class PropertySerializer(val name: String, val propertyReader: PropertyRe
      * A property serializer for a complex type (another object).
      */
     class DescribedTypePropertySerializer(
-            name: String,
-            readMethod: PropertyReader,
-            resolvedType: Type,
-            private val lazyTypeSerializer: () -> AMQPSerializer<*>) : PropertySerializer(name, readMethod, resolvedType) {
+        name: String,
+        readMethod: PropertyReader,
+        resolvedType: Type,
+        private val lazyTypeSerializer: () -> AMQPSerializer<*>
+    ) : PropertySerializer(name, readMethod, resolvedType) {
         // This is lazy so we don't get an infinite loop when a method returns an instance of the class.
         private val typeSerializer: AMQPSerializer<*> by lazy { lazyTypeSerializer() }
 
@@ -74,9 +75,10 @@ sealed class PropertySerializer(val name: String, val propertyReader: PropertyRe
         }
 
         override fun readProperty(
-                obj: Any?,
-                schemas: SerializationSchemas,
-                input: DeserializationInput): Any? = ifThrowsAppend({ nameForDebug }) {
+            obj: Any?,
+            schemas: SerializationSchemas,
+            input: DeserializationInput
+        ): Any? = ifThrowsAppend({ nameForDebug }) {
             input.readObjectOrNull(obj, schemas, resolvedType)
         }
 
@@ -91,9 +93,10 @@ sealed class PropertySerializer(val name: String, val propertyReader: PropertyRe
      * A property serializer for most AMQP primitive type (Int, String, etc).
      */
     class AMQPPrimitivePropertySerializer(
-            name: String,
-            readMethod: PropertyReader,
-            resolvedType: Type) : PropertySerializer(name, readMethod, resolvedType) {
+        name: String,
+        readMethod: PropertyReader,
+        resolvedType: Type
+    ) : PropertySerializer(name, readMethod, resolvedType) {
         override fun writeClassInfo(output: SerializationOutput) {}
 
         override fun readProperty(obj: Any?, schemas: SerializationSchemas, input: DeserializationInput): Any? {
@@ -129,4 +132,3 @@ sealed class PropertySerializer(val name: String, val propertyReader: PropertyRe
         }
     }
 }
-

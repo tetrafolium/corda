@@ -37,9 +37,11 @@ import kotlin.streams.toList
  *        testing. It defaults to the io scheduler which is the appropriate value for production uses.
  */
 // TODO: Use NIO watch service instead?
-class NodeInfoWatcher(private val nodePath: Path,
-                      private val scheduler: Scheduler,
-                      private val pollInterval: Duration = 5.seconds) {
+class NodeInfoWatcher(
+    private val nodePath: Path,
+    private val scheduler: Scheduler,
+    private val pollInterval: Duration = 5.seconds
+) {
     companion object {
         private val logger = contextLogger()
 

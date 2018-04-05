@@ -29,33 +29,33 @@ import javax.persistence.*
 class PersistentUniquenessProvider(val clock: Clock) : UniquenessProvider, SingletonSerializeAsToken() {
     @MappedSuperclass
     open class BaseComittedState(
-            @EmbeddedId
-            val id: PersistentStateRef,
+        @EmbeddedId
+        val id: PersistentStateRef,
 
-            @Column(name = "consuming_transaction_id")
-            val consumingTxHash: String
+        @Column(name = "consuming_transaction_id")
+        val consumingTxHash: String
     )
 
     @Entity
     @javax.persistence.Table(name = "${NODE_DATABASE_PREFIX}notary_request_log")
     @CordaSerializable
     class Request(
-            @Id
-            @GeneratedValue
-            val id: Int? = null,
+        @Id
+        @GeneratedValue
+        val id: Int? = null,
 
-            @Column(name = "consuming_transaction_id")
-            val consumingTxHash: String,
+        @Column(name = "consuming_transaction_id")
+        val consumingTxHash: String,
 
-            @Column(name = "requesting_party_name")
-            var partyName: String,
+        @Column(name = "requesting_party_name")
+        var partyName: String,
 
-            @Lob
-            @Column(name = "request_signature")
-            val requestSignature: ByteArray,
+        @Lob
+        @Column(name = "request_signature")
+        val requestSignature: ByteArray,
 
-            @Column(name = "request_timestamp")
-            var requestDate: Instant
+        @Column(name = "request_timestamp")
+        var requestDate: Instant
     )
 
     @Entity
@@ -82,7 +82,6 @@ class PersistentUniquenessProvider(val clock: Clock) : UniquenessProvider, Singl
                                     StateRef(txhash = SecureHash.parse(txId), index = index),
                                     SecureHash.parse(it.consumingTxHash)
                             )
-
                         },
                         toPersistentEntity = { (txHash, index): StateRef, id: SecureHash ->
                             CommittedState(

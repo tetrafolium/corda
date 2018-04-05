@@ -10,15 +10,17 @@ import org.apache.qpid.proton.engine.Delivery
  *  An internal packet management class that allows tracking of asynchronous acknowledgements
  *  that in turn send Delivery messages back to the originator.
  */
-internal class ReceivedMessageImpl(override val payload: ByteArray,
-                                   override val topic: String,
-                                   override val sourceLegalName: String,
-                                   override val sourceLink: NetworkHostAndPort,
-                                   override val destinationLegalName: String,
-                                   override val destinationLink: NetworkHostAndPort,
-                                   override val applicationProperties: Map<Any?, Any?>,
-                                   private val channel: Channel,
-                                   private val delivery: Delivery) : ReceivedMessage {
+internal class ReceivedMessageImpl(
+    override val payload: ByteArray,
+    override val topic: String,
+    override val sourceLegalName: String,
+    override val sourceLink: NetworkHostAndPort,
+    override val destinationLegalName: String,
+    override val destinationLink: NetworkHostAndPort,
+    override val applicationProperties: Map<Any?, Any?>,
+    private val channel: Channel,
+    private val delivery: Delivery
+) : ReceivedMessage {
     data class MessageCompleter(val status: MessageStatus, val delivery: Delivery)
 
     override fun complete(accepted: Boolean) {

@@ -29,7 +29,7 @@ class SerializationPropertyOrdering {
         val r2 = Reffed("do not", "or", "do")
         val l = listOf(r1, r2, r1, r2, r1, r2)
 
-        val u = User(l,l)
+        val u = User(l, l)
         val output = TestSerializationOutput(VERBOSE, sf).serializeAndReturnSchema(u)
         val input = DeserializationInput(sf).deserialize(output.obj)
     }
@@ -38,7 +38,7 @@ class SerializationPropertyOrdering {
     fun randomOrder() {
         data class C(val c: Int, val d: Int, val b: Int, val e: Int, val a: Int)
 
-        val c = C(3,4,2,5,1)
+        val c = C(3, 4, 2, 5, 1)
         val output = TestSerializationOutput(VERBOSE, sf).serializeAndReturnSchema(c)
 
         // the schema should reflect the serialized order of properties, not the
@@ -97,7 +97,7 @@ class SerializationPropertyOrdering {
         }
 
         // Test needs to look at a bunch of private variables, change the access semantics for them
-        val fields : Map<String, java.lang.reflect.Field> = mapOf (
+        val fields: Map<String, java.lang.reflect.Field> = mapOf (
                 "serializersByDesc" to SerializerFactory::class.java.getDeclaredField("serializersByDescriptor"),
                 "setter" to PropertyAccessorGetterSetter::class.java.getDeclaredField("setter")).apply {
             this.values.forEach {

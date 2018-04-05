@@ -1,6 +1,5 @@
 package net.corda.node.services.statemachine
 
-import net.corda.core.crypto.random63BitValue
 import net.corda.core.flows.FlowException
 import net.corda.core.flows.FlowInfo
 import net.corda.core.serialization.CordaSerializable
@@ -20,7 +19,6 @@ import java.security.SecureRandom
  */
 @CordaSerializable
 sealed class SessionMessage
-
 
 @CordaSerializable
 data class SessionId(val toLong: Long) {
@@ -42,12 +40,12 @@ data class SessionId(val toLong: Long) {
  * @param firstPayload the optional first payload.
  */
 data class InitialSessionMessage(
-        val initiatorSessionId: SessionId,
-        val initiationEntropy: Long,
-        val initiatorFlowClassName: String,
-        val flowVersion: Int,
-        val appName: String,
-        val firstPayload: SerializedBytes<Any>?
+    val initiatorSessionId: SessionId,
+    val initiationEntropy: Long,
+    val initiatorFlowClassName: String,
+    val flowVersion: Int,
+    val appName: String,
+    val firstPayload: SerializedBytes<Any>?
 ) : SessionMessage() {
     override fun toString() = "InitialSessionMessage(" +
             "initiatorSessionId=$initiatorSessionId, " +
@@ -66,8 +64,8 @@ data class InitialSessionMessage(
  * @param payload the rest of the message.
  */
 data class ExistingSessionMessage(
-        val recipientSessionId: SessionId,
-        val payload: ExistingSessionMessagePayload
+    val recipientSessionId: SessionId,
+    val payload: ExistingSessionMessagePayload
 ) : SessionMessage()
 
 /**
@@ -82,8 +80,8 @@ sealed class ExistingSessionMessagePayload
  *   This is the *source* ID on the sending(initiated) side, and the *sink* ID on the receiving(initiating) side.
  */
 data class ConfirmSessionMessage(
-        val initiatedSessionId: SessionId,
-        val initiatedFlowInfo: FlowInfo
+    val initiatedSessionId: SessionId,
+    val initiatedFlowInfo: FlowInfo
 ) : ExistingSessionMessagePayload()
 
 /**

@@ -34,10 +34,12 @@ interface StartedNode<out N : AbstractNode> {
     fun <T : FlowLogic<*>> registerInitiatedFlow(initiatedFlowClass: Class<T>) = internals.registerInitiatedFlow(smm, initiatedFlowClass)
 
     @VisibleForTesting
-    fun <F : FlowLogic<*>> internalRegisterFlowFactory(initiatingFlowClass: Class<out FlowLogic<*>>,
-                                                       flowFactory: InitiatedFlowFactory<F>,
-                                                       initiatedFlowClass: Class<F>,
-                                                       track: Boolean): Observable<F> {
+    fun <F : FlowLogic<*>> internalRegisterFlowFactory(
+        initiatingFlowClass: Class<out FlowLogic<*>>,
+        flowFactory: InitiatedFlowFactory<F>,
+        initiatedFlowClass: Class<F>,
+        track: Boolean
+    ): Observable<F> {
         return internals.internalRegisterFlowFactory(smm, initiatingFlowClass, flowFactory, initiatedFlowClass, track)
     }
 }

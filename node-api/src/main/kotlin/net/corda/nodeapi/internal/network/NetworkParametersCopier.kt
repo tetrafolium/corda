@@ -12,11 +12,11 @@ import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
 class NetworkParametersCopier(
-        networkParameters: NetworkParameters,
-        signingCertAndKeyPair: CertificateAndKeyPair = createDevNetworkMapCa(),
-        overwriteFile: Boolean = false,
-        @VisibleForTesting
-        val update: Boolean = false
+    networkParameters: NetworkParameters,
+    signingCertAndKeyPair: CertificateAndKeyPair = createDevNetworkMapCa(),
+    overwriteFile: Boolean = false,
+    @VisibleForTesting
+    val update: Boolean = false
 ) {
     private val copyOptions = if (overwriteFile) arrayOf(StandardCopyOption.REPLACE_EXISTING) else emptyArray()
     private val serialisedSignedNetParams = signingCertAndKeyPair.sign(networkParameters).serialize()

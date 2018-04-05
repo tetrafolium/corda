@@ -23,8 +23,7 @@ import java.util.*
 import javax.persistence.Tuple
 import javax.persistence.criteria.*
 
-
-abstract class AbstractQueryCriteriaParser<Q : GenericQueryCriteria<Q,P>, in P: BaseQueryCriteriaParser<Q, P, S>, in S: BaseSort> : BaseQueryCriteriaParser<Q, P, S> {
+abstract class AbstractQueryCriteriaParser<Q : GenericQueryCriteria<Q, P>, in P : BaseQueryCriteriaParser<Q, P, S>, in S : BaseSort> : BaseQueryCriteriaParser<Q, P, S> {
 
     abstract val criteriaBuilder: CriteriaBuilder
 
@@ -102,8 +101,11 @@ abstract class AbstractQueryCriteriaParser<Q : GenericQueryCriteria<Q,P>, in P: 
     }
 }
 
-class HibernateAttachmentQueryCriteriaParser(override val criteriaBuilder: CriteriaBuilder,
-                                             private val criteriaQuery: CriteriaQuery<NodeAttachmentService.DBAttachment>, val root: Root<NodeAttachmentService.DBAttachment>) :
+class HibernateAttachmentQueryCriteriaParser(
+    override val criteriaBuilder: CriteriaBuilder,
+    private val criteriaQuery: CriteriaQuery<NodeAttachmentService.DBAttachment>,
+    val root: Root<NodeAttachmentService.DBAttachment>
+) :
         AbstractQueryCriteriaParser<AttachmentQueryCriteria, AttachmentsQueryCriteriaParser, AttachmentSort>(), AttachmentsQueryCriteriaParser {
 
     private companion object {
@@ -164,11 +166,13 @@ class HibernateAttachmentQueryCriteriaParser(override val criteriaBuilder: Crite
     }
 }
 
-class HibernateQueryCriteriaParser(val contractStateType: Class<out ContractState>,
-                                   val contractStateTypeMappings: Map<String, Set<String>>,
-                                   override val criteriaBuilder: CriteriaBuilder,
-                                   val criteriaQuery: CriteriaQuery<Tuple>,
-                                   val vaultStates: Root<VaultSchemaV1.VaultStates>) : AbstractQueryCriteriaParser<QueryCriteria, IQueryCriteriaParser, Sort>(), IQueryCriteriaParser {
+class HibernateQueryCriteriaParser(
+    val contractStateType: Class<out ContractState>,
+    val contractStateTypeMappings: Map<String, Set<String>>,
+    override val criteriaBuilder: CriteriaBuilder,
+    val criteriaQuery: CriteriaQuery<Tuple>,
+    val vaultStates: Root<VaultSchemaV1.VaultStates>
+) : AbstractQueryCriteriaParser<QueryCriteria, IQueryCriteriaParser, Sort>(), IQueryCriteriaParser {
     private companion object {
         private val log = contextLogger()
     }
@@ -178,7 +182,7 @@ class HibernateQueryCriteriaParser(val contractStateType: Class<out ContractStat
     // incrementally build list of root entities (for later use in Sort parsing)
     private val rootEntities = mutableMapOf<Class<out PersistentState>, Root<*>>(Pair(VaultSchemaV1.VaultStates::class.java, vaultStates))
     private val aggregateExpressions = mutableListOf<Expression<*>>()
-    private val commonPredicates = mutableMapOf<Pair<String, Operator>, Predicate>()   // schema attribute Name, operator -> predicate
+    private val commonPredicates = mutableMapOf<Pair<String, Operator>, Predicate>() // schema attribute Name, operator -> predicate
 
     var stateTypes: Vault.StateStatus = Vault.StateStatus.UNCONSUMED
 
@@ -243,7 +247,6 @@ class HibernateQueryCriteriaParser(val contractStateType: Class<out ContractStat
             return interfaces.union(concrete)
         }
     }
-
 
     private fun <O> parseExpression(entityRoot: Root<O>, expression: CriteriaExpression<O, Boolean>, predicateSet: MutableSet<Predicate>) {
         if (expression is CriteriaExpression.AggregateFunctionExpression<O, *>) {

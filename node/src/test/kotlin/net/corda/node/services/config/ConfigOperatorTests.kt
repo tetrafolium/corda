@@ -20,5 +20,4 @@ class ConfigOperatorTests {
             assertEquals(null, c["z"])
         }
     }
-
 }

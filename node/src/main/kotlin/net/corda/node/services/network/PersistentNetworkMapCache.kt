@@ -36,8 +36,8 @@ import javax.annotation.concurrent.ThreadSafe
 import kotlin.collections.HashSet
 
 class NetworkMapCacheImpl(
-        networkMapCacheBase: NetworkMapCacheBaseInternal,
-        private val identityService: IdentityService
+    networkMapCacheBase: NetworkMapCacheBaseInternal,
+    private val identityService: IdentityService
 ) : NetworkMapCacheBaseInternal by networkMapCacheBase, NetworkMapCacheInternal {
     companion object {
         private val logger = loggerFor<NetworkMapCacheImpl>()
@@ -73,8 +73,8 @@ class NetworkMapCacheImpl(
  */
 @ThreadSafe
 open class PersistentNetworkMapCache(
-        private val database: CordaPersistence,
-        notaries: List<NotaryInfo>
+    private val database: CordaPersistence,
+    notaries: List<NotaryInfo>
 ) : SingletonSerializeAsToken(), NetworkMapCacheBaseInternal {
     companion object {
         private val logger = contextLogger()

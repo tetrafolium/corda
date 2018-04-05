@@ -41,11 +41,13 @@ import java.util.concurrent.TimeUnit
 
 class FlowPermissionException(message: String) : FlowException(message)
 
-class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
-                              override val logic: FlowLogic<R>,
-                              scheduler: FiberScheduler,
-                              val ourIdentity: Party,
-                              override val context: InvocationContext) : Fiber<Unit>(id.toString(), scheduler), FlowStateMachine<R> {
+class FlowStateMachineImpl<R>(
+    override val id: StateMachineRunId,
+    override val logic: FlowLogic<R>,
+    scheduler: FiberScheduler,
+    val ourIdentity: Party,
+    override val context: InvocationContext
+) : Fiber<Unit>(id.toString(), scheduler), FlowStateMachine<R> {
 
     companion object {
         // Used to work around a small limitation in Quasar.
@@ -172,12 +174,14 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
     }
 
     @Suspendable
-    override fun <T : Any> sendAndReceive(receiveType: Class<T>,
-                                          otherParty: Party,
-                                          payload: Any,
-                                          sessionFlow: FlowLogic<*>,
-                                          retrySend: Boolean,
-                                          maySkipCheckpoint: Boolean): UntrustworthyData<T> {
+    override fun <T : Any> sendAndReceive(
+        receiveType: Class<T>,
+        otherParty: Party,
+        payload: Any,
+        sessionFlow: FlowLogic<*>,
+        retrySend: Boolean,
+        maySkipCheckpoint: Boolean
+    ): UntrustworthyData<T> {
         requireNonPrimitive(receiveType)
         logger.debug { "sendAndReceive(${receiveType.name}, $otherParty, ${payload.toString().abbreviate(300)}) ..." }
         val session = getConfirmedSessionIfPresent(otherParty, sessionFlow)
@@ -206,10 +210,12 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
     }
 
     @Suspendable
-    override fun <T : Any> receive(receiveType: Class<T>,
-                                   otherParty: Party,
-                                   sessionFlow: FlowLogic<*>,
-                                   maySkipCheckpoint: Boolean): UntrustworthyData<T> {
+    override fun <T : Any> receive(
+        receiveType: Class<T>,
+        otherParty: Party,
+        sessionFlow: FlowLogic<*>,
+        maySkipCheckpoint: Boolean
+    ): UntrustworthyData<T> {
         requireNonPrimitive(receiveType)
         logger.debug { "receive(${receiveType.name}, $otherParty) ..." }
         val session = getConfirmedSession(otherParty, sessionFlow)
@@ -335,8 +341,8 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
         when (payload) {
             is ConfirmSessionMessage -> {
                 state = FlowSessionState.Initiated(
-                        sessionInitResponse.
-                        peerParty,
+                        sessionInitResponse
+                        .peerParty,
                         payload.initiatedSessionId,
                         payload.initiatedFlowInfo)
             }
@@ -358,16 +364,18 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
 
     @Suspendable
     private fun receiveInternal(
-            session: FlowSessionInternal,
-            userReceiveType: Class<*>?): ReceivedSessionMessage {
+        session: FlowSessionInternal,
+        userReceiveType: Class<*>?
+    ): ReceivedSessionMessage {
         return waitForMessage(ReceiveOnly(session, userReceiveType))
     }
 
     @Suspendable
     private fun sendAndReceiveInternal(
-            session: FlowSessionInternal,
-            message: DataSessionMessage,
-            userReceiveType: Class<*>?): ReceivedSessionMessage {
+        session: FlowSessionInternal,
+        message: DataSessionMessage,
+        userReceiveType: Class<*>?
+    ): ReceivedSessionMessage {
         val sessionMessage = ExistingSessionMessage(session.getPeerSessionId(), message)
         return waitForMessage(SendAndReceive(session, sessionMessage, userReceiveType))
     }
@@ -387,14 +395,14 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
 
     @Suspendable
     private fun getConfirmedSession(otherParty: Party, sessionFlow: FlowLogic<*>): FlowSessionInternal {
-        return getConfirmedSessionIfPresent(otherParty, sessionFlow) ?:
-                initiateSession(otherParty, sessionFlow, null, waitForConfirmation = true)
+        return getConfirmedSessionIfPresent(otherParty, sessionFlow)
+                ?: initiateSession(otherParty, sessionFlow, null, waitForConfirmation = true)
     }
 
     private fun createNewSession(
-            otherParty: Party,
-            flowSession: FlowSession,
-            sessionFlow: FlowLogic<*>
+        otherParty: Party,
+        flowSession: FlowSession,
+        sessionFlow: FlowLogic<*>
     ) {
         logger.trace { "Creating a new session with $otherParty" }
         val session = FlowSessionInternal(sessionFlow, flowSession, SessionId.createRandom(newSecureRandom()), null, FlowSessionState.Uninitiated(otherParty))
@@ -403,11 +411,11 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
 
     @Suspendable
     private fun initiateSession(
-            otherParty: Party,
-            sessionFlow: FlowLogic<*>,
-            firstPayload: Any?,
-            waitForConfirmation: Boolean,
-            retryable: Boolean = false
+        otherParty: Party,
+        sessionFlow: FlowLogic<*>,
+        firstPayload: Any?,
+        waitForConfirmation: Boolean,
+        retryable: Boolean = false
     ): FlowSessionInternal {
         val session = openSessions[Pair(sessionFlow, otherParty)] ?: throw IllegalStateException("Expected an Uninitiated session for $otherParty")
         val state = session.state as? FlowSessionState.Uninitiated ?: throw IllegalStateException("Tried to initiate a session $session, but it's already initiating/initiated")
@@ -432,7 +440,7 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
         return receivedMessage
     }
 
-    private val suspend : ReceiveAll.Suspend = object : ReceiveAll.Suspend {
+    private val suspend: ReceiveAll.Suspend = object : ReceiveAll.Suspend {
         @Suspendable
         override fun invoke(request: FlowIORequest) {
             suspend(request)
@@ -452,8 +460,8 @@ class FlowStateMachineImpl<R>(override val id: StateMachineRunId,
         } else {
             // Suspend while we wait for a receive
             suspend(this)
-            session.receivedMessages.poll() ?:
-                    throw IllegalStateException("Was expecting a message but instead got nothing for $this")
+            session.receivedMessages.poll()
+                    ?: throw IllegalStateException("Was expecting a message but instead got nothing for $this")
         }
     }
 
@@ -591,7 +599,7 @@ fun <T : Any> DataSessionMessage.checkPayloadIs(type: Class<T>): UntrustworthyDa
     } catch (ex: Exception) {
         throw IOException("Payload invalid", ex)
     }
-    return type.castIfPossible(payloadData)?.let { UntrustworthyData(it) } ?:
-            throw UnexpectedFlowEndException("We were expecting a ${type.name} but we instead got a " +
-                    "${payloadData.javaClass.name} (${payloadData})")
+    return type.castIfPossible(payloadData)?.let { UntrustworthyData(it) }
+            ?: throw UnexpectedFlowEndException("We were expecting a ${type.name} but we instead got a " +
+                    "${payloadData.javaClass.name} ($payloadData)")
 }

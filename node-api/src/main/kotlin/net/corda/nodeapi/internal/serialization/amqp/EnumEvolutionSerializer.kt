@@ -35,10 +35,11 @@ import java.util.*
  * @property ordinals Convenience mapping of constant to ordinality
  */
 class EnumEvolutionSerializer(
-        override val type: Type,
-        factory: SerializerFactory,
-        private val conversions: Map<String, String>,
-        private val ordinals: Map<String, Int>) : AMQPSerializer<Any> {
+    override val type: Type,
+    factory: SerializerFactory,
+    private val conversions: Map<String, String>,
+    private val ordinals: Map<String, Int>
+) : AMQPSerializer<Any> {
     override val typeDescriptor = Symbol.valueOf(
             "$DESCRIPTOR_DOMAIN:${factory.fingerPrinter.fingerprint(type)}")!!
 
@@ -61,10 +62,12 @@ class EnumEvolutionSerializer(
          * @param schemas the transforms attached to the class in the AMQP header, i.e. the transforms
          * known at serialization time
          */
-        fun make(old: RestrictedType,
-                 new: AMQPSerializer<Any>,
-                 factory: SerializerFactory,
-                 schemas: SerializationSchemas): AMQPSerializer<Any> {
+        fun make(
+            old: RestrictedType,
+            new: AMQPSerializer<Any>,
+            factory: SerializerFactory,
+            schemas: SerializationSchemas
+        ): AMQPSerializer<Any> {
             val wireTransforms = schemas.transforms.types[old.name] ?: EnumMap<TransformTypes, MutableList<Transform>>(TransformTypes::class.java)
             val localTransforms = TransformsSchema.get(old.name, factory)
 

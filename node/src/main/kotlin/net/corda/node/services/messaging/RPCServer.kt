@@ -56,12 +56,12 @@ import java.util.concurrent.*
 import kotlin.concurrent.thread
 
 data class RPCServerConfiguration(
-        /** The number of threads to use for handling RPC requests */
-        val rpcThreadPoolSize: Int,
-        /** The interval of subscription reaping */
-        val reapInterval: Duration,
-        /** The cache expiry of a deduplication watermark per client. */
-        val deduplicationCacheExpiry: Duration
+    /** The number of threads to use for handling RPC requests */
+    val rpcThreadPoolSize: Int,
+    /** The interval of subscription reaping */
+    val reapInterval: Duration,
+    /** The cache expiry of a deduplication watermark per client. */
+    val deduplicationCacheExpiry: Duration
 ) {
     companion object {
         val default = RPCServerConfiguration(
@@ -81,13 +81,13 @@ data class RPCServerConfiguration(
  * The way this is done is similar to that in [RPCClient], we use Kryo and add a context to stores the subscription map.
  */
 class RPCServer(
-        private val ops: RPCOps,
-        private val rpcServerUsername: String,
-        private val rpcServerPassword: String,
-        private val serverLocator: ServerLocator,
-        private val securityManager: RPCSecurityManager,
-        private val nodeLegalName: CordaX500Name,
-        private val rpcConfiguration: RPCServerConfiguration = RPCServerConfiguration.default
+    private val ops: RPCOps,
+    private val rpcServerUsername: String,
+    private val rpcServerPassword: String,
+    private val serverLocator: ServerLocator,
+    private val securityManager: RPCSecurityManager,
+    private val nodeLegalName: CordaX500Name,
+    private val rpcConfiguration: RPCServerConfiguration = RPCServerConfiguration.default
 ) {
     private companion object {
         private val log = contextLogger()
@@ -147,7 +147,7 @@ class RPCServer(
 
     private fun createObservableSubscriptionMap(): ObservableSubscriptionMap {
         val onObservableRemove = RemovalListener<InvocationId, ObservableSubscription> { key, value, cause ->
-            log.debug { "Unsubscribing from Observable with id ${key} because of ${cause}" }
+            log.debug { "Unsubscribing from Observable with id $key because of $cause" }
             value!!.subscription.unsubscribe()
         }
         return Caffeine.newBuilder().removalListener(onObservableRemove).executor(SameThreadExecutor.getExecutor()).build()
@@ -344,8 +344,8 @@ class RPCServer(
             try {
                 CURRENT_RPC_CONTEXT.set(context)
                 log.debug { "Calling $methodName" }
-                val method = methodTable[methodName] ?:
-                        throw RPCException("Received RPC for unknown method $methodName - possible client/server version skew?")
+                val method = methodTable[methodName]
+                        ?: throw RPCException("Received RPC for unknown method $methodName - possible client/server version skew?")
                 method.invoke(ops, *arguments.toTypedArray())
             } catch (e: InvocationTargetException) {
                 throw e.cause ?: RPCException("Caught InvocationTargetException without cause")
@@ -418,10 +418,10 @@ class RPCServer(
      * muxed correctly. Note that the context construction itself is quite cheap.
      */
     inner class ObservableContext(
-            val observableMap: ObservableSubscriptionMap,
-            val clientAddressToObservables: SetMultimap<SimpleString, InvocationId>,
-            val deduplicationIdentity: String,
-            val clientAddress: SimpleString
+        val observableMap: ObservableSubscriptionMap,
+        val clientAddressToObservables: SetMultimap<SimpleString, InvocationId>,
+        val deduplicationIdentity: String,
+        val clientAddress: SimpleString
     ) {
         private val serializationContextWithObservableContext = RpcServerObservableSerializer.createContext(this)
 
@@ -434,10 +434,10 @@ class RPCServer(
         data class Send(
                 // TODO HACK this is because during serialisation we subscribe to observables that may use
                 // DatabaseTransactionWrappingSubscriber which tries to access the current database,
-                val database: CordaPersistence?,
-                val clientAddress: SimpleString,
-                val serializationContext: SerializationContext,
-                val message: RPCApi.ServerToClient
+            val database: CordaPersistence?,
+            val clientAddress: SimpleString,
+            val serializationContext: SerializationContext,
+            val message: RPCApi.ServerToClient
         ) : RpcSendJob()
         object Stop : RpcSendJob()
     }
@@ -483,7 +483,7 @@ internal fun context(): InvocationContext = rpcContext().invocation
 fun rpcContext(): RpcAuthContext = CURRENT_RPC_CONTEXT.get()
 
 class ObservableSubscription(
-        val subscription: Subscription
+    val subscription: Subscription
 )
 
 typealias ObservableSubscriptionMap = Cache<InvocationId, ObservableSubscription>

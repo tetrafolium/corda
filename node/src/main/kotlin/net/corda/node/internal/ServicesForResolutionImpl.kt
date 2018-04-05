@@ -9,11 +9,11 @@ import net.corda.core.node.services.IdentityService
 import net.corda.core.node.services.TransactionStorage
 
 data class ServicesForResolutionImpl(
-        override val identityService: IdentityService,
-        override val attachments: AttachmentStorage,
-        override val cordappProvider: CordappProvider,
-        override val networkParameters: NetworkParameters,
-        private val validatedTransactions: TransactionStorage
+    override val identityService: IdentityService,
+    override val attachments: AttachmentStorage,
+    override val cordappProvider: CordappProvider,
+    override val networkParameters: NetworkParameters,
+    private val validatedTransactions: TransactionStorage
 ) : ServicesForResolution {
     @Throws(TransactionResolutionException::class)
     override fun loadState(stateRef: StateRef): TransactionState<*> {

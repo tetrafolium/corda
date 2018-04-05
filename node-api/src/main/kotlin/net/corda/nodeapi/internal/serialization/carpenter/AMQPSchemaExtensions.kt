@@ -41,9 +41,11 @@ fun AMQPField.typeAsString() = if (type == "*") requires[0] else type
  *  @param force by default a schema is not added to [carpenterSchemas] if it already exists
  *  on the class path. For testing purposes schema generation can be forced
  */
-fun CompositeType.carpenterSchema(classloader: ClassLoader,
-                                  carpenterSchemas: CarpenterMetaSchema,
-                                  force: Boolean = false) {
+fun CompositeType.carpenterSchema(
+    classloader: ClassLoader,
+    carpenterSchemas: CarpenterMetaSchema,
+    force: Boolean = false
+) {
     if (classloader.exists(name)) {
         validatePropertyTypes(classloader)
         if (!force) return
@@ -120,7 +122,7 @@ val typeStrToType: Map<Pair<String, Boolean>, Class<out Any?>> = mapOf(
         Pair("byte", false) to Byte::class.javaObjectType
 )
 
-fun String.stripGenerics() : String = if(this.endsWith('>')) {
+fun String.stripGenerics(): String = if (this.endsWith('>')) {
     this.substring(0, this.indexOf('<'))
 } else this
 
@@ -146,4 +148,3 @@ private fun ClassLoader.exists(clazz: String) = run {
         false
     }
 }
-

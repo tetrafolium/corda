@@ -50,11 +50,13 @@ class ScheduledFlowTests {
     private lateinit var alice: Party
     private lateinit var bob: Party
 
-    data class ScheduledState(val creationTime: Instant,
-                              val source: Party,
-                              val destination: Party,
-                              val processed: Boolean = false,
-                              override val linearId: UniqueIdentifier = UniqueIdentifier()) : SchedulableState, LinearState {
+    data class ScheduledState(
+        val creationTime: Instant,
+        val source: Party,
+        val destination: Party,
+        val processed: Boolean = false,
+        override val linearId: UniqueIdentifier = UniqueIdentifier()
+    ) : SchedulableState, LinearState {
         override fun nextScheduledActivity(thisStateRef: StateRef, flowLogicRefFactory: FlowLogicRefFactory): ScheduledActivity? {
             return if (!processed) {
                 val logicRef = flowLogicRefFactory.create(ScheduledFlow::class.jvmName, thisStateRef)

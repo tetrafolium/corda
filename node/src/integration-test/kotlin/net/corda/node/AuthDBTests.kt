@@ -243,7 +243,7 @@ private class UsersDB : AutoCloseable {
         session {
             it.execute("INSERT INTO users VALUES ('${user.username}', '${user.password}')")
             for (role in user.roles) {
-                it.execute("INSERT INTO user_roles VALUES ('${user.username}', '${role}')")
+                it.execute("INSERT INTO user_roles VALUES ('${user.username}', '$role')")
             }
         }
     }
@@ -271,7 +271,7 @@ private class UsersDB : AutoCloseable {
     }
 
     private val dataSource: DataSource
-    inline private fun session(statement: (Statement) -> Unit) {
+    private inline fun session(statement: (Statement) -> Unit) {
         dataSource.connection.use {
             it.autoCommit = false
             it.createStatement().use(statement)
@@ -279,11 +279,13 @@ private class UsersDB : AutoCloseable {
         }
     }
 
-    constructor(name: String,
-                users: List<UserAndRoles> = emptyList(),
-                roleAndPermissions: List<RoleAndPermissions> = emptyList()) {
+    constructor(
+        name: String,
+        users: List<UserAndRoles> = emptyList(),
+        roleAndPermissions: List<RoleAndPermissions> = emptyList()
+    ) {
 
-        jdbcUrl = "jdbc:h2:mem:${name};DB_CLOSE_DELAY=-1"
+        jdbcUrl = "jdbc:h2:mem:$name;DB_CLOSE_DELAY=-1"
         dataSource = DataSourceFactory.createDataSource(Properties().apply {
             put("dataSourceClassName", "org.h2.jdbcx.JdbcDataSource")
             put("dataSource.url", jdbcUrl)
@@ -323,6 +325,6 @@ private val hashedPasswords = mapOf(
  */
 private fun encodePassword(s: String, format: PasswordEncryption) = when (format) {
         PasswordEncryption.NONE -> s
-        PasswordEncryption.SHIRO_1_CRYPT -> hashedPasswords[format]!![s] ?:
-            DefaultPasswordService().encryptPassword(s.toCharArray())
+        PasswordEncryption.SHIRO_1_CRYPT -> hashedPasswords[format]!![s]
+            ?: DefaultPasswordService().encryptPassword(s.toCharArray())
     }

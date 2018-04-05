@@ -5,10 +5,8 @@ import net.corda.core.crypto.SecureHash
 import net.corda.core.flows.*
 import net.corda.core.identity.Party
 import net.corda.core.internal.InputStreamAndHash
-import net.corda.core.node.ServiceHub
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.getOrThrow
-import net.corda.node.services.api.StartedNodeServices
 import net.corda.testing.common.internal.testNetworkParameters
 import net.corda.testing.contracts.DummyContract
 import net.corda.testing.contracts.DummyState
@@ -22,7 +20,6 @@ import net.corda.testing.node.StartedMockNode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -100,13 +97,15 @@ class MaxTransactionSizeTests {
 
     @StartableByRPC
     @InitiatingFlow
-    class SendLargeTransactionFlow(private val notary: Party,
-                                   private val otherSide: Party,
-                                   private val hash1: SecureHash,
-                                   private val hash2: SecureHash,
-                                   private val hash3: SecureHash,
-                                   private val hash4: SecureHash,
-                                   private val verify: Boolean = true) : FlowLogic<Unit>() {
+    class SendLargeTransactionFlow(
+        private val notary: Party,
+        private val otherSide: Party,
+        private val hash1: SecureHash,
+        private val hash2: SecureHash,
+        private val hash3: SecureHash,
+        private val hash4: SecureHash,
+        private val verify: Boolean = true
+    ) : FlowLogic<Unit>() {
         @Suspendable
         override fun call() {
             val tx = TransactionBuilder(notary = notary)

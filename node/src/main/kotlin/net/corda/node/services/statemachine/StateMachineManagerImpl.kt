@@ -61,12 +61,12 @@ import javax.annotation.concurrent.ThreadSafe
  */
 @ThreadSafe
 class StateMachineManagerImpl(
-        val serviceHub: ServiceHubInternal,
-        val checkpointStorage: CheckpointStorage,
-        val executor: AffinityExecutor,
-        val database: CordaPersistence,
-        private val unfinishedFibers: ReusableLatch = ReusableLatch(),
-        private val classloader: ClassLoader = StateMachineManagerImpl::class.java.classLoader
+    val serviceHub: ServiceHubInternal,
+    val checkpointStorage: CheckpointStorage,
+    val executor: AffinityExecutor,
+    val database: CordaPersistence,
+    private val unfinishedFibers: ReusableLatch = ReusableLatch(),
+    private val classloader: ClassLoader = StateMachineManagerImpl::class.java.classLoader
 ) : StateMachineManager {
     inner class FiberScheduler : FiberExecutorScheduler("Same thread scheduler", executor)
 
@@ -349,7 +349,7 @@ class StateMachineManagerImpl(
             val flowSession = FlowSessionImpl(sender)
             val flow = initiatedFlowFactory.createFlow(flowSession)
             val senderFlowVersion = when (initiatedFlowFactory) {
-                is InitiatedFlowFactory.Core -> receivedMessage.platformVersion  // The flow version for the core flows is the platform version
+                is InitiatedFlowFactory.Core -> receivedMessage.platformVersion // The flow version for the core flows is the platform version
                 is InitiatedFlowFactory.CorDapp -> sessionInit.flowVersion
             }
             val session = FlowSessionInternal(
@@ -401,8 +401,8 @@ class StateMachineManagerImpl(
         } catch (e: ClassCastException) {
             throw SessionRejectException("${sessionInit.initiatorFlowClassName} is not a flow")
         }
-        return serviceHub.getFlowFactory(initiatingFlowClass) ?:
-                throw SessionRejectException("$initiatingFlowClass is not registered")
+        return serviceHub.getFlowFactory(initiatingFlowClass)
+                ?: throw SessionRejectException("$initiatingFlowClass is not registered")
     }
 
     private fun serializeFiber(fiber: FlowStateMachineImpl<*>): SerializedBytes<FlowStateMachineImpl<*>> {

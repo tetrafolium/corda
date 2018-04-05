@@ -34,8 +34,8 @@ class EnumSerializer(declaredType: Type, declaredClass: Class<*>, factory: Seria
         val fromOrd = type.asClass()!!.enumConstants[enumOrd] as Enum<*>?
 
         if (enumName != fromOrd?.name) {
-            throw NotSerializableException("Deserializing obj as enum $type with value $enumName.$enumOrd but "
-                    + "ordinality has changed")
+            throw NotSerializableException("Deserializing obj as enum $type with value $enumName.$enumOrd but " +
+                    "ordinality has changed")
         }
         return fromOrd
     }

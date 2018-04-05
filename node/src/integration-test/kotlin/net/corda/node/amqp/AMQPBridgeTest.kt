@@ -141,7 +141,6 @@ class AMQPBridgeTest {
         }
         artemis.producer.send(sourceQueueName, artemisMessage)
 
-
         // start receiving again, discarding duplicates
         while (true) {
             val received5 = receive.next()

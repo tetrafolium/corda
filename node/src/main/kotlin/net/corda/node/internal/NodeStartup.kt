@@ -132,11 +132,11 @@ open class NodeStartup(val args: Array<String>) {
         return true
     }
 
-    open protected fun preNetworkRegistration(conf: NodeConfiguration) = Unit
+    protected open fun preNetworkRegistration(conf: NodeConfiguration) = Unit
 
-    open protected fun createNode(conf: NodeConfiguration, versionInfo: VersionInfo): Node = Node(conf, versionInfo)
+    protected open fun createNode(conf: NodeConfiguration, versionInfo: VersionInfo): Node = Node(conf, versionInfo)
 
-    open protected fun startNode(conf: NodeConfiguration, versionInfo: VersionInfo, startTime: Long, cmdlineOptions: CmdLineOptions) {
+    protected open fun startNode(conf: NodeConfiguration, versionInfo: VersionInfo, startTime: Long, cmdlineOptions: CmdLineOptions) {
         val node = createNode(conf, versionInfo)
         if (cmdlineOptions.justGenerateNodeInfo) {
             // Perform the minimum required start-up logic to be able to write a nodeInfo to disk
@@ -154,7 +154,7 @@ open class NodeStartup(val args: Array<String>) {
             if (conf.shouldStartLocalShell()) {
                 startedNode.internals.startupComplete.then {
                     try {
-                        InteractiveShell.runLocalShell( {startedNode.dispose()} )
+                        InteractiveShell.runLocalShell({ startedNode.dispose() })
                     } catch (e: Throwable) {
                         logger.error("Shell failed to start", e)
                     }
@@ -170,13 +170,13 @@ open class NodeStartup(val args: Array<String>) {
         startedNode.internals.run()
     }
 
-    open protected fun logStartupInfo(versionInfo: VersionInfo, cmdlineOptions: CmdLineOptions, conf: NodeConfiguration) {
+    protected open fun logStartupInfo(versionInfo: VersionInfo, cmdlineOptions: CmdLineOptions, conf: NodeConfiguration) {
         logger.info("Vendor: ${versionInfo.vendor}")
         logger.info("Release: ${versionInfo.releaseVersion}")
         logger.info("Platform Version: ${versionInfo.platformVersion}")
         logger.info("Revision: ${versionInfo.revision}")
         val info = ManagementFactory.getRuntimeMXBean()
-        logger.info("PID: ${info.name.split("@").firstOrNull()}")  // TODO Java 9 has better support for this
+        logger.info("PID: ${info.name.split("@").firstOrNull()}") // TODO Java 9 has better support for this
         logger.info("Main class: ${NodeConfiguration::class.java.protectionDomain.codeSource.location.toURI().path}")
         logger.info("CommandLine Args: ${info.inputArguments.joinToString(" ")}")
         logger.info("Application Args: ${args.joinToString(" ")}")
@@ -192,7 +192,7 @@ open class NodeStartup(val args: Array<String>) {
         logger.info("Starting as node on ${conf.p2pAddress}")
     }
 
-    open protected fun registerWithNetwork(conf: NodeConfiguration, nodeRegistrationConfig: NodeRegistrationOption) {
+    protected open fun registerWithNetwork(conf: NodeConfiguration, nodeRegistrationConfig: NodeRegistrationOption) {
         val compatibilityZoneURL = conf.compatibilityZoneURL!!
         println()
         println("******************************************************************")
@@ -203,13 +203,13 @@ open class NodeStartup(val args: Array<String>) {
         NetworkRegistrationHelper(conf, HTTPNetworkRegistrationService(compatibilityZoneURL), nodeRegistrationConfig).buildKeystore()
     }
 
-    open protected fun loadConfigFile(cmdlineOptions: CmdLineOptions): NodeConfiguration = cmdlineOptions.loadConfig()
+    protected open fun loadConfigFile(cmdlineOptions: CmdLineOptions): NodeConfiguration = cmdlineOptions.loadConfig()
 
-    open protected fun banJavaSerialisation(conf: NodeConfiguration) {
+    protected open fun banJavaSerialisation(conf: NodeConfiguration) {
         SerialFilter.install(if (conf.notary?.bftSMaRt != null) ::bftSMaRtSerialFilter else ::defaultSerialFilter)
     }
 
-    open protected fun getVersionInfo(): VersionInfo {
+    protected open fun getVersionInfo(): VersionInfo {
         // Manifest properties are only available if running from the corda jar
         fun manifestValue(name: String): String? = if (Manifests.exists(name)) Manifests.read(name) else null
 
@@ -258,7 +258,7 @@ open class NodeStartup(val args: Array<String>) {
         return Pair(argsParser, cmdlineOptions)
     }
 
-    open protected fun initLogging(cmdlineOptions: CmdLineOptions) {
+    protected open fun initLogging(cmdlineOptions: CmdLineOptions) {
         val loggingLevel = cmdlineOptions.loggingLevel.name.toLowerCase(Locale.ENGLISH)
         System.setProperty("defaultLogLevel", loggingLevel) // These properties are referenced from the XML config file.
         if (cmdlineOptions.logToConsole) {
@@ -343,11 +343,11 @@ open class NodeStartup(val args: Array<String>) {
                     """  / ____/     _________/ /___ _""").newline().a(
                     """ / /     __  / ___/ __  / __ `/         """).fgBrightBlue().a(msg1).newline().fgBrightRed().a(
                     """/ /___  /_/ / /  / /_/ / /_/ /          """).fgBrightBlue().a(msg2).newline().fgBrightRed().a(
-                    """\____/     /_/   \__,_/\__,_/""").reset().newline().newline().fgBrightDefault().bold().
-                    a("--- ${versionInfo.vendor} ${versionInfo.releaseVersion} (${versionInfo.revision.take(7)}) -----------------------------------------------").
-                    newline().
-                    newline().
-                    reset())
+                    """\____/     /_/   \__,_/\__,_/""").reset().newline().newline().fgBrightDefault().bold()
+                    .a("--- ${versionInfo.vendor} ${versionInfo.releaseVersion} (${versionInfo.revision.take(7)}) -----------------------------------------------")
+                    .newline()
+                    .newline()
+                    .reset())
         }
     }
 }
