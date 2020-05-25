@@ -25,7 +25,7 @@ public class IOUContract implements Contract {
     }
 
     @Override
-    public void verify(LedgerTransaction tx) {
+    public void verify(final LedgerTransaction tx) {
         final CommandWithParties<IOUContract.Create> command = requireSingleCommand(tx.getCommands(), IOUContract.Create.class);
 
         requireThat(check -> {

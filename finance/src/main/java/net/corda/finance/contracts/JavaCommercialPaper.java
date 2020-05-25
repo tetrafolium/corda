@@ -44,8 +44,8 @@ public class JavaCommercialPaper implements Contract {
         public State() {
         }  // For serialization
 
-        public State(PartyAndReference issuance, AbstractParty owner, Amount<Issued<Currency>> faceValue,
-                     Instant maturityDate) {
+        public State(final PartyAndReference issuance, final AbstractParty owner, final Amount<Issued<Currency>> faceValue,
+                     final Instant maturityDate) {
             this.issuance = issuance;
             this.owner = owner;
             this.faceValue = faceValue;
@@ -56,21 +56,21 @@ public class JavaCommercialPaper implements Contract {
             return new State(this.issuance, this.owner, this.faceValue, this.maturityDate);
         }
 
-        public ICommercialPaperState withOwner(AbstractParty newOwner) {
+        public ICommercialPaperState withOwner(final AbstractParty newOwner) {
             return new State(this.issuance, newOwner, this.faceValue, this.maturityDate);
         }
 
         @NotNull
         @Override
-        public CommandAndState withNewOwner(@NotNull AbstractParty newOwner) {
+        public CommandAndState withNewOwner(final @NotNull AbstractParty newOwner) {
             return new CommandAndState(new Commands.Move(), new State(this.issuance, newOwner, this.faceValue, this.maturityDate));
         }
 
-        public ICommercialPaperState withFaceValue(Amount<Issued<Currency>> newFaceValue) {
+        public ICommercialPaperState withFaceValue(final Amount<Issued<Currency>> newFaceValue) {
             return new State(this.issuance, this.owner, newFaceValue, this.maturityDate);
         }
 
-        public ICommercialPaperState withMaturityDate(Instant newMaturityDate) {
+        public ICommercialPaperState withMaturityDate(final Instant newMaturityDate) {
             return new State(this.issuance, this.owner, this.faceValue, newMaturityDate);
         }
 
@@ -92,7 +92,7 @@ public class JavaCommercialPaper implements Contract {
         }
 
         @Override
-        public boolean equals(Object that) {
+        public boolean equals(final Object that) {
             if (this == that) return true;
             if (that == null || getClass() != that.getClass()) return false;
 
@@ -127,28 +127,28 @@ public class JavaCommercialPaper implements Contract {
     public interface Commands extends CommandData {
         class Move implements Commands {
             @Override
-            public boolean equals(Object obj) {
+            public boolean equals(final Object obj) {
                 return obj instanceof Move;
             }
         }
 
         class Redeem implements Commands {
             @Override
-            public boolean equals(Object obj) {
+            public boolean equals(final Object obj) {
                 return obj instanceof Redeem;
             }
         }
 
         class Issue implements Commands {
             @Override
-            public boolean equals(Object obj) {
+            public boolean equals(final Object obj) {
                 return obj instanceof Issue;
             }
         }
     }
 
     @NotNull
-    private List<CommandWithParties<Commands>> extractCommands(@NotNull LedgerTransaction tx) {
+    private List<CommandWithParties<Commands>> extractCommands(final @NotNull LedgerTransaction tx) {
         return tx.getCommands()
                 .stream()
                 .filter((CommandWithParties<CommandData> command) -> command.getValue() instanceof Commands)
@@ -157,7 +157,7 @@ public class JavaCommercialPaper implements Contract {
     }
 
     @Override
-    public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
+    public void verify(final @NotNull LedgerTransaction tx) throws IllegalArgumentException {
 
         // Group by everything except owner: any modification to the CP at all is considered changing it fundamentally.
         final List<LedgerTransaction.InOutGroup<State, State>> groups = tx.groupStates(State.class, State::withoutOwner);
@@ -227,13 +227,13 @@ public class JavaCommercialPaper implements Contract {
         }
     }
 
-    public TransactionBuilder generateIssue(@NotNull PartyAndReference issuance, @NotNull Amount<Issued<Currency>> faceValue, @Nullable Instant maturityDate, @NotNull Party notary, Integer encumbrance) {
+    public TransactionBuilder generateIssue(final @NotNull PartyAndReference issuance, final @NotNull Amount<Issued<Currency>> faceValue, final @Nullable Instant maturityDate, final @NotNull Party notary, final Integer encumbrance) {
         State state = new State(issuance, issuance.getParty(), faceValue, maturityDate);
         TransactionState output = new TransactionState<>(state, JCP_PROGRAM_ID, notary, encumbrance);
         return new TransactionBuilder(notary).withItems(output, new Command<>(new Commands.Issue(), issuance.getParty().getOwningKey()));
     }
 
-    public TransactionBuilder generateIssue(@NotNull PartyAndReference issuance, @NotNull Amount<Issued<Currency>> faceValue, @Nullable Instant maturityDate, @NotNull Party notary) {
+    public TransactionBuilder generateIssue(final @NotNull PartyAndReference issuance, final @NotNull Amount<Issued<Currency>> faceValue, final @Nullable Instant maturityDate, final @NotNull Party notary) {
         return generateIssue(issuance, faceValue, maturityDate, notary, null);
     }
 
@@ -247,13 +247,13 @@ public class JavaCommercialPaper implements Contract {
         tx.addCommand(new Command<>(new Commands.Redeem(), paper.getState().getData().getOwner().getOwningKey()));
     }
 
-    public void generateMove(TransactionBuilder tx, StateAndRef<State> paper, AbstractParty newOwner) {
+    public void generateMove(final TransactionBuilder tx, final StateAndRef<State> paper, final AbstractParty newOwner) {
         tx.addInputState(paper);
         tx.addOutputState(new TransactionState<>(new State(paper.getState().getData().getIssuance(), newOwner, paper.getState().getData().getFaceValue(), paper.getState().getData().getMaturityDate()), JCP_PROGRAM_ID, paper.getState().getNotary(), paper.getState().getEncumbrance()));
         tx.addCommand(new Command<>(new Commands.Move(), paper.getState().getData().getOwner().getOwningKey()));
     }
 
-    private static <T> T onlyElementOf(Iterable<T> iterable) {
+    private static <T> T onlyElementOf(final Iterable<T> iterable) {
         Iterator<T> iter = iterable.iterator();
         T item = iter.next();
         if (iter.hasNext()) {

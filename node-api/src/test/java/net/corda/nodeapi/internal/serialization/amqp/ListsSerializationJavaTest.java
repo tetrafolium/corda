@@ -18,12 +18,12 @@ public class ListsSerializationJavaTest {
     public static class Child implements Parent {
         private final int value;
 
-        Child(int value) {
+        Child(final int value) {
             this.value = value;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -48,13 +48,13 @@ public class ListsSerializationJavaTest {
     public static class CovariantContainer<T extends Parent> {
         private final List<T> content;
 
-        CovariantContainer(List<T> content) {
+        CovariantContainer(final List<T> content) {
             this.content = content;
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -79,12 +79,12 @@ public class ListsSerializationJavaTest {
     public static class CovariantContainer2 {
         private final List<? extends Parent> content;
 
-        CovariantContainer2(List<? extends Parent> content) {
+        CovariantContainer2(final List<? extends Parent> content) {
             this.content = content;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -124,7 +124,7 @@ public class ListsSerializationJavaTest {
     }
 
     // Have to have own version as Kotlin inline functions cannot be easily called from Java
-    private static <T> void assertEqualAfterRoundTripSerialization(T container, Class<T> clazz) throws Exception {
+    private static <T> void assertEqualAfterRoundTripSerialization(final T container, final Class<T> clazz) throws Exception {
         EvolutionSerializerGetterBase evolutionSerializerGetter = new EvolutionSerializerGetter();
         FingerPrinter fingerPrinter = new SerializerFingerPrinter();
         SerializerFactory factory1 = new SerializerFactory(

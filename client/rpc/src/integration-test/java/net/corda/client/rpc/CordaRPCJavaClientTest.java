@@ -49,7 +49,7 @@ public class CordaRPCJavaClientTest extends NodeBasedTest {
     private RPCConnection<CordaRPCOps> connection = null;
     private CordaRPCOps rpcProxy;
 
-    private void login(String username, String password) {
+    private void login(final String username, final String password) {
         connection = client.start(username, password);
         rpcProxy = connection.getProxy();
     }
@@ -75,7 +75,7 @@ public class CordaRPCJavaClientTest extends NodeBasedTest {
         login(rpcUser.getUsername(), rpcUser.getPassword());
 
         FlowHandle<AbstractCashFlow.Result> flowHandle = rpcProxy.startFlowDynamic(CashIssueFlow.class,
-                DOLLARS(123), OpaqueBytes.of((byte)0),
+                DOLLARS(123), OpaqueBytes.of((byte) 0),
                 InternalTestUtilsKt.chooseIdentity(node.getInfo()));
         System.out.println("Started issuing cash, waiting on result");
         flowHandle.getReturnValue().get();

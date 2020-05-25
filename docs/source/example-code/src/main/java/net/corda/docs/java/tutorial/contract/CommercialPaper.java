@@ -19,7 +19,7 @@ public class CommercialPaper implements Contract {
 
     // DOCSTART 3
     @Override
-    public void verify(LedgerTransaction tx) {
+    public void verify(final LedgerTransaction tx) {
         List<InOutGroup<State, State>> groups = tx.groupStates(State.class, State::withoutOwner);
         CommandWithParties<Commands> cmd = requireSingleCommand(tx.getCommands(), Commands.class);
         // DOCEND 3
@@ -78,21 +78,21 @@ public class CommercialPaper implements Contract {
     public static class Commands implements CommandData {
         public static class Move extends Commands {
             @Override
-            public boolean equals(Object obj) {
+            public boolean equals(final Object obj) {
                 return obj instanceof Move;
             }
         }
 
         public static class Redeem extends Commands {
             @Override
-            public boolean equals(Object obj) {
+            public boolean equals(final Object obj) {
                 return obj instanceof Redeem;
             }
         }
 
         public static class Issue extends Commands {
             @Override
-            public boolean equals(Object obj) {
+            public boolean equals(final Object obj) {
                 return obj instanceof Issue;
             }
         }

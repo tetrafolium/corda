@@ -42,7 +42,7 @@ public final class MarkitRedCode
      * @return a RED code
      */
     @FromString
-    public static MarkitRedCode of(String name) {
+    public static MarkitRedCode of(final String name) {
         ArgChecker.isTrue(name.length() == 6 || name.length() == 9, "RED Code must be exactly 6 or 9 characters");
         return new MarkitRedCode(name);
     }
@@ -53,7 +53,7 @@ public final class MarkitRedCode
      * @param id standard id identifying a RED code
      * @return the equivalent RED code
      */
-    public static MarkitRedCode from(StandardId id) {
+    public static MarkitRedCode from(final StandardId id) {
         Preconditions.checkArgument(id.getScheme().equals(MARKIT_REDCODE_SCHEME));
         return MarkitRedCode.of(id.getValue());
     }
@@ -64,7 +64,7 @@ public final class MarkitRedCode
      * @param name  the Markit RED code, 6 or 9 characters long
      * @return the equivalent standard identifier
      */
-    public static StandardId id(String name) {
+    public static StandardId id(final String name) {
         ArgChecker.isTrue(name.length() == 6 || name.length() == 9, "RED Code must be exactly 6 or 9 characters");
         return StandardId.of(MARKIT_REDCODE_SCHEME, name);
     }
@@ -74,7 +74,7 @@ public final class MarkitRedCode
      *
      * @param name  the RED code
      */
-    private MarkitRedCode(String name) {
+    private MarkitRedCode(final String name) {
         super(name);
     }
 

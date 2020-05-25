@@ -69,7 +69,7 @@ public enum MarkitSeniorityLevel {
      * @param seniorityLevel  the level to convert
      * @return the converted level
      */
-    public static MarkitSeniorityLevel from(SeniorityLevel seniorityLevel) {
+    public static MarkitSeniorityLevel from(final SeniorityLevel seniorityLevel) {
         switch (seniorityLevel) {
             case SENIOR_SECURED_DOMESTIC:
                 return SECDOM;

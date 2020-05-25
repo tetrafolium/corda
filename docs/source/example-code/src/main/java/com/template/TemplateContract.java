@@ -13,9 +13,9 @@ public class TemplateContract implements Contract {
      * and output states does not throw an exception.
      */
     @Override
-    public void verify(LedgerTransaction tx) {}
+    public void verify(final LedgerTransaction tx) { }
 
     public interface Commands extends CommandData {
-        class Action implements Commands {}
+        class Action implements Commands { }
     }
 }

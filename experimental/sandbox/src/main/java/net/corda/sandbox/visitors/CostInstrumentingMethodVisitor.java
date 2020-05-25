@@ -24,7 +24,7 @@ public final class CostInstrumentingMethodVisitor extends GeneratorAdapter {
     // stub
     private final String runtimeAccounterTypeName;
 
-    public CostInstrumentingMethodVisitor(MethodVisitor methodVisitor, int access, String name, String desc) {
+    public CostInstrumentingMethodVisitor(final MethodVisitor methodVisitor, final int access, final String name, final String desc) {
         super(Opcodes.ASM5, methodVisitor, access, name, desc);
 
         runtimeAccounterTypeName = "net/corda/sandbox/costing/RuntimeCostAccounter";
@@ -146,7 +146,7 @@ public final class CostInstrumentingMethodVisitor extends GeneratorAdapter {
      * @param itf
      */
     @Override
-    public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+    public void visitMethodInsn(final int opcode, final String owner, final String name, final String desc, final boolean itf) {
 
         switch (opcode) {
             case Opcodes.INVOKEVIRTUAL:

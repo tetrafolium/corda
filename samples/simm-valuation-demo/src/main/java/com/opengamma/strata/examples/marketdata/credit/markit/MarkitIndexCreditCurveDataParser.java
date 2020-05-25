@@ -60,7 +60,7 @@ public class MarkitIndexCreditCurveDataParser {
 
         private final String columnName;
 
-        Columns(String columnName) {
+        Columns(final String columnName) {
             this.columnName = columnName;
         }
 
@@ -77,9 +77,9 @@ public class MarkitIndexCreditCurveDataParser {
      * @param staticDataSource  the source of static data to parse
      */
     public static void parse(
-            ImmutableMarketDataBuilder builder,
-            CharSource curveSource,
-            CharSource staticDataSource) {
+            final ImmutableMarketDataBuilder builder,
+            final CharSource curveSource,
+            final CharSource staticDataSource) {
 
         Map<IsdaIndexCreditCurveInputsId, List<Point>> curveData = Maps.newHashMap();
         Map<MarkitRedCode, StaticData> staticDataMap = parseStaticData(staticDataSource);
@@ -163,7 +163,7 @@ public class MarkitIndexCreditCurveDataParser {
     }
 
     // parses the static data file
-    private static Map<MarkitRedCode, StaticData> parseStaticData(CharSource source) {
+    private static Map<MarkitRedCode, StaticData> parseStaticData(final CharSource source) {
         CsvFile csv = CsvFile.of(source, true);
 
         Map<MarkitRedCode, StaticData> result = Maps.newHashMap();
@@ -197,7 +197,7 @@ public class MarkitIndexCreditCurveDataParser {
         private double recoveryRate;
         private double indexFactor;
 
-        private StaticData(LocalDate fromDate, CdsConvention convention, double recoveryRate, double indexFactor) {
+        private StaticData(final LocalDate fromDate, final CdsConvention convention, final double recoveryRate, final double indexFactor) {
             this.fromDate = fromDate;
             this.convention = convention;
             this.recoveryRate = recoveryRate;
@@ -234,7 +234,7 @@ public class MarkitIndexCreditCurveDataParser {
 
         private final double rate;
 
-        private Point(Tenor tenor, LocalDate date, double rate) {
+        private Point(final Tenor tenor, final LocalDate date, final double rate) {
             this.tenor = tenor;
             this.date = date;
             this.rate = rate;
@@ -255,7 +255,7 @@ public class MarkitIndexCreditCurveDataParser {
 
     // Converts from a string percentage rate with a percent sign to a double rate
     // e.g. 0.12% => 0.0012d
-    private static double parseRate(String input) {
+    private static double parseRate(final String input) {
         return Double.parseDouble(input.replace("%", "")) / 100d;
     }
 

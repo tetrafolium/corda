@@ -81,7 +81,7 @@ public class TestUtils {
         return clz;
     }
 
-    public static Class<?> transformClass(final String resourceMethodAccessIsRewrittenclass, int i) throws Exception {
+    public static Class<?> transformClass(final String resourceMethodAccessIsRewrittenclass, final int i) throws Exception {
         return transformClass(resourceMethodAccessIsRewrittenclass, i, -1);
     }
 
@@ -90,7 +90,7 @@ public class TestUtils {
     }
 
     // Helper for finding the correct offsets if they change
-    public static void printBytes(byte[] data) {
+    public static void printBytes(final byte[] data) {
         byte[] datum = new byte[1];
         for (int i = 0; i < data.length; i++) {
             datum[0] = data[i];
@@ -98,7 +98,7 @@ public class TestUtils {
         }
     }
 
-    public static int findOffset(byte[] classBytes, byte[] originalSeq) {
+    public static int findOffset(final byte[] classBytes, final byte[] originalSeq) {
         int offset = 0;
         for (int i = 415; i < classBytes.length; i++) {
             if (classBytes[i] != originalSeq[offset]) {
@@ -114,7 +114,7 @@ public class TestUtils {
         return -1;
     }
 
-    public static byte[] instrumentWithCosts(byte[] basic, Set<String> hashSet) throws Exception {
+    public static byte[] instrumentWithCosts(final byte[] basic, final Set<String> hashSet) throws Exception {
         final WhitelistClassLoader wlcl = WhitelistClassLoader.of("/tmp");
         return wlcl.instrumentWithCosts(basic, hashSet);
     }
@@ -122,7 +122,7 @@ public class TestUtils {
 
     public static final class MyClassloader extends ClassLoader {
 
-        public Class<?> byPath(Path p) throws IOException {
+        public Class<?> byPath(final Path p) throws IOException {
             final byte[] buffy = Files.readAllBytes(p);
             return defineClass(null, buffy, 0, buffy.length);
         }
@@ -131,20 +131,20 @@ public class TestUtils {
     public static final class Reaper extends SimpleFileVisitor<Path> {
 
         @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+        public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
                 throws IOException {
             Files.delete(file);
             return FileVisitResult.CONTINUE;
         }
 
         @Override
-        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        public FileVisitResult visitFileFailed(final Path file, final IOException exc) throws IOException {
             Files.delete(file);
             return FileVisitResult.CONTINUE;
         }
 
         @Override
-        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
             if (exc == null) {
                 Files.delete(dir);
                 return FileVisitResult.CONTINUE;

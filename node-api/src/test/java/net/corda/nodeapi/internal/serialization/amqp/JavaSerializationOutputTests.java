@@ -24,13 +24,13 @@ public class JavaSerializationOutputTests {
         private final String bob;
         private final int count;
 
-        public Foo(String msg, long count) {
+        public Foo(final String msg, final long count) {
             this.bob = msg;
             this.count = (int) count;
         }
 
         @ConstructorForDeserialization
-        private Foo(String fred, int count) {
+        private Foo(final String fred, final int count) {
             this.bob = fred;
             this.count = count;
         }
@@ -46,7 +46,7 @@ public class JavaSerializationOutputTests {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -68,7 +68,7 @@ public class JavaSerializationOutputTests {
         private final String bob;
         private final int count;
 
-        private UnAnnotatedFoo(String fred, int count) {
+        private UnAnnotatedFoo(final String fred, final int count) {
             this.bob = fred;
             this.count = count;
         }
@@ -84,7 +84,7 @@ public class JavaSerializationOutputTests {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -106,7 +106,7 @@ public class JavaSerializationOutputTests {
         private final String fred;
         private final Integer count;
 
-        private BoxedFoo(String fred, Integer count) {
+        private BoxedFoo(final String fred, final Integer count) {
             this.fred = fred;
             this.count = count;
         }
@@ -120,7 +120,7 @@ public class JavaSerializationOutputTests {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -143,7 +143,7 @@ public class JavaSerializationOutputTests {
         private final String fred;
         private final Integer count;
 
-        private BoxedFooNotNull(String fred, Integer count) {
+        private BoxedFooNotNull(final String fred, final Integer count) {
             this.fred = fred;
             this.count = count;
         }
@@ -158,7 +158,7 @@ public class JavaSerializationOutputTests {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -176,7 +176,7 @@ public class JavaSerializationOutputTests {
         }
     }
 
-    private Object serdes(Object obj) throws NotSerializableException {
+    private Object serdes(final Object obj) throws NotSerializableException {
         EvolutionSerializerGetterBase evolutionSerialiserGetter = new EvolutionSerializerGetter();
         FingerPrinter fingerPrinter = new SerializerFingerPrinter();
         SerializerFactory factory1 = new SerializerFactory(AllWhitelist.INSTANCE, ClassLoader.getSystemClassLoader(),

@@ -9,7 +9,7 @@ import java.io.NotSerializableException;
 
 @Ignore("Current behaviour allows for the serialization of objects with private members, this will be disallowed at some point in the future")
 public class ErrorMessageTests {
-    private String errMsg(String property, String testname) {
+    private String errMsg(final String property, final String testname) {
         return "Property '"
                 + property
                 + "' or its getter is non public, this renders class 'class "
@@ -22,11 +22,12 @@ public class ErrorMessageTests {
     static class C {
         public Integer a;
 
-        public C(Integer a) {
+        public C(final Integer a) {
             this.a = a;
         }
 
-        private Integer getA() { return this.a; }
+        private Integer getA() {
+            return this.a; }
     }
 
     @Test

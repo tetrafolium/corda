@@ -83,7 +83,7 @@ public enum MarkitRestructuringClause {
      * @param restructuringClause  the clause to convert
      * @return the converted clause
      */
-    public static MarkitRestructuringClause from(RestructuringClause restructuringClause) {
+    public static MarkitRestructuringClause from(final RestructuringClause restructuringClause) {
         switch (restructuringClause) {
             case MOD_MOD_RESTRUCTURING_2003:
                 return MM;

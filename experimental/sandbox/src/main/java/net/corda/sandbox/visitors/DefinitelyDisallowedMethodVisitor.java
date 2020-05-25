@@ -8,7 +8,7 @@ import org.objectweb.asm.Opcodes;
  */
 class DefinitelyDisallowedMethodVisitor extends MethodVisitor {
 
-    DefinitelyDisallowedMethodVisitor(MethodVisitor baseMethodVisitor) {
+    DefinitelyDisallowedMethodVisitor(final MethodVisitor baseMethodVisitor) {
         super(Opcodes.ASM5, baseMethodVisitor);
     }
 

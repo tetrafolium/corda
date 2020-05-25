@@ -16,11 +16,11 @@ public class CordaCaplet extends Capsule {
     private Config nodeConfig = null;
     private String baseDir = null;
 
-    protected CordaCaplet(Capsule pred) {
+    protected CordaCaplet(final Capsule pred) {
         super(pred);
     }
 
-    private Config parseConfigFile(List<String> args) {
+    private Config parseConfigFile(final List<String> args) {
         String baseDirOption = getOption(args, "--base-directory");
         this.baseDir = Paths.get((baseDirOption == null) ? "." : baseDirOption).toAbsolutePath().normalize().toString();
         String config = getOption(args, "--config-file");
@@ -37,7 +37,7 @@ public class CordaCaplet extends Capsule {
         }
     }
 
-    private String getOption(List<String> args, String option) {
+    private String getOption(final List<String> args, final String option) {
         final String lowerCaseOption = option.toLowerCase();
         int index = 0;
         for (String arg : args) {
@@ -54,14 +54,14 @@ public class CordaCaplet extends Capsule {
     }
 
     @Override
-    protected ProcessBuilder prelaunch(List<String> jvmArgs, List<String> args) {
+    protected ProcessBuilder prelaunch(final List<String> jvmArgs, final List<String> args) {
         nodeConfig = parseConfigFile(args);
         return super.prelaunch(jvmArgs, args);
     }
 
     // Add working directory variable to capsules string replacement variables.
     @Override
-    protected String getVarValue(String var) {
+    protected String getVarValue(final String var) {
         if (var.equals("baseDirectory")) {
             return baseDir;
         } else {
@@ -74,7 +74,7 @@ public class CordaCaplet extends Capsule {
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected <T> T attribute(Map.Entry<String, T> attr) {
+    protected <T> T attribute(final Map.Entry<String, T> attr) {
         // Equality is used here because Capsule never instantiates these attributes but instead reuses the ones
         // defined as public static final fields on the Capsule class, therefore referential equality is safe.
         if (ATTR_APP_CLASS_PATH == attr) {
@@ -127,7 +127,7 @@ public class CordaCaplet extends Capsule {
         } else return super.attribute(attr);
     }
 
-    private void augmentClasspath(List<Path> classpath, File dir) {
+    private void augmentClasspath(final List<Path> classpath, final File dir) {
         if (dir.exists()) {
             File[] files = dir.listFiles();
             for (File file : files) {
@@ -143,13 +143,13 @@ public class CordaCaplet extends Capsule {
         super.liftoff();
         Signal.handle(new Signal("INT"), new SignalHandler() {
             @Override
-            public void handle(Signal signal) {
+            public void handle(final Signal signal) {
                 // Disable Ctrl-C for this process, so the child process can handle it in the shell instead.
             }
         });
     }
 
-    private Boolean isJAR(File file) {
+    private Boolean isJAR(final File file) {
         return file.getName().toLowerCase().endsWith(".jar");
     }
 }

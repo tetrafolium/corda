@@ -30,7 +30,7 @@ public final class CandidateMethod {
 
     private String reason;
 
-    private CandidateMethod(String methodSignature) {
+    private CandidateMethod(final String methodSignature) {
         internalMethodName = methodSignature;
     }
 
@@ -71,7 +71,7 @@ public final class CandidateMethod {
         return reason;
     }
 
-    public void setReason(String reason) {
+    public void setReason(final String reason) {
         this.reason = reason;
     }
 
@@ -87,7 +87,7 @@ public final class CandidateMethod {
         return referencedCandidateMethods;
     }
 
-    public static CandidateMethod of(String methodSignature) {
+    public static CandidateMethod of(final String methodSignature) {
         return new CandidateMethod(methodSignature);
     }
 
@@ -97,7 +97,7 @@ public final class CandidateMethod {
      * @param methodSignature
      * @return
      */
-    public static CandidateMethod proven(String methodSignature) {
+    public static CandidateMethod proven(final String methodSignature) {
         final CandidateMethod provenCandidateMethod = new CandidateMethod(methodSignature);
         provenCandidateMethod.deterministic();
         return provenCandidateMethod;

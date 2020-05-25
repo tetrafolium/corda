@@ -104,7 +104,7 @@ public abstract class ExampleMarketDataBuilder {
      * @param resourceRoot  the resource root path
      * @return the market data builder
      */
-    public static ExampleMarketDataBuilder ofResource(String resourceRoot) {
+    public static ExampleMarketDataBuilder ofResource(final String resourceRoot) {
         return ofResource(resourceRoot, ExampleMarketDataBuilder.class.getClassLoader());
     }
 
@@ -119,7 +119,7 @@ public abstract class ExampleMarketDataBuilder {
      * @param classLoader  the class loader with which to find the resource
      * @return the market data builder
      */
-    public static ExampleMarketDataBuilder ofResource(String resourceRoot, ClassLoader classLoader) {
+    public static ExampleMarketDataBuilder ofResource(final String resourceRoot, final ClassLoader classLoader) {
         // classpath resources are forward-slash separated
         String qualifiedRoot = resourceRoot;
         qualifiedRoot = qualifiedRoot.startsWith("/") ? qualifiedRoot.substring(1) : qualifiedRoot;
@@ -161,7 +161,7 @@ public abstract class ExampleMarketDataBuilder {
      * @param rootPath  the root directory
      * @return the market data builder
      */
-    public static ExampleMarketDataBuilder ofPath(Path rootPath) {
+    public static ExampleMarketDataBuilder ofPath(final Path rootPath) {
         return new DirectoryMarketDataBuilder(rootPath);
     }
 
@@ -173,7 +173,7 @@ public abstract class ExampleMarketDataBuilder {
      * @param marketDataDate  the date of the market data
      * @return the snapshot
      */
-    public ImmutableMarketData buildSnapshot(LocalDate marketDataDate) {
+    public ImmutableMarketData buildSnapshot(final LocalDate marketDataDate) {
         ImmutableMarketDataBuilder builder = ImmutableMarketData.builder(marketDataDate);
         loadFixingSeries(builder);
         loadRatesCurves(builder, marketDataDate);
@@ -189,7 +189,7 @@ public abstract class ExampleMarketDataBuilder {
      * @param marketDataDate  the date of the market data
      * @return the rates lookup
      */
-    public RatesMarketDataLookup ratesLookup(LocalDate marketDataDate) {
+    public RatesMarketDataLookup ratesLookup(final LocalDate marketDataDate) {
         SortedMap<LocalDate, CurveGroup> curves = loadAllRatesCurves();
         return RatesMarketDataLookup.of(curves.get(marketDataDate));
     }
@@ -222,7 +222,7 @@ public abstract class ExampleMarketDataBuilder {
     }
 
     //-------------------------------------------------------------------------
-    private void loadFixingSeries(ImmutableMarketDataBuilder builder) {
+    private void loadFixingSeries(final ImmutableMarketDataBuilder builder) {
         if (!subdirectoryExists(HISTORICAL_FIXINGS_DIR)) {
             log.debug("No historical fixings directory found");
             return;
@@ -236,7 +236,7 @@ public abstract class ExampleMarketDataBuilder {
         }
     }
 
-    private void loadRatesCurves(ImmutableMarketDataBuilder builder, LocalDate marketDataDate) {
+    private void loadRatesCurves(final ImmutableMarketDataBuilder builder, final LocalDate marketDataDate) {
         if (!subdirectoryExists(CURVES_DIR)) {
             log.debug("No rates curves directory found");
             return;
@@ -273,7 +273,7 @@ public abstract class ExampleMarketDataBuilder {
     }
 
     // load quotes
-    private void loadQuotes(ImmutableMarketDataBuilder builder, LocalDate marketDataDate) {
+    private void loadQuotes(final ImmutableMarketDataBuilder builder, final LocalDate marketDataDate) {
         if (!subdirectoryExists(QUOTES_DIR)) {
             log.debug("No quotes directory found");
             return;
@@ -294,7 +294,7 @@ public abstract class ExampleMarketDataBuilder {
         }
     }
 
-    private void loadFxRates(ImmutableMarketDataBuilder builder) {
+    private void loadFxRates(final ImmutableMarketDataBuilder builder) {
         // TODO - load from CSV file - format to be defined
         builder.addValue(FxRateId.of(Currency.GBP, Currency.USD), FxRate.of(Currency.GBP, Currency.USD, 1.61));
     }
@@ -307,7 +307,7 @@ public abstract class ExampleMarketDataBuilder {
                 .collect(toImmutableList());
     }
 
-    private void loadCreditMarketData(ImmutableMarketDataBuilder builder, LocalDate marketDataDate) {
+    private void loadCreditMarketData(final ImmutableMarketDataBuilder builder, final LocalDate marketDataDate) {
         if (!subdirectoryExists(CREDIT_DIR)) {
             log.debug("No credit curves directory found");
             return;
@@ -329,7 +329,7 @@ public abstract class ExampleMarketDataBuilder {
         loadCdsIndexSpreadCurves(builder, creditMarketDataDateDirectory);
     }
 
-    private void loadCdsYieldCurves(ImmutableMarketDataBuilder builder, String creditMarketDataDateDirectory) {
+    private void loadCdsYieldCurves(final ImmutableMarketDataBuilder builder, final String creditMarketDataDateDirectory) {
         ResourceLocator cdsYieldCurvesResource = getResource(creditMarketDataDateDirectory, CDS_YIELD_CURVES_FILE);
         if (cdsYieldCurvesResource == null) {
             log.debug("Unable to load cds yield curves: file not found at {}/{}", creditMarketDataDateDirectory,
@@ -346,7 +346,7 @@ public abstract class ExampleMarketDataBuilder {
         }
     }
 
-    private void loadCdsSingleNameSpreadCurves(ImmutableMarketDataBuilder builder, String creditMarketDataDateDirectory) {
+    private void loadCdsSingleNameSpreadCurves(final ImmutableMarketDataBuilder builder, final String creditMarketDataDateDirectory) {
         ResourceLocator singleNameCurvesResource = getResource(creditMarketDataDateDirectory, SINGLE_NAME_CREDIT_CURVES_FILE);
         if (singleNameCurvesResource == null) {
             log.debug("Unable to load single name spread curves: file not found at {}/{}", creditMarketDataDateDirectory,
@@ -373,7 +373,7 @@ public abstract class ExampleMarketDataBuilder {
         }
     }
 
-    private void loadCdsIndexSpreadCurves(ImmutableMarketDataBuilder builder, String creditMarketDataDateDirectory) {
+    private void loadCdsIndexSpreadCurves(final ImmutableMarketDataBuilder builder, final String creditMarketDataDateDirectory) {
         ResourceLocator inputCurvesResource = getResource(creditMarketDataDateDirectory, INDEX_CREDIT_CURVES_FILE);
         if (inputCurvesResource == null) {
             log.debug("Unable to load single name spread curves: file not found at {}/{}", creditMarketDataDateDirectory,

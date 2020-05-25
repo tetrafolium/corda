@@ -110,7 +110,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
     static {
         SwingAccessor.setJLightweightFrameAccessor(new SwingAccessor.JLightweightFrameAccessor() {
             @Override
-            public void updateCursor(JLightweightFrame frame) {
+            public void updateCursor(final JLightweightFrame frame) {
                 frame.updateClientCursor();
             }
         });
@@ -135,8 +135,8 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
 
         layoutSizeListener = new PropertyChangeListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                Dimension d = (Dimension)e.getNewValue();
+            public void propertyChange(final PropertyChangeEvent e) {
+                Dimension d = (Dimension) e.getNewValue();
 
                 if ("preferredSize".equals(e.getPropertyName())) {
                     content.preferredSizeChanged(d.width, d.height);
@@ -255,7 +255,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
             this.scaleFactor = scaleFactor;
         }
         if (getPeer() instanceof DisplayChangedListener) {
-            ((DisplayChangedListener)getPeer()).displayChanged();
+            ((DisplayChangedListener) getPeer()).displayChanged();
         }
         repaint();
     }
@@ -264,14 +264,14 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
     public void addNotify() {
         super.addNotify();
         if (getPeer() instanceof DisplayChangedListener) {
-            ((DisplayChangedListener)getPeer()).displayChanged();
+            ((DisplayChangedListener) getPeer()).displayChanged();
         }
     }
 
-    private void syncCopyBuffer(boolean reset, int x, int y, int w, int h, int scale) {
+    private void syncCopyBuffer(final boolean reset, final int x, final int y, final int w, final int h, final int scale) {
         content.paintLock();
         try {
-            int[] srcBuffer = ((DataBufferInt)bbImage.getRaster().getDataBuffer()).getData();
+            int[] srcBuffer = ((DataBufferInt) bbImage.getRaster().getDataBuffer()).getData();
             if (reset) {
                 copyBuffer = new int[srcBuffer.length];
             }
@@ -282,7 +282,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
             w *= scale;
             h *= scale;
 
-            for (int i=0; i<h; i++) {
+            for (int i = 0; i < h; i++) {
                 int from = (y + i) * linestride + x;
                 System.arraycopy(srcBuffer, from, copyBuffer, from, w);
             }
@@ -291,7 +291,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
         }
     }
 
-    private void notifyImageUpdated(int x, int y, int width, int height) {
+    private void notifyImageUpdated(final int x, final int y, final int width, final int height) {
         if (copyBufferEnabled) {
             syncCopyBuffer(false, x, y, width, height, scaleFactor);
         }
@@ -301,16 +301,16 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
     private void initInterior() {
         contentPane = new JPanel() {
             @Override
-            public void paint(Graphics g) {
+            public void paint(final Graphics g) {
                 if (!copyBufferEnabled) {
                     content.paintLock();
                 }
                 try {
                     super.paint(g);
 
-                    final Rectangle clip = g.getClipBounds() != null ?
-                            g.getClipBounds() :
-                            new Rectangle(0, 0, contentPane.getWidth(), contentPane.getHeight());
+                    final Rectangle clip = g.getClipBounds() != null
+                            ? g.getClipBounds()
+                            : new Rectangle(0, 0, contentPane.getWidth(), contentPane.getHeight());
 
                     clip.x = Math.max(0, clip.x);
                     clip.y = Math.max(0, clip.y);
@@ -346,7 +346,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
 
         contentPane.addContainerListener(new ContainerListener() {
             @Override
-            public void componentAdded(ContainerEvent e) {
+            public void componentAdded(final ContainerEvent e) {
                 Component c = JLightweightFrame.this.component;
                 if (e.getChild() == c) {
                     c.addPropertyChangeListener("preferredSize", layoutSizeListener);
@@ -355,7 +355,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
                 }
             }
             @Override
-            public void componentRemoved(ContainerEvent e) {
+            public void componentRemoved(final ContainerEvent e) {
                 Component c = JLightweightFrame.this.component;
                 if (e.getChild() == c) {
                     c.removePropertyChangeListener(layoutSizeListener);
@@ -365,7 +365,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
     }
 
     @SuppressWarnings("deprecation")
-    @Override public void reshape(int x, int y, int width, int height) {
+    @Override public void reshape(final int x, final int y, final int width, final int height) {
         super.reshape(x, y, width, height);
 
         if (width == 0 || height == 0) {
@@ -392,12 +392,12 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
                             if (oldW >= newW) {
                                 newW = oldW;
                             } else {
-                                newW = Math.max((int)(oldW * 1.2), width);
+                                newW = Math.max((int) (oldW * 1.2), width);
                             }
                             if (oldH >= newH) {
                                 newH = oldH;
                             } else {
-                                newH = Math.max((int)(oldH * 1.2), height);
+                                newH = Math.max((int) (oldH * 1.2), height);
                             }
                         }
                     }
@@ -416,10 +416,10 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
         }
     }
 
-    private void resizeBuffer(int width, int height, int newScaleFactor) {
-            bbImage = new BufferedImage(width*newScaleFactor,height*newScaleFactor,
+    private void resizeBuffer(final int width, final int height, final int newScaleFactor) {
+            bbImage = new BufferedImage(width * newScaleFactor, height * newScaleFactor,
                                         BufferedImage.TYPE_INT_ARGB_PRE);
-        int[] pixels= ((DataBufferInt)bbImage.getRaster().getDataBuffer()).getData();
+        int[] pixels = ((DataBufferInt) bbImage.getRaster().getDataBuffer()).getData();
         if (copyBufferEnabled) {
             syncCopyBuffer(true, 0, 0, width, height, newScaleFactor);
             pixels = copyBuffer;
@@ -434,7 +434,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
     }
 
     @Override
-    public void setContentPane(Container contentPane) {
+    public void setContentPane(final Container contentPane) {
         getRootPane().setContentPane(contentPane);
     }
 
@@ -444,7 +444,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
     }
 
     @Override
-    public void setLayeredPane(JLayeredPane layeredPane) {
+    public void setLayeredPane(final JLayeredPane layeredPane) {
         getRootPane().setLayeredPane(layeredPane);
     }
 
@@ -454,7 +454,7 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
     }
 
     @Override
-    public void setGlassPane(Component glassPane) {
+    public void setGlassPane(final Component glassPane) {
         getRootPane().setGlassPane(glassPane);
     }
 
@@ -490,24 +490,24 @@ public final class JLightweightFrame extends LightweightFrame implements RootPan
     }
 
     public <T extends DragGestureRecognizer> T createDragGestureRecognizer(
-            Class<T> abstractRecognizerClass,
-            DragSource ds, Component c, int srcActions,
-            DragGestureListener dgl)
+            final Class<T> abstractRecognizerClass,
+            final DragSource ds, final Component c, final int srcActions,
+            final DragGestureListener dgl)
     {
         return content == null ? null : content.createDragGestureRecognizer(
                 abstractRecognizerClass, ds, c, srcActions, dgl);
     }
 
-    public DragSourceContextPeer createDragSourceContextPeer(DragGestureEvent dge) throws InvalidDnDOperationException {
+    public DragSourceContextPeer createDragSourceContextPeer(final DragGestureEvent dge) throws InvalidDnDOperationException {
         return content == null ? null : content.createDragSourceContextPeer(dge);
     }
 
-    public void addDropTarget(DropTarget dt) {
+    public void addDropTarget(final DropTarget dt) {
         if (content == null) return;
         content.addDropTarget(dt);
     }
 
-    public void removeDropTarget(DropTarget dt) {
+    public void removeDropTarget(final DropTarget dt) {
         if (content == null) return;
         content.removeDropTarget(dt);
     }

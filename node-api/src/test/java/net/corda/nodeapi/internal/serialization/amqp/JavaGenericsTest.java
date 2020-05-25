@@ -11,15 +11,19 @@ public class JavaGenericsTest {
     private static class Inner {
         private final Integer v;
 
-        private Inner(Integer v) { this.v = v; }
-        public Integer getV() { return v; }
+        private Inner(final Integer v) {
+            this.v = v; }
+        public Integer getV() {
+            return v; }
     }
 
     private static class A<T> {
         private final T t;
 
-        private A(T t) { this.t = t; }
-        public T getT() { return t; }
+        private A(final T t) {
+            this.t = t; }
+        public T getT() {
+            return t; }
     }
 
     @Test
@@ -41,7 +45,7 @@ public class JavaGenericsTest {
         assertEquals(1, a2.getT());
     }
 
-    private SerializedBytes<?> forceWildcardSerialize(A<?> a) throws NotSerializableException {
+    private SerializedBytes<?> forceWildcardSerialize(final A<?> a) throws NotSerializableException {
         SerializerFactory factory = new SerializerFactory(
                 AllWhitelist.INSTANCE,
                 ClassLoader.getSystemClassLoader(),
@@ -52,12 +56,12 @@ public class JavaGenericsTest {
     }
 
     private SerializedBytes<?> forceWildcardSerializeFactory(
-            A<?> a,
-            SerializerFactory factory) throws NotSerializableException {
+            final A<?> a,
+            final SerializerFactory factory) throws NotSerializableException {
         return (new SerializationOutput(factory)).serialize(a);
     }
 
-    private A<?> forceWildcardDeserialize(SerializedBytes<?> bytes) throws NotSerializableException {
+    private A<?> forceWildcardDeserialize(final SerializedBytes<?> bytes) throws NotSerializableException {
         SerializerFactory factory = new SerializerFactory(
                 AllWhitelist.INSTANCE,
                 ClassLoader.getSystemClassLoader(),
@@ -69,15 +73,15 @@ public class JavaGenericsTest {
     }
 
     private A<?> forceWildcardDeserializeFactory(
-            SerializedBytes<?> bytes,
-            SerializerFactory factory) throws NotSerializableException {
+            final SerializedBytes<?> bytes,
+            final SerializerFactory factory) throws NotSerializableException {
         return (new DeserializationInput(factory)).deserialize(bytes, A.class);
     }
 
     @Test
     public void forceWildcard() throws NotSerializableException {
         SerializedBytes<?> bytes = forceWildcardSerialize(new A(new Inner(29)));
-        Inner i = (Inner)forceWildcardDeserialize(bytes).getT();
+        Inner i = (Inner) forceWildcardDeserialize(bytes).getT();
         assertEquals(29, i.getV());
     }
 
@@ -90,7 +94,7 @@ public class JavaGenericsTest {
                 new SerializerFingerPrinter());
 
         SerializedBytes<?> bytes = forceWildcardSerializeFactory(new A(new Inner(29)), factory);
-        Inner i = (Inner)forceWildcardDeserializeFactory(bytes, factory).getT();
+        Inner i = (Inner) forceWildcardDeserializeFactory(bytes, factory).getT();
 
         assertEquals(29, i.getV());
     }

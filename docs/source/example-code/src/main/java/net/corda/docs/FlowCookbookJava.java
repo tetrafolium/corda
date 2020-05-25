@@ -54,7 +54,7 @@ public class FlowCookbookJava {
         private final Party counterparty;
         private final Party regulator;
 
-        public InitiatorFlow(boolean arg1, int arg2, Party counterparty, Party regulator) {
+        public InitiatorFlow(final boolean arg1, final int arg2, final Party counterparty, final Party regulator) {
             this.arg1 = arg1;
             this.arg2 = arg2;
             this.counterparty = counterparty;
@@ -448,7 +448,7 @@ public class FlowCookbookJava {
             // Optional request verification to further restrict data access.
             subFlow(new SendTransactionFlow(counterpartySession, twiceSignedTx) {
                 @Override
-                protected void verifyDataRequest(@NotNull FetchDataFlow.Request.Data dataRequest) {
+                protected void verifyDataRequest(final @NotNull FetchDataFlow.Request.Data dataRequest) {
                     // Extra request verification.
                 }
             });
@@ -605,7 +605,7 @@ public class FlowCookbookJava {
 
         private final FlowSession counterpartySession;
 
-        public ResponderFlow(FlowSession counterpartySession) {
+        public ResponderFlow(final FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 
@@ -653,12 +653,12 @@ public class FlowCookbookJava {
             // ``SignTransactionFlow`` subclass.
             // DOCSTART 16
             class SignTxFlow extends SignTransactionFlow {
-                private SignTxFlow(FlowSession otherSession, ProgressTracker progressTracker) {
+                private SignTxFlow(final FlowSession otherSession, final ProgressTracker progressTracker) {
                     super(otherSession, progressTracker);
                 }
 
                 @Override
-                protected void checkTransaction(SignedTransaction stx) {
+                protected void checkTransaction(final SignedTransaction stx) {
                     requireThat(require -> {
                         // Any additional checking we see fit...
                         DummyState outputState = (DummyState) stx.getTx().getOutputs().get(0).getData();

@@ -87,7 +87,7 @@ public final class SandboxCreator {
         return new SandboxCreator(options);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(final String[] args) throws IOException, URISyntaxException {
         parser.accepts("help", "Displays this help screen").forHelp();
         parser.accepts("dir", "The directory where classes to be sandboxed can be found").withRequiredArg().ofType(String.class);
         parser.accepts("jar", "The jar file where classes to be sandboxed can be found").withRequiredArg().ofType(String.class);

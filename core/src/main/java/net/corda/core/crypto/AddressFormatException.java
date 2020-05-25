@@ -5,7 +5,7 @@ public class AddressFormatException extends IllegalArgumentException {
         super();
     }
 
-    public AddressFormatException(String message) {
+    public AddressFormatException(final String message) {
         super(message);
     }
 }

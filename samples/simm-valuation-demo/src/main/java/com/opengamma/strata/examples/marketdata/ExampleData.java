@@ -32,7 +32,7 @@ public final class ExampleData {
      * @param name  the name of the results
      * @return the loaded results
      */
-    public static String loadExpectedResults(String name) {
+    public static String loadExpectedResults(final String name) {
         String classpathResourceName = String.format(Locale.ENGLISH, "classpath:goldencopy/%s.txt", name);
         ResourceLocator resourceLocator = ResourceLocator.of(classpathResourceName);
         try {
@@ -48,7 +48,7 @@ public final class ExampleData {
      * @param templateName  the name of the template
      * @return the loaded report template
      */
-    public static TradeReportTemplate loadTradeReportTemplate(String templateName) {
+    public static TradeReportTemplate loadTradeReportTemplate(final String templateName) {
         String resourceName = String.format(Locale.ENGLISH, "classpath:example-reports/%s.ini", templateName);
         ResourceLocator resourceLocator = ResourceLocator.of(resourceName);
         IniFile ini = IniFile.of(resourceLocator.getCharSource());

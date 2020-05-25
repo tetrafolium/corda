@@ -21,7 +21,7 @@ final class WhitelistCheckingMethodVisitor extends MethodVisitor {
     private final CandidacyStatus candidacyStatus;
     private final String currentMethodName;
 
-    public WhitelistCheckingMethodVisitor(final MethodVisitor methodVisitor, final CandidacyStatus initialCandidacyStatus, String methodName) {
+    public WhitelistCheckingMethodVisitor(final MethodVisitor methodVisitor, final CandidacyStatus initialCandidacyStatus, final String methodName) {
         super(Opcodes.ASM5, methodVisitor);
         candidacyStatus = initialCandidacyStatus;
         currentMethodName = methodName;
@@ -104,7 +104,7 @@ final class WhitelistCheckingMethodVisitor extends MethodVisitor {
      * @param labels
      */
     @Override
-    public void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
+    public void visitTableSwitchInsn(final int min, final int max, final Label dflt, final Label... labels) {
         super.visitTableSwitchInsn(min, max, dflt, labels);
     }
 

@@ -50,7 +50,7 @@ public class SwapExampleX {
 
     public static final LocalDate VALUATION_DATE = LocalDate.of(2016, 6, 6);
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         CurveGroupDefinition curveGroupDefinition = loadCurveGroup();
         MarketData marketData = loadMarketData();
         List<SwapTrade> trades = ImmutableList.of(createVanillaFixedVsLibor3mSwap(), createVanillaFixedVsLibor6mSwap());

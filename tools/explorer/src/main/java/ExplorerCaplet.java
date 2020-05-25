@@ -5,7 +5,7 @@ import java.util.*;
 public class ExplorerCaplet extends Capsule {
 
     @SuppressWarnings("unused")
-    protected ExplorerCaplet(Capsule pred) {
+    protected ExplorerCaplet(final Capsule pred) {
         super(pred);
     }
 
@@ -14,7 +14,7 @@ public class ExplorerCaplet extends Capsule {
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected <T> T attribute(Map.Entry<String, T> attr) {
+    protected <T> T attribute(final Map.Entry<String, T> attr) {
         // Equality is used here because Capsule never instantiates these attributes but instead reuses the ones
         // defined as public static final fields on the Capsule class, therefore referential equality is safe.
         if (ATTR_APP_CLASS_PATH == attr) {
@@ -27,7 +27,7 @@ public class ExplorerCaplet extends Capsule {
 
     // TODO: Make directory configurable via the capsule manifest.
     // TODO: Add working directory variable to capsules string replacement variables.
-    private List<Path> augmentClasspath(List<Path> classpath, String dirName) {
+    private List<Path> augmentClasspath(final List<Path> classpath, final String dirName) {
         File dir = new File(dirName);
         if (!dir.exists()) {
             dir.mkdir();
@@ -42,7 +42,7 @@ public class ExplorerCaplet extends Capsule {
         return classpath;
     }
 
-    private Boolean isJAR(File file) {
+    private Boolean isJAR(final File file) {
         return file.getName().toLowerCase().endsWith(".jar");
     }
 

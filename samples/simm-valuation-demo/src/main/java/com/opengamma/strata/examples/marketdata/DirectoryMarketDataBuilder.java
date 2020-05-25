@@ -29,13 +29,13 @@ public class DirectoryMarketDataBuilder extends ExampleMarketDataBuilder {
      *
      * @param rootPath  the path to the root of the directory structure
      */
-    public DirectoryMarketDataBuilder(Path rootPath) {
+    public DirectoryMarketDataBuilder(final Path rootPath) {
         this.rootPath = rootPath;
     }
 
     //-------------------------------------------------------------------------
     @Override
-    protected Collection<ResourceLocator> getAllResources(String subdirectoryName) {
+    protected Collection<ResourceLocator> getAllResources(final String subdirectoryName) {
         File dir = rootPath.resolve(subdirectoryName).toFile();
         if (!dir.exists()) {
             throw new IllegalArgumentException(Messages.format("Directory does not exist: {}", dir));
@@ -47,7 +47,7 @@ public class DirectoryMarketDataBuilder extends ExampleMarketDataBuilder {
     }
 
     @Override
-    protected ResourceLocator getResource(String subdirectoryName, String resourceName) {
+    protected ResourceLocator getResource(final String subdirectoryName, final String resourceName) {
         File file = rootPath.resolve(subdirectoryName).resolve(resourceName).toFile();
         if (!file.exists()) {
             return null;
@@ -56,7 +56,7 @@ public class DirectoryMarketDataBuilder extends ExampleMarketDataBuilder {
     }
 
     @Override
-    protected boolean subdirectoryExists(String subdirectoryName) {
+    protected boolean subdirectoryExists(final String subdirectoryName) {
         File file = rootPath.resolve(subdirectoryName).toFile();
         return file.exists();
     }

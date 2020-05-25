@@ -9,21 +9,21 @@ public class WhitelistClassloadingException extends Exception {
         super();
     }
 
-    public WhitelistClassloadingException(String message) {
+    public WhitelistClassloadingException(final String message) {
         super(message);
     }
 
-    public WhitelistClassloadingException(String message, Throwable cause) {
+    public WhitelistClassloadingException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public WhitelistClassloadingException(Throwable cause) {
+    public WhitelistClassloadingException(final Throwable cause) {
         super(cause);
     }
 
-    protected WhitelistClassloadingException(String message, Throwable cause,
-                                             boolean enableSuppression,
-                                             boolean writableStackTrace) {
+    protected WhitelistClassloadingException(final String message, final Throwable cause,
+                                             final boolean enableSuppression,
+                                             final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 

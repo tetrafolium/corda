@@ -90,9 +90,9 @@ public class MarkitSingleNameCreditCurveDataParser {
      * @param staticDataSource  the source of static data to parse
      */
     public static void parse(
-            ImmutableMarketDataBuilder builder,
-            CharSource curveSource,
-            CharSource staticDataSource) {
+            final ImmutableMarketDataBuilder builder,
+            final CharSource curveSource,
+            final CharSource staticDataSource) {
 
         Map<MarkitRedCode, CdsConvention> conventions = parseStaticData(staticDataSource);
         try (Scanner scanner = new Scanner(curveSource.openStream())) {
@@ -100,9 +100,9 @@ public class MarkitSingleNameCreditCurveDataParser {
 
                 String line = scanner.nextLine();
                 // skip over header rows
-                if (line.startsWith("V5 CDS Composites by Convention") ||
-                        line.trim().isEmpty() ||
-                        line.startsWith("\"Date\",")) {
+                if (line.startsWith("V5 CDS Composites by Convention")
+                        || line.trim().isEmpty()
+                        || line.startsWith("\"Date\",")) {
                     continue;
                 }
                 String[] columns = line.split(",");
@@ -176,7 +176,7 @@ public class MarkitSingleNameCreditCurveDataParser {
     }
 
     // parses the static data file of RED code to convention
-    private static Map<MarkitRedCode, CdsConvention> parseStaticData(CharSource source) {
+    private static Map<MarkitRedCode, CdsConvention> parseStaticData(final CharSource source) {
         CsvFile csv = CsvFile.of(source, true);
         Map<MarkitRedCode, CdsConvention> result = Maps.newHashMap();
         for (CsvRow row : csv.rows()) {
@@ -189,7 +189,7 @@ public class MarkitSingleNameCreditCurveDataParser {
 
     // Converts from a string percentage rate with a percent sign to a double rate
     // e.g. 0.12% => 0.0012d
-    private static double parseRate(String input) {
+    private static double parseRate(final String input) {
         return Double.parseDouble(input.replace("%", "")) / 100d;
     }
 

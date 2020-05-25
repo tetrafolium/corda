@@ -15,7 +15,7 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
 public class IOUFlowResponder extends FlowLogic<Void> {
     private final FlowSession otherPartySession;
 
-    public IOUFlowResponder(FlowSession otherPartySession) {
+    public IOUFlowResponder(final FlowSession otherPartySession) {
         this.otherPartySession = otherPartySession;
     }
 
@@ -23,12 +23,12 @@ public class IOUFlowResponder extends FlowLogic<Void> {
     @Override
     public Void call() throws FlowException {
         class SignTxFlow extends SignTransactionFlow {
-            private SignTxFlow(FlowSession otherPartySession, ProgressTracker progressTracker) {
+            private SignTxFlow(final FlowSession otherPartySession, final ProgressTracker progressTracker) {
                 super(otherPartySession, progressTracker);
             }
 
             @Override
-            protected void checkTransaction(SignedTransaction stx) {
+            protected void checkTransaction(final SignedTransaction stx) {
                 requireThat(require -> {
                     ContractState output = stx.getTx().getOutputs().get(0).getData();
                     require.using("This must be an IOU transaction.", output instanceof IOUState);

@@ -41,7 +41,7 @@ public class JarMarketDataBuilder extends ExampleMarketDataBuilder {
      * @param jarFile  the JAR file containing the expected structure of resources
      * @param rootPath  the root path to the resources within the JAR file
      */
-    public JarMarketDataBuilder(File jarFile, String rootPath) {
+    public JarMarketDataBuilder(final File jarFile, final String rootPath) {
         // classpath resources are forward-slash separated
         String jarRoot = rootPath.startsWith("/") ? rootPath.substring(1) : rootPath;
         if (!jarRoot.endsWith("/")) {
@@ -54,7 +54,7 @@ public class JarMarketDataBuilder extends ExampleMarketDataBuilder {
 
     //-------------------------------------------------------------------------
     @Override
-    protected Collection<ResourceLocator> getAllResources(String subdirectoryName) {
+    protected Collection<ResourceLocator> getAllResources(final String subdirectoryName) {
         String resolvedSubdirectory = subdirectoryName + "/";
         return entries.stream()
                 .filter(e -> e.startsWith(resolvedSubdirectory) && !e.equals(resolvedSubdirectory))
@@ -63,7 +63,7 @@ public class JarMarketDataBuilder extends ExampleMarketDataBuilder {
     }
 
     @Override
-    protected ResourceLocator getResource(String subdirectoryName, String resourceName) {
+    protected ResourceLocator getResource(final String subdirectoryName, final String resourceName) {
         String fullLocation = String.format(Locale.ENGLISH, "%s%s/%s", rootPath, subdirectoryName, resourceName);
         try (JarFile jar = new JarFile(jarFile)) {
             JarEntry entry = jar.getJarEntry(fullLocation);
@@ -78,7 +78,7 @@ public class JarMarketDataBuilder extends ExampleMarketDataBuilder {
     }
 
     @Override
-    protected boolean subdirectoryExists(String subdirectoryName) {
+    protected boolean subdirectoryExists(final String subdirectoryName) {
         // classpath resources are forward-slash separated
         String resolvedName = subdirectoryName.startsWith("/") ? subdirectoryName.substring(1) : subdirectoryName;
         if (!resolvedName.endsWith("/")) {
@@ -89,11 +89,11 @@ public class JarMarketDataBuilder extends ExampleMarketDataBuilder {
 
     //-------------------------------------------------------------------------
     // Gets the resource locator corresponding to a given entry
-    private ResourceLocator getEntryLocator(String entryName) {
+    private ResourceLocator getEntryLocator(final String entryName) {
         return ResourceLocator.of(ResourceLocator.CLASSPATH_URL_PREFIX + entryName);
     }
 
-    private static ImmutableSet<String> getEntries(File jarFile, String rootPath) {
+    private static ImmutableSet<String> getEntries(final File jarFile, final String rootPath) {
         ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         try (JarFile jar = new JarFile(jarFile)) {
             Enumeration<JarEntry> jarEntries = jar.entries();

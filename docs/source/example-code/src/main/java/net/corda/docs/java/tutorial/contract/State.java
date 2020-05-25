@@ -21,8 +21,8 @@ public class State implements OwnableState {
     public State() {
     }  // For serialization
 
-    public State(PartyAndReference issuance, AbstractParty owner, Amount<Issued<Currency>> faceValue,
-                 Instant maturityDate) {
+    public State(final PartyAndReference issuance, final AbstractParty owner, final Amount<Issued<Currency>> faceValue,
+                 final Instant maturityDate) {
         this.issuance = issuance;
         this.owner = owner;
         this.faceValue = faceValue;
@@ -39,7 +39,7 @@ public class State implements OwnableState {
 
     @NotNull
     @Override
-    public CommandAndState withNewOwner(@NotNull AbstractParty newOwner) {
+    public CommandAndState withNewOwner(final @NotNull AbstractParty newOwner) {
         return new CommandAndState(new CommercialPaper.Commands.Move(), new State(this.issuance, newOwner, this.faceValue, this.maturityDate));
     }
 
@@ -60,7 +60,7 @@ public class State implements OwnableState {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

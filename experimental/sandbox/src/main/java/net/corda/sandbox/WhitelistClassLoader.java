@@ -52,7 +52,7 @@ public final class WhitelistClassLoader extends ClassLoader {
      * Copy constructor for use in recursive calls
      * @param other 
      */
-    private WhitelistClassLoader(WhitelistClassLoader other) {
+    private WhitelistClassLoader(final WhitelistClassLoader other) {
         candidacyStatus = other.candidacyStatus;
         loadedClasses = other.loadedClasses;
         transformedClasses = other.transformedClasses;
@@ -348,7 +348,7 @@ public final class WhitelistClassLoader extends ClassLoader {
         return outputJarPath;
     }
 
-    public void setOutpurJarPath(Path outpurJarPath) {
+    public void setOutpurJarPath(final Path outpurJarPath) {
         this.outputJarPath = outpurJarPath;
     }
 

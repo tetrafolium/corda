@@ -53,7 +53,7 @@ public class FlowsInJavaTest {
         }
     }
 
-    private void primitiveReceiveTypeTest(Class<?> receiveType) throws InterruptedException {
+    private void primitiveReceiveTypeTest(final Class<?> receiveType) throws InterruptedException {
         PrimitiveReceiveFlow flow = new PrimitiveReceiveFlow(bob, receiveType);
         Future<?> result = aliceNode.startFlow(flow);
         mockNet.runNetwork();
@@ -72,7 +72,7 @@ public class FlowsInJavaTest {
     private static class SendInUnwrapFlow extends FlowLogic<String> {
         private final Party otherParty;
 
-        private SendInUnwrapFlow(Party otherParty) {
+        private SendInUnwrapFlow(final Party otherParty) {
             this.otherParty = otherParty;
         }
 
@@ -91,7 +91,7 @@ public class FlowsInJavaTest {
     private static class SendHelloAndThenReceive extends FlowLogic<String> {
         private final FlowSession otherSide;
 
-        private SendHelloAndThenReceive(FlowSession otherParty) {
+        private SendHelloAndThenReceive(final FlowSession otherParty) {
             this.otherSide = otherParty;
         }
 
@@ -107,7 +107,7 @@ public class FlowsInJavaTest {
         private final Party otherParty;
         private final Class<?> receiveType;
 
-        private PrimitiveReceiveFlow(Party otherParty, Class<?> receiveType) {
+        private PrimitiveReceiveFlow(final Party otherParty, final Class<?> receiveType) {
             this.otherParty = otherParty;
             this.receiveType = receiveType;
         }

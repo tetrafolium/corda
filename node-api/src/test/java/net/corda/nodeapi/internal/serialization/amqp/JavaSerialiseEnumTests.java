@@ -16,7 +16,7 @@ public class JavaSerialiseEnumTests {
     private static class Bra {
         private final Bras bra;
 
-        private Bra(Bras bra) {
+        private Bra(final Bras bra) {
             this.bra = bra;
         }
 

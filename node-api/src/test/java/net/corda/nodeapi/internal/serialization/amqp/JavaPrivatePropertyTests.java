@@ -12,21 +12,25 @@ public class JavaPrivatePropertyTests {
     static class C {
         private String a;
 
-        C(String a) { this.a = a; }
+        C(final String a) {
+            this.a = a; }
     }
 
     static class C2 {
         private String a;
 
-        C2(String a) { this.a = a; }
+        C2(final String a) {
+            this.a = a; }
 
-        public String getA() { return a; }
+        public String getA() {
+            return a; }
     }
 
     static class B {
         private Boolean b;
 
-        B(Boolean b) { this.b = b; }
+        B(final Boolean b) {
+            this.b = b; }
 
         public Boolean isB() {
             return this.b;
@@ -40,7 +44,7 @@ public class JavaPrivatePropertyTests {
             return this.b;
         }
 
-        public void setB(Boolean b) {
+        public void setB(final Boolean b) {
             this.b = b;
         }
     }
@@ -53,7 +57,7 @@ public class JavaPrivatePropertyTests {
             return this.b;
         }
 
-        public void setB(Boolean b) {
+        public void setB(final Boolean b) {
             this.b = b;
         }
     }
@@ -69,7 +73,7 @@ public class JavaPrivatePropertyTests {
             return this.a > 0;
         }
 
-        public void setA(Integer a) {
+        public void setA(final Integer a) {
             this.a = a;
         }
     }
@@ -84,7 +88,7 @@ public class JavaPrivatePropertyTests {
 
         B b = new B(true);
         B b2 = des.deserialize(ser.serialize(b), B.class);
-        assertEquals (b.b, b2.b);
+        assertEquals(b.b, b2.b);
     }
 
     @Test
@@ -99,7 +103,7 @@ public class JavaPrivatePropertyTests {
         B2 b = new B2();
         b.setB(false);
         B2 b2 = des.deserialize(ser.serialize(b), B2.class);
-        assertEquals (b.b, b2.b);
+        assertEquals(b.b, b2.b);
     }
 
     @Test
@@ -115,7 +119,7 @@ public class JavaPrivatePropertyTests {
         B3 b2 = des.deserialize(ser.serialize(b), B3.class);
 
         // since we can't find a getter for b (isb != isB) then we won't serialize that parameter
-        assertEquals (null, b2.b);
+        assertEquals(null, b2.b);
     }
 
     @Test
@@ -130,7 +134,7 @@ public class JavaPrivatePropertyTests {
         c.setA(12345);
         C3 c2 = des.deserialize(ser.serialize(c), C3.class);
 
-        assertEquals (c.a, c2.a);
+        assertEquals(c.a, c2.a);
     }
 
     @Test
@@ -145,7 +149,7 @@ public class JavaPrivatePropertyTests {
         C c = new C("dripping taps");
         C c2 = des.deserialize(ser.serialize(c), C.class);
 
-        assertEquals (c.a, c2.a);
+        assertEquals(c.a, c2.a);
 
         //
         // Now ensure we actually got a private property serializer
@@ -157,10 +161,10 @@ public class JavaPrivatePropertyTests {
                 (ConcurrentHashMap<Object, AMQPSerializer<Object>>) f.get(factory);
 
         assertEquals(1, serializersByDescriptor.size());
-        ObjectSerializer cSerializer = ((ObjectSerializer)serializersByDescriptor.values().toArray()[0]);
+        ObjectSerializer cSerializer = ((ObjectSerializer) serializersByDescriptor.values().toArray()[0]);
         assertEquals(1, cSerializer.getPropertySerializers().getSerializationOrder().size());
         Object[] propertyReaders = cSerializer.getPropertySerializers().getSerializationOrder().toArray();
-        assertTrue (((PropertyAccessor)propertyReaders[0]).getGetter().getPropertyReader() instanceof PrivatePropertyReader);
+        assertTrue(((PropertyAccessor) propertyReaders[0]).getGetter().getPropertyReader() instanceof PrivatePropertyReader);
     }
 
     @Test
@@ -177,7 +181,7 @@ public class JavaPrivatePropertyTests {
         C2 c = new C2("dripping taps");
         C2 c2 = des.deserialize(ser.serialize(c), C2.class);
 
-        assertEquals (c.a, c2.a);
+        assertEquals(c.a, c2.a);
 
         //
         // Now ensure we actually got a private property serializer
@@ -188,9 +192,9 @@ public class JavaPrivatePropertyTests {
                 (ConcurrentHashMap<Object, AMQPSerializer<Object>>) f.get(factory);
 
         assertEquals(1, serializersByDescriptor.size());
-        ObjectSerializer cSerializer = ((ObjectSerializer)serializersByDescriptor.values().toArray()[0]);
+        ObjectSerializer cSerializer = ((ObjectSerializer) serializersByDescriptor.values().toArray()[0]);
         assertEquals(1, cSerializer.getPropertySerializers().getSerializationOrder().size());
         Object[] propertyReaders = cSerializer.getPropertySerializers().getSerializationOrder().toArray();
-        assertTrue (((PropertyAccessor)propertyReaders[0]).getGetter().getPropertyReader() instanceof PublicPropertyReader);
+        assertTrue(((PropertyAccessor) propertyReaders[0]).getGetter().getPropertyReader() instanceof PublicPropertyReader);
     }
 }

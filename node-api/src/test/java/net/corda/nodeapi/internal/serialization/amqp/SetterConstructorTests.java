@@ -15,13 +15,19 @@ public class SetterConstructorTests {
         private int b;
         private int c;
 
-        public int getA() { return a; }
-        public int getB() { return b; }
-        public int getC() { return c; }
+        public int getA() {
+            return a; }
+        public int getB() {
+            return b; }
+        public int getC() {
+            return c; }
 
-        public void setA(int a) { this.a = a; }
-        public void setB(int b) { this.b = b; }
-        public void setC(int c) { this.c = c; }
+        public void setA(final int a) {
+            this.a = a; }
+        public void setB(final int b) {
+            this.b = b; }
+        public void setC(final int c) {
+            this.c = c; }
     }
 
     static class C2 {
@@ -29,12 +35,17 @@ public class SetterConstructorTests {
         private int b;
         private int c;
 
-        public int getA() { return a; }
-        public int getB() { return b; }
-        public int getC() { return c; }
+        public int getA() {
+            return a; }
+        public int getB() {
+            return b; }
+        public int getC() {
+            return c; }
 
-        public void setA(int a) { this.a = a; }
-        public void setB(int b) { this.b = b; }
+        public void setA(final int a) {
+            this.a = a; }
+        public void setB(final int b) {
+            this.b = b; }
     }
 
     static class C3 {
@@ -42,12 +53,17 @@ public class SetterConstructorTests {
         private int b;
         private int c;
 
-        public int getA() { return a; }
-        public int getC() { return c; }
+        public int getA() {
+            return a; }
+        public int getC() {
+            return c; }
 
-        public void setA(int a) { this.a = a; }
-        public void setB(int b) { this.b = b; }
-        public void setC(int c) { this.c = c; }
+        public void setA(final int a) {
+            this.a = a; }
+        public void setB(final int b) {
+            this.b = b; }
+        public void setC(final int c) {
+            this.c = c; }
     }
 
     static class C4 {
@@ -55,27 +71,37 @@ public class SetterConstructorTests {
         private int b;
         private int c;
 
-        public int getA() { return a; }
-        protected int getB() { return b; }
-        public int getC() { return c; }
+        public int getA() {
+            return a; }
+        protected int getB() {
+            return b; }
+        public int getC() {
+            return c; }
 
-        private void setA(int a) { this.a = a; }
-        public void setB(int b) { this.b = b; }
-        public void setC(int c) { this.c = c; }
+        private void setA(final int a) {
+            this.a = a; }
+        public void setB(final int b) {
+            this.b = b; }
+        public void setC(final int c) {
+            this.c = c; }
     }
 
     static class Inner1 {
         private String a;
 
-        public Inner1(String a) { this.a = a; }
-        public String getA() { return this.a; }
+        public Inner1(final String a) {
+            this.a = a; }
+        public String getA() {
+            return this.a; }
     }
 
     static class Inner2 {
         private Double a;
 
-        public Double getA() { return this.a; }
-        public void setA(Double a) { this.a = a; }
+        public Double getA() {
+            return this.a; }
+        public void setA(final Double a) {
+            this.a = a; }
     }
 
     static class Outer {
@@ -83,27 +109,37 @@ public class SetterConstructorTests {
         private String b;
         private Inner2 c;
 
-        public Inner1 getA() { return a; }
-        public String getB() { return b; }
-        public Inner2 getC() { return c; }
+        public Inner1 getA() {
+            return a; }
+        public String getB() {
+            return b; }
+        public Inner2 getC() {
+            return c; }
 
-        public void setA(Inner1 a) { this.a = a; }
-        public void setB(String b) { this.b = b; }
-        public void setC(Inner2 c) { this.c = c; }
+        public void setA(final Inner1 a) {
+            this.a = a; }
+        public void setB(final String b) {
+            this.b = b; }
+        public void setC(final Inner2 c) {
+            this.c = c; }
     }
 
     static class TypeMismatch {
         private Integer a;
 
-        public void setA(Integer a) { this.a = a; }
-        public String getA() { return this.a.toString(); }
+        public void setA(final Integer a) {
+            this.a = a; }
+        public String getA() {
+            return this.a.toString(); }
     }
 
     static class TypeMismatch2 {
         private Integer a;
 
-        public void setA(String a) { this.a = Integer.parseInt(a); }
-        public Integer getA() { return this.a; }
+        public void setA(final String a) {
+            this.a = Integer.parseInt(a); }
+        public Integer getA() {
+            return this.a; }
     }
 
     // despite having no constructor we should still be able to serialise an instance of C
@@ -276,7 +312,7 @@ public class SetterConstructorTests {
 
         assertEquals("Hello", post.a.a);
         assertEquals("World", post.b);
-        assertEquals((Double)10.5, post.c.a);
+        assertEquals((Double) 10.5, post.c.a);
 
     }
 
@@ -294,7 +330,7 @@ public class SetterConstructorTests {
         tm.setA(10);
         assertEquals("10", tm.getA());
 
-        Assertions.assertThatThrownBy(() -> new SerializationOutput(factory1).serialize(tm)).isInstanceOf (
+        Assertions.assertThatThrownBy(() -> new SerializationOutput(factory1).serialize(tm)).isInstanceOf(
                 NotSerializableException.class);
     }
 
@@ -310,7 +346,7 @@ public class SetterConstructorTests {
 
         TypeMismatch2 tm = new TypeMismatch2();
         tm.setA("10");
-        assertEquals((Integer)10, tm.getA());
+        assertEquals((Integer) 10, tm.getA());
 
         Assertions.assertThatThrownBy(() -> new SerializationOutput(factory1).serialize(tm)).isInstanceOf(
                 NotSerializableException.class);

@@ -43,7 +43,7 @@ public class MarkitYieldCurveDataParser {
      * @param source the source to parse
      * @return the map of parsed yield curve par rates
      */
-    public static Map<IsdaYieldCurveInputsId, IsdaYieldCurveInputs> parse(CharSource source) {
+    public static Map<IsdaYieldCurveInputsId, IsdaYieldCurveInputs> parse(final CharSource source) {
         // parse the curve data
         Map<IsdaYieldCurveConvention, List<Point>> curveData = Maps.newHashMap();
         CsvFile csv = CsvFile.of(source, true);
@@ -86,7 +86,7 @@ public class MarkitYieldCurveDataParser {
     }
 
     // parse the M/S instrument type flag
-    private static IsdaYieldCurveUnderlyingType mapUnderlyingType(String type) {
+    private static IsdaYieldCurveUnderlyingType mapUnderlyingType(final String type) {
         switch (type) {
             case "M":
                 return IsdaYieldCurveUnderlyingType.ISDA_MONEY_MARKET;
@@ -108,7 +108,7 @@ public class MarkitYieldCurveDataParser {
         private final IsdaYieldCurveUnderlyingType instrumentType;
         private final double rate;
 
-        private Point(Tenor tenor, LocalDate baseDate, IsdaYieldCurveUnderlyingType instrumentType, double rate) {
+        private Point(final Tenor tenor, final LocalDate baseDate, final IsdaYieldCurveUnderlyingType instrumentType, final double rate) {
             this.tenor = tenor;
             this.date = baseDate.plus(tenor.getPeriod());
             this.instrumentType = instrumentType;

@@ -21,15 +21,15 @@ import static java.util.Comparator.comparing;
 public class RunShellCommand extends InteractiveShellCommand {
     @Command
     @Man(
-            "Runs a method from the CordaRPCOps interface, which is the same interface exposed to RPC clients.\n\n" +
-
-                    "You can learn more about what commands are available by typing 'run' just by itself, or by\n" +
-                    "consulting the developer guide at https://docs.corda.net/api/kotlin/corda/net.corda.core.messaging/-corda-r-p-c-ops/index.html"
+            "Runs a method from the CordaRPCOps interface, which is the same interface exposed to RPC clients.\n\n"
++ 
+                    "You can learn more about what commands are available by typing 'run' just by itself, or by\n"
+                    + "consulting the developer guide at https://docs.corda.net/api/kotlin/corda/net.corda.core.messaging/-corda-r-p-c-ops/index.html"
     )
     @Usage("runs a method from the CordaRPCOps interface on the node.")
     public Object main(
-            InvocationContext<Map> context,
-            @Usage("The command to run") @Argument(unquote = false) List<String> command
+            final InvocationContext<Map> context,
+            final @Usage("The command to run") @Argument(unquote = false) List<String> command
     ) {
         StringToMethodCallParser<CordaRPCOps> parser = new StringToMethodCallParser<>(CordaRPCOps.class, objectMapper());
 
@@ -40,7 +40,7 @@ public class RunShellCommand extends InteractiveShellCommand {
         return InteractiveShell.runRPCFromString(command, out, context, ops(), objectMapper(), isSsh());
     }
 
-    private void emitHelp(InvocationContext<Map> context, StringToMethodCallParser<CordaRPCOps> parser) {
+    private void emitHelp(final InvocationContext<Map> context, final StringToMethodCallParser<CordaRPCOps> parser) {
         // Sends data down the pipeline about what commands are available. CRaSH will render it nicely.
         // Each element we emit is a map of column -> content.
         Set<Map.Entry<String, String>> entries = parser.getAvailableCommands().entrySet();
@@ -71,7 +71,7 @@ public class RunShellCommand extends InteractiveShellCommand {
     }
 
     @NotNull
-    private Map<String, String> commandAndDesc(String command, String description) {
+    private Map<String, String> commandAndDesc(final String command, final String description) {
         // Use a LinkedHashMap to ensure that the Command column comes first.
         Map<String, String> abruptShutdown = Maps.newLinkedHashMap();
         abruptShutdown.put("Command", command);

@@ -45,7 +45,7 @@ public class Base58 {
      * @param input the bytes to encode
      * @return the base58-encoded string
      */
-    public static String encode(byte[] input) {
+    public static String encode(final byte[] input) {
         if (input.length == 0) {
             return "";
         }
@@ -82,7 +82,7 @@ public class Base58 {
      * @return the decoded data bytes
      * @throws AddressFormatException if the given string is not a valid base58 string
      */
-    public static byte[] decode(String input) throws AddressFormatException {
+    public static byte[] decode(final String input) throws AddressFormatException {
         if (input.length() == 0) {
             return new byte[0];
         }
@@ -118,7 +118,7 @@ public class Base58 {
         return Arrays.copyOfRange(decoded, outputStart - zeros, decoded.length);
     }
 
-    public static BigInteger decodeToBigInteger(String input) throws AddressFormatException {
+    public static BigInteger decodeToBigInteger(final String input) throws AddressFormatException {
         return new BigInteger(1, decode(input));
     }
 
@@ -131,7 +131,7 @@ public class Base58 {
      * @return the original data bytes less the last 4 bytes (the checksum).
      * @throws AddressFormatException if the input is not base 58 or the checksum does not validate.
      */
-    public static byte[] decodeChecked(String input) throws AddressFormatException {
+    public static byte[] decodeChecked(final String input) throws AddressFormatException {
         byte[] decoded = decode(input);
         if (decoded.length < 4)
             throw new AddressFormatException("Input too short");
@@ -155,7 +155,7 @@ public class Base58 {
      * @param divisor    the number to divide by (up to 256)
      * @return the remainder of the division operation
      */
-    private static byte divmod(byte[] number, int firstDigit, int base, int divisor) {
+    private static byte divmod(final byte[] number, final int firstDigit, final int base, final int divisor) {
         // this is just long division which accounts for the base of the input digits
         int remainder = 0;
         for (int i = firstDigit; i < number.length; i++) {

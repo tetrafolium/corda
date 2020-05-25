@@ -10,7 +10,7 @@ public class FlowLogicRefFromJavaTest {
     private static class ParamType1 {
         final int value;
 
-        ParamType1(int v) {
+        ParamType1(final int v) {
             value = v;
         }
     }
@@ -19,7 +19,7 @@ public class FlowLogicRefFromJavaTest {
     private static class ParamType2 {
         final String value;
 
-        ParamType2(String v) {
+        ParamType2(final String v) {
             value = v;
         }
     }
@@ -27,7 +27,7 @@ public class FlowLogicRefFromJavaTest {
     @SuppressWarnings("unused")
     private static class JavaFlowLogic extends FlowLogic<Void> {
 
-        public JavaFlowLogic(ParamType1 A, ParamType2 b) {
+        public JavaFlowLogic(final ParamType1 A, final ParamType2 b) {
         }
 
         @Override
